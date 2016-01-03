@@ -1,0 +1,15 @@
+{
+  "name": "n1-unsubscribe",
+  "main": "./lib/main",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "nylas": ">=0.3.32-b11131d"
+  },
+  "description": "Enter a description of your package!",
+  "dependencies": {},
+  "license": "MIT"
+}
