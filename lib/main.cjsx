@@ -1,17 +1,17 @@
 {ComponentRegistry} = require 'nylas-exports'
 
-UnsubscribeQuickAction = require './unsubscribe_quick_action'
-#UnsubscribeToolbarButton = require './unsubscribe_toolbar_button'
+ThreadUnsubscribeQuickActions = require './unsubscribe_quick_action'
+ThreadUnsubscribeToolbarButton = require './unsubscribe_toolbar_button'
 
 module.exports =
   # Activate is called when the package is loaded. If your package previously
   # saved state using `serialize` it is provided.
   #
   activate: (@state) ->
-    ComponentRegistry.register UnsubscribeQuickAction,
+    ComponentRegistry.register ThreadUnsubscribeQuickActions,
       role: 'ThreadListQuickAction'
-    #ComponentRegistry.register UnsubscribeToolbarButton,
-    #  role: 'ThreadListQuickAction'
+    ComponentRegistry.register ThreadUnsubscribeToolbarButton,
+      role: 'message:Toolbar'
 
   # Serialize is called when your package is about to be unmounted.
   # You can return a state object that will be passed back to your package
@@ -25,5 +25,5 @@ module.exports =
   # subscribing to events, release them here.
   #
   deactivate: ->
-    ComponentRegistry.unregister(UnsubscribeQuickAction)
-    #ComponentRegistry.unregister(UnsubscribeToolbarButton)
+    ComponentRegistry.unregister(ThreadUnsubscribeQuickActions)
+    ComponentRegistry.unregister(ThreadUnsubscribeToolbarButton)

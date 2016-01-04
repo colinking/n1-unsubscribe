@@ -3,9 +3,10 @@
  React,
  TaskFactory,
  FocusedMailViewStore} = require 'nylas-exports'
+{UnsubscribeManager} = require './unsubscribe-manager'
 
-class UnsubscribeQuickAction extends React.Component
-  @displayName: 'ThreadListQuickActions'
+class ThreadUnsubscribeQuickActions extends React.Component
+  @displayName: 'ThreadUnsubscribeQuickActions'
   @propTypes:
     thread: React.PropTypes.object
 
@@ -26,13 +27,11 @@ class UnsubscribeQuickAction extends React.Component
     newProps.thread.id isnt @props?.thread.id
 
   _onUnsubscribe: (event) =>
-    console.log("Unsubscribe button clicked");
-    #task = TaskFactory.taskForMovingToTrash
-     # threads: [@props.thread]
-     # fromView: FocusedMailViewStore.mailView()
-    #Actions.queueTask(task)
+    console.log("Unsubscribe quick action clicked");
+
+    UnsubscribeManager.unsubscribe(@props);
   
     # Don't trigger the thread row click
     event.stopPropagation()
 
-module.exports = UnsubscribeQuickAction
+module.exports = ThreadUnsubscribeQuickActions
