@@ -13,12 +13,15 @@
 NylasStore = require 'nylas-store'
 _ = require('underscore')
 
+# ipc = require('ipc')
+ipcMain = require('ipc')
+
 class UnsubscribeManager
   @unsubscribe: (props) ->
     console.log("Unsubscribing...")
 
-    # Also checked for header items (list-unsubscribe). but was unsuccessful
-    console.log MessageStore.items()[0]
+    # # Also checked for header items (list-unsubscribe). but was unsuccessful
+    # console.log MessageStore.items()[0]
 
     TextHTML = MessageStore.items()[0].body
     parser = new DOMParser() # Cool chromium experimental thing
@@ -65,6 +68,8 @@ class UnsubscribeManager
       'preload': 'inject.js'
     })
     w.on 'closed', () ->
+      # # Archive/Trash Email:
+      # @_TrashEmail(@props)
       w = null
     w.loadUrl(TheLink)
     w.show()
@@ -84,9 +89,16 @@ class UnsubscribeManager
     webContents = w.webContents
     webContents.on 'dom-ready', (event) ->
       console.log 'Current URL: '+webContents.getURL()
-      console.log webContents.getURL().indexOf('success')
-      # # if second occurrence...
+      # One way of trying to get feedback:
+      # console.log webContents.getURL().indexOf('success')
+      # # if unsubscribed...
       # w.destroy()
+
+    #   # ipc = require('ipc')
+    # ipc.on 'invokeAction', (event, data) ->
+    #   result = processData(data)
+    #   event.sender.send 'actionReply', result
+    #   return
 
     webContents.on 'did-get-redirect-request', (event) ->
       console.log 'Current URL: '+webContents.getURL()
@@ -143,23 +155,20 @@ class UnsubscribeManager
     #     webContents.executeJavaScript('__InjectJS.HelloWorld()')
 
     # XXX - doesn't work: can't access ipcMain? undefined
-    # webContents.on "dom-ready", () ->
+    webContents.on "dom-ready", () ->
     # In main process.
     # ipcMain = require('electron').ipcMain
-    # ipcMain.on 'asynchronous-message', (event, arg) ->
-    #   console.log arg
-    #   # prints "ping"
-    #   event.sender.send 'asynchronous-reply', 'pong'
-    #   return
-    # ipcMain.on 'synchronous-message', (event, arg) ->
-    #   console.log arg
-    #   # prints "ping"
-    #   event.returnValue = 'pong'
-    #   return
+    ipcMain.on 'asynchronous-message', (event, arg) ->
+      console.log arg
+      # prints "ping"
+      event.sender.send 'asynchronous-reply', 'pong'
+      return
+    ipcMain.on 'synchronous-message', (event, arg) ->
+      console.log arg
+      # prints "ping"
+      event.returnValue = 'pong'
+      return
 
-
-
-    # @_TrashEmail(@props)
 
   @_TrashEmail: (@props) ->
     # Don't do this while testing
