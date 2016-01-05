@@ -1,6 +1,27 @@
 @import "ui-variables";
 @import "ui-mixins";
 
-.my-package .btn {
-  
+// Styles for unsubscribe quick action
+
+@unsubscribe-img: "nylas://n1-unsubscribe/assets/unsubscribe.png";
+
+.thread-list .list-item .list-column-HoverActions {
+	.action.action-unsubscribe {
+    	background: url(@unsubscribe-img) center no-repeat, @background-gradient;
+	}
 }
+body.platform-win32 { 
+	.thread-list .list-item .list-column-HoverActions {
+		.action.action-unsubscribe {
+      		background: url(@unsubscribe-img) center no-repeat;
+		}
+	}
+}
+.thread-list .list-item.focused:hover .list-column-HoverActions .inner {
+  .action.action-unsubscribe {
+    background: url(@unsubscribe-img) center no-repeat;
+  }
+}
+
+// Styles for unsubscribe toolbar button
+

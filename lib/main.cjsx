@@ -1,7 +1,7 @@
 {ComponentRegistry} = require 'nylas-exports'
 
-MyComposerButton = require './my-composer-button'
-MyMessageSidebar = require './my-message-sidebar'
+ThreadUnsubscribeQuickActions = require './unsubscribe_quick_action'
+ThreadUnsubscribeToolbarButton = require './unsubscribe_toolbar_button'
 
 # This must be consistent with the export (i.e. same '{}' or not)
 {KyleButton} = require "./thread-buttons"
@@ -25,6 +25,11 @@ module.exports =
       # # In front of message in thread list:
       # role: 'ThreadListIcon'
       # button on individual message page
+      role: 'message:Toolbar'
+
+    ComponentRegistry.register ThreadUnsubscribeQuickActions,
+      role: 'ThreadListQuickAction'
+    ComponentRegistry.register ThreadUnsubscribeToolbarButton,
       role: 'message:Toolbar'
 
   # Serialize is called when your package is about to be unmounted.
