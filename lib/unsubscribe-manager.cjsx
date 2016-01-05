@@ -1,20 +1,6 @@
 
 # On click, open browser and begin unsubscribe process
 
-# Useful Code: https://github.com/colinramsay/nylas-unsubscribe
-
-# What we actually care about:
-# TODO Merge with Colin's changes to make buttons look pretty
-# TODO Clean up icon
-# TODO If needed, copy receipt address to clipboard, but if not clear clipboard back
-# XXX Others listed at bottom of this code
-
-# Probably worth doing at some point:
-# TODO Error catch if multiple unsubscribe links..
-# TODO Support unsubscription by emailing back a message
-# TODO support batch unsubscriptions
-# ??? UI?
-
 {Actions,
  CategoryStore,
  TaskFactory,
@@ -55,6 +41,7 @@ class UnsubscribeManager
 		console.log links[0].href
 
 		# Open links[0].href in browser
+		# https://github.com/atom/electron/blob/master/docs/api/browser-window.md
 		BrowserWindow = require('remote').require('browser-window');
 		w = new BrowserWindow({
 		  'node-integration': false,
@@ -66,13 +53,6 @@ class UnsubscribeManager
 		});
 
 		w.loadUrl(links[0].href)
-
-		# TODO Make unsubscribe run in background when possible (sort of works, but...
-		    # > TODO Confirm unsubscription
-		    # > https://github.com/atom/electron/blob/master/docs/api/browser-window.md
-		# TODO Otherwise load full window so user can interact
-		# TODO Auto archive original email
-		# TODO Archive any confirmation emails (You are now unsubscribed)
 
 		# Trash the element if the unsubscribe was successful
 		if true
