@@ -1,10 +1,14 @@
 {ComponentRegistry} = require 'nylas-exports'
 
-ThreadUnsubscribeQuickActions = require './unsubscribe_quick_action'
-ThreadUnsubscribeToolbarButton = require './unsubscribe_toolbar_button'
+# MyComposerButton = require './my-composer-button'
+# MyMessageSidebar = require './my-message-sidebar'
 
 # This must be consistent with the export (i.e. same '{}' or not)
 {KyleButton} = require "./thread-buttons"
+
+ThreadUnsubscribeQuickActions = require './unsubscribe_quick_action'
+ThreadUnsubscribeToolbarButton = require './unsubscribe_toolbar_button'
+
 
 module.exports =
   # Activate is called when the package is loaded. If your package previously
@@ -47,3 +51,5 @@ module.exports =
     # ComponentRegistry.unregister(MyComposerButton)
     # ComponentRegistry.unregister(MyMessageSidebar)
     ComponentRegistry.unregister(KyleButton)
+    ComponentRegistry.unregister(MyComposerButton)
+    ComponentRegistry.unregister(MyMessageSidebar)
