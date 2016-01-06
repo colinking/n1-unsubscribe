@@ -13,10 +13,13 @@
 NylasStore = require 'nylas-store'
 _ = require('underscore')
 
-# ipc = require('ipc')
-ipcMain = require('ipc')
+# ipcMain = require('ipc')
+ipcMain = require("electron").ipcRenderer
 
 class UnsubscribeManager
+  @accessProps: () ->
+    return @props
+
   @unsubscribe: (props) ->
     console.log("Unsubscribing...")
 
@@ -32,20 +35,19 @@ class UnsubscribeManager
     # Search for unsub link
     re = new RegExp /unsubscribe/gi
     AllLinks = PseudoDoc.querySelectorAll('a')
+    # console.log 'AllLinks'
+    # console.log AllLinks
     links = _.filter AllLinks, (selector) ->
-      return re.test(selector.innerText)
+      return re.test(selector.innerText) || re.test(selector.href)
     # Handle Error Cases
     if links.length is 0
+      # Check for opt out instead of unsubscribe
+      re = new RegExp /opt.?out/gi
       links = _.filter AllLinks, (selector) ->
-        return re.test(selector.href)
+        return re.test(selector.href) || re.test(selector.innerText)
       if links.length is 0
-        # Check for opt out instead of unsubscribe
-        re = new RegExp /opt.?out/gi
-        links = _.filter AllLinks, (selector) ->
-          return re.test(selector.href)
-        if links.length is 0
-          console.error 'Failed to find unsubscribe link. Are you sure this is a marketing email?'
-          return
+        console.error 'Failed to find unsubscribe link. Are you sure this is a marketing email?'
+        return
     if links.length > 1
       console.error 'Too many links, only accepting first link'
     TheLink = links[0].href
@@ -61,15 +63,16 @@ class UnsubscribeManager
     BrowserWindow = require('remote').require('browser-window');
     w = new BrowserWindow({
       # 'node-integration': false,
-      # 'web-preferences': {'web-security':false},
+      'web-preferences': {'web-security':false},
       'width': 1000,
       'height': 800,
-      'allowDisplayingInsecureContent': true,
+      # 'allowDisplayingInsecureContent': true,
       'preload': 'inject.js'
     })
     w.on 'closed', () ->
-      # # Archive/Trash Email:
-      # @_TrashEmail(@props)
+      # Archive/Trash Email:
+      # # Need to get right props
+      UnsubscribeManager._TrashEmail(@props)
       w = null
     w.loadUrl(TheLink)
     w.show()
@@ -101,7 +104,7 @@ class UnsubscribeManager
     #   return
 
     webContents.on 'did-get-redirect-request', (event) ->
-      console.log 'Current URL: '+webContents.getURL()
+      console.log 'Current URL on Redirect: '+webContents.getURL()
 
     # Basically this can't be automated:
 
@@ -156,28 +159,33 @@ class UnsubscribeManager
 
     # XXX - doesn't work: can't access ipcMain? undefined
     webContents.on "dom-ready", () ->
-    # In main process.
-    # ipcMain = require('electron').ipcMain
-    ipcMain.on 'asynchronous-message', (event, arg) ->
-      console.log arg
-      # prints "ping"
-      event.sender.send 'asynchronous-reply', 'pong'
-      return
-    ipcMain.on 'synchronous-message', (event, arg) ->
-      console.log arg
-      # prints "ping"
-      event.returnValue = 'pong'
-      return
+      # In main process.
+      # ipcMain = require('electron').ipcMain
+      ipcMain.on 'asynchronous-message', (event, arg) ->
+        console.log arg
+        # prints "ping"
+        event.sender.send 'asynchronous-reply', 'pong'
+        return
+      ipcMain.on 'synchronous-message', (event, arg) ->
+        console.log arg
+        # prints "ping"
+        event.returnValue = 'pong'
+        return
 
 
-  @_TrashEmail: (@props) ->
+  @_TrashEmail: (props) ->
+    if props is undefined
+      console.warn "This is where the message would be archived, but you didn't send any properties."
+      return
     # Don't do this while testing
+    # if false is true
     # Trash the element if the unsubscribe was successful
-    if false is true
+    if true
       task = TaskFactory.taskForMovingToTrash
         threads: [props.thread]
         fromView: FocusedMailViewStore.mailView()
       Actions.queueTask(task)
+    return
 
 module.exports = {UnsubscribeManager}
 
