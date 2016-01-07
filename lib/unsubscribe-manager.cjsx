@@ -33,10 +33,13 @@ class UnsubscribeManager
     # console.log PseudoDoc.querySelectorAll('a')
 
     # Search for unsub link
-    re = new RegExp /unsubscribe/gi
     AllLinks = PseudoDoc.querySelectorAll('a')
+    # Check that link isnt 'blank'
+    AllLinks = _.filter AllLinks, (selector) ->
+      return selector.href isnt 'blank'
     # console.log 'AllLinks'
     # console.log AllLinks
+    re = new RegExp /unsubscribe/gi
     links = _.filter AllLinks, (selector) ->
       return re.test(selector.innerText) || re.test(selector.href)
     # Handle Error Cases
@@ -46,8 +49,33 @@ class UnsubscribeManager
       links = _.filter AllLinks, (selector) ->
         return re.test(selector.href) || re.test(selector.innerText)
       if links.length is 0
-        console.error 'Failed to find unsubscribe link. Are you sure this is a marketing email?'
-        return
+        # Check for opt out instead of unsubscribe
+        re = new RegExp /click.?here/gi
+        links = _.filter AllLinks, (selector) ->
+          return re.test(selector.href) || re.test(selector.innerText)
+        if links.length is 0
+          re = new RegExp /stop.?receiving/gi
+          links = _.filter AllLinks, (selector) ->
+            return re.test(selector.href) || re.test(selector.innerText)
+          if links.length is 0
+            re = new RegExp /do.?not.?send/gi
+            links = _.filter AllLinks, (selector) ->
+              return re.test(selector.href) || re.test(selector.innerText)
+            if links.length is 0
+              # rejectInvitationMail
+              re = new RegExp /reject/gi
+              links = _.filter AllLinks, (selector) ->
+                return re.test(selector.href) || re.test(selector.innerText)
+            if links.length is 0
+              # TODO FIXME rejectInvitationMail
+              console.warn "You haven't finished the check for a user email address in unsub link. K bye."
+              userEmail = 'find some way to get user email'
+              links = _.filter AllLinks, (selector) ->
+                return selector.href.indexOf(userEmail) > -1
+              if links.length is 0
+                console.error 'Failed to find unsubscribe link. Are you sure this is a marketing email?'
+                return
+
     if links.length > 1
       console.error 'Too many links, only accepting first link'
     TheLink = links[0].href

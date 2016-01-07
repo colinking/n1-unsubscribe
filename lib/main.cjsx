@@ -1,4 +1,5 @@
 {ComponentRegistry} = require 'nylas-exports'
+MyMessageSidebar = require './my-message-sidebar'
 ThreadUnsubscribeQuickAction = require './unsubscribe_quick_action'
 ThreadUnsubscribeToolbarButton = require './unsubscribe_toolbar_button'
 
@@ -7,6 +8,8 @@ module.exports =
   # saved state using `serialize` it is provided.
   #
   activate: (@state) ->
+    ComponentRegistry.register MyMessageSidebar,
+      role: 'MessageListSidebar:ContactCard'
     ComponentRegistry.register ThreadUnsubscribeQuickAction,
       role: 'ThreadListQuickAction'
     ComponentRegistry.register ThreadUnsubscribeToolbarButton,
@@ -25,5 +28,6 @@ module.exports =
   # subscribing to events, release them here.
   #
   deactivate: ->
+    ComponentRegistry.unregister(MyMessageSidebar)
     ComponentRegistry.unregister(ThreadUnsubscribeQuickAction)
     ComponentRegistry.unregister(ThreadUnsubscribeToolbarButton)
