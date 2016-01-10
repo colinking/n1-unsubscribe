@@ -101,14 +101,17 @@ class UnsubscribeManager extends NylasStore {
 			return false;
 		}
 
-		for (var i = 0; i < this.links[this.id].length; i++) {
+		var isDone = false;
+		for (var i = 0; i < this.links[this.id].length && !isDone; i++) {
 			var link = this.links[this.id][i].href
 			console.log("Found link: " + link);
-			this._unsubscribeViaBrowser(link);
+			isDone = this._unsubscribeViaBrowser(link);
 		};
 
-		//_trashEmail();
-		return true;
+		if (isDone)
+			_trashEmail();
+
+		return isDone;
 	}
 
 	_onItemsLoaded(change) {
@@ -129,8 +132,8 @@ class UnsubscribeManager extends NylasStore {
 			'web-preferences': {'web-security':false},
 			'width': 1000,
 			'height': 800,
-			'allowDisplayingInsecureContent': true,
-			'preload': path.join(__dirname, 'inject.js')
+			'allowDisplayingInsecureContent': true
+			// 'preload': path.join(__dirname, 'inject.js')
 		});
 		browserwindow.loadUrl(url);
 		browserwindow.show();
