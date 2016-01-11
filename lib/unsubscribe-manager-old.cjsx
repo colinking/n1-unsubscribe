@@ -17,28 +17,44 @@ _ = require('underscore')
 ipcMain = require("electron").ipcRenderer
 
 class UnsubscribeManager
-  @accessProps: () ->
-    return @props
 
-  @unsubscribe: (props) ->
+	constructor: (props) ->
+		@props = props
+
+  canUnsubscribe: () ->
+  	return parseEmailBody().length isnt 0 or parseHeaders().length isnt 0
+
+  getHTMLEmailBody: () ->
+  	html_string = MessageStore.items()[0].body
+    parser = new DOMParser()
+    html = parser.parseFromString(html_string, "text/html")
+    return html
+
+  parseHeaders: () ->
+  	console.log("parsing headers")
+  	return []
+
+  parseEmailBody: () ->
+  	console.log("parsing email body")
+  	# Get a list of all links in the email body
+  	email_body = getHTMLEmailBody()
+  	email_links = _.filter email_body.querySelectorAll('a'), (email_link) ->
+  		return email_link.href isnt 'blank'
+
+  	# TODO: Attempt to get for user email and add regexp for user email
+  	regexps = [/unsubscribe/gi, /opt.?out/gi, /click.?here/gi, /stop.?receiving/gi, /do.?not.?send/gi, /reject/gi]
+  	unsubscribe_links = []
+  	i = 0
+  	while unsubscribe_links.length is 0 and i < regexps.length
+  		unsubscribe_links = _.filter email_links, (email_link) ->
+  			return regexps[i].text(email_link.innerText) || re.test(email_link.href)
+  		i++
+
+  	return unsubscribe_links
+
+  unsubscribe: (props) ->
     console.log("Unsubscribing...")
 
-    # # Also checked for header items (list-unsubscribe). but was unsuccessful
-    # console.log MessageStore.items()[0]
-
-    TextHTML = MessageStore.items()[0].body
-    parser = new DOMParser() # Cool chromium experimental thing
-    PseudoDoc = parser.parseFromString(TextHTML, "text/html")
-    # console.log 'PseudoDoc.querySelectorAll...'
-    # console.log PseudoDoc.querySelectorAll('a')
-
-    # Search for unsub link
-    AllLinks = PseudoDoc.querySelectorAll('a')
-    # Check that link isnt 'blank'
-    AllLinks = _.filter AllLinks, (selector) ->
-      return selector.href isnt 'blank'
-    # console.log 'AllLinks'
-    # console.log AllLinks
     re = new RegExp /unsubscribe/gi
     links = _.filter AllLinks, (selector) ->
       return re.test(selector.innerText) || re.test(selector.href)
