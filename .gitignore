@@ -28,3 +28,5 @@ node_modules
 
 # Locally saved files of no use to you
 lib/backup
+
+.DS_Store
