@@ -10,8 +10,8 @@ class ThreadUnsubscribeToolbarButton extends React.Component
   render: =>
     unsubscribe = null
 
-    if @tuStore.canUnsubscribe()
-      unsubscribe = <button className="btn btn-toolbar"
+    if @_tuStore.canUnsubscribe()
+      unsubscribe = <button className="btn btn-toolbar toolbar-unsubscribe"
                             onClick={@_onUnsubscribe}
                             title="Unsubscribe">
                       <RetinaImg
@@ -22,20 +22,30 @@ class ThreadUnsubscribeToolbarButton extends React.Component
     return unsubscribe
 
   shouldComponentUpdate: (newProps, newState) ->
-    newProps.thread.id isnt @props?.thread.id
+    shouldUpdate = newProps.thread.id isnt @props?.thread.id
+    if shouldUpdate
+      @_load(newProps)
+    shouldUpdate
 
   componentWillMount: ->
-    @tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(@props.thread)
-    @_unlisten = @tuStore.listen @_onMessageLoad
+    @_load(@props)
 
   componentWillUnmount: ->
-    @_unlisten();
+    @_unload()
+
+  _load: (props) ->
+      @_unload()
+      @_tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(props.thread)
+      @_unlisten = @_tuStore.listen @_onMessageLoad
+
+  _unload: ->
+    @_unlisten() if @_unlisten
 
   _onMessageLoad: (change) =>
     @forceUpdate()
 
   _onUnsubscribe: (event) =>
-    @tuStore.unsubscribe();
+    @_tuStore.unsubscribe();
     
     # Don't trigger the thread row click
     event.stopPropagation()
