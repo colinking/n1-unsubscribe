@@ -1,11 +1,5 @@
-{Actions,
- CategoryStore,
- React,
- TaskFactory,
- FocusedMailViewStore} = require 'nylas-exports'
-UnsubscribeManager = require '../unsubscribe-manager'
-
-# NOTE: Currently does not work, unless the email is currently selected. 
+{React} = require 'nylas-exports'
+ThreadUnsubscribeStoreManager = require '../thread-unsubscribe-store-manager'
 
 class ThreadUnsubscribeQuickActions extends React.Component
   @displayName: 'ThreadUnsubscribeQuickActions'
@@ -13,10 +7,9 @@ class ThreadUnsubscribeQuickActions extends React.Component
     thread: React.PropTypes.object
 
   render: =>
-    mailViewFilter = FocusedMailViewStore.mailView()
     unsubscribe = null
 
-    if UnsubscribeManager.canUnsubscribe()
+    if @tuStore.canUnsubscribe()
       unsubscribe = <div key="unsubscribe"
                    title="Unsubscribe"
                    style={{ order: 90 }}
@@ -28,7 +21,8 @@ class ThreadUnsubscribeQuickActions extends React.Component
     newProps.thread.id isnt @props?.thread.id
 
   componentWillMount: ->
-    @_unlisten = UnsubscribeManager.listen @_onMessageLoad
+    @tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(@props.thread)
+    @_unlisten = @tuStore.listen @_onMessageLoad
 
   componentWillUnmount: ->
     @_unlisten();
@@ -37,7 +31,7 @@ class ThreadUnsubscribeQuickActions extends React.Component
     @forceUpdate()
 
   _onUnsubscribe: (event) =>
-    UnsubscribeManager.unsubscribe();
+    @tuStore.unsubscribe();
     
     # Don't trigger the thread row click
     event.stopPropagation()

@@ -7,8 +7,8 @@ module.exports =
   # saved state using `serialize` it is provided.
   #
   activate: (@state) ->
-    #ComponentRegistry.register ThreadUnsubscribeQuickAction,
-    #  role: 'ThreadListQuickAction'
+    ComponentRegistry.register ThreadUnsubscribeQuickAction,
+      role: 'ThreadListQuickAction'
     ComponentRegistry.register ThreadUnsubscribeToolbarButton,
       role: 'message:Toolbar'
       # role: 'thread:BulkAction'
@@ -25,5 +25,5 @@ module.exports =
   # subscribing to events, release them here.
   #
   deactivate: ->
-    #ComponentRegistry.unregister(ThreadUnsubscribeQuickAction)
+    ComponentRegistry.unregister(ThreadUnsubscribeQuickAction)
     ComponentRegistry.unregister(ThreadUnsubscribeToolbarButton)
