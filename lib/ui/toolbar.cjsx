@@ -1,7 +1,6 @@
 {RetinaImg} = require 'nylas-component-kit'
-{React,
- FocusedMailViewStore} = require 'nylas-exports'
-{UnsubscribeManager} = require './unsubscribe-manager'
+{React} = require 'nylas-exports'
+ThreadUnsubscribeStoreManager = require '../thread-unsubscribe-store-manager'
 
 class ThreadUnsubscribeToolbarButton extends React.Component
   @displayName: 'ThreadUnsubscribeToolbarButton'
@@ -9,11 +8,10 @@ class ThreadUnsubscribeToolbarButton extends React.Component
     thread: React.PropTypes.object
 
   render: =>
-    mailViewFilter = FocusedMailViewStore.mailView()
     unsubscribe = null
 
-    if true
-      unsubscribe = <button className="btn btn-toolbar"
+    if @_tuStore.canUnsubscribe()
+      unsubscribe = <button className="btn btn-toolbar toolbar-unsubscribe"
                             onClick={@_onUnsubscribe}
                             title="Unsubscribe">
                       <RetinaImg
@@ -21,16 +19,33 @@ class ThreadUnsubscribeToolbarButton extends React.Component
                         style={{ zoom: 0.5 }}
                         url="nylas://n1-unsubscribe/assets/unsubscribe.png" />
                     </button>
-
     return unsubscribe
 
   shouldComponentUpdate: (newProps, newState) ->
-    newProps.thread.id isnt @props?.thread.id
+    shouldUpdate = newProps.thread.id isnt @props?.thread.id
+    if shouldUpdate
+      @_load(newProps)
+    shouldUpdate
+
+  componentWillMount: ->
+    @_load(@props)
+
+  componentWillUnmount: ->
+    @_unload()
+
+  _load: (props) ->
+      @_unload()
+      @_tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(props.thread)
+      @_unlisten = @_tuStore.listen @_onMessageLoad
+
+  _unload: ->
+    @_unlisten() if @_unlisten
+
+  _onMessageLoad: (change) =>
+    @forceUpdate()
 
   _onUnsubscribe: (event) =>
-    console.log("Unsubscribe toggle button clicked");
-
-    UnsubscribeManager.unsubscribe(@props);
+    @_tuStore.unsubscribe();
     
     # Don't trigger the thread row click
     event.stopPropagation()

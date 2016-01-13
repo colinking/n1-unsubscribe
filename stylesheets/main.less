@@ -4,24 +4,47 @@
 // Styles for unsubscribe quick action
 
 @unsubscribe-img: "nylas://n1-unsubscribe/assets/unsubscribe.png";
+// Future, unused icons
+@unsubscribe-img-mail: "nylas://n1-unsubscribe/assets/mailunsubscribe.png";
+@unsubscribe-img-browser: "nylas://n1-unsubscribe/assets/browserunsubscribe.png";
 
 .thread-list .list-item .list-column-HoverActions {
 	.action.action-unsubscribe {
-    	background: url(@unsubscribe-img) center no-repeat, @background-gradient;
+		background: url(@unsubscribe-img) center no-repeat, @background-gradient;
+	}
+	.action.action-unsubscribe.unsubscribe-mail {
+		background: url(@unsubscribe-img-mail) center no-repeat, @background-gradient;
+	}
+	.action.action-unsubscribe.unsubscribe-browser {
+		background: url(@unsubscribe-img-browser) center no-repeat, @background-gradient;
 	}
 }
 body.platform-win32 { 
 	.thread-list .list-item .list-column-HoverActions {
 		.action.action-unsubscribe {
-      		background: url(@unsubscribe-img) center no-repeat;
+			background: url(@unsubscribe-img) center no-repeat;
+		}
+		.action.action-unsubscribe.unsubscribe-mail {
+			background: url(@unsubscribe-img-mail) center no-repeat;
+		}
+		.action.action-unsubscribe.unsubscribe-browser {
+			background: url(@unsubscribe-img-browser) center no-repeat;
 		}
 	}
 }
 .thread-list .list-item.focused:hover .list-column-HoverActions .inner {
-  .action.action-unsubscribe {
-    background: url(@unsubscribe-img) center no-repeat;
-  }
+	.action.action-unsubscribe {
+		background: url(@unsubscribe-img) center no-repeat;
+	}
+	.action.action-unsubscribe.unsubscribe-mail {
+		background: url(@unsubscribe-img-mail) center no-repeat;
+	}
+	.action.action-unsubscribe.unsubscribe-browser {
+		background: url(@unsubscribe-img-browser) center no-repeat;
+	}
 }
 
 // Styles for unsubscribe toolbar button
-
+.sheet-toolbar .btn-toolbar.toolbar-unsubscribe {
+	margin-right: 0px;
+}
