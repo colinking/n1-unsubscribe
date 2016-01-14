@@ -32,11 +32,11 @@ class ThreadUnsubscribeStore extends NylasStore {
 			var unsubscribeHandler = (error, wasSuccess) => {
 				this.unsubscribeWasSuccess = wasSuccess;
 				setTimeout(() => {
+					if(!error && this.unsubscribeWasSuccess)
+						this._trashThread();
 					this.unsubscribeWasSuccess = false;
 					this.trigger();
-				}, 3000);
-				// if(!error && this.unsubscribeWasSuccess)
-					// this._trashThread();
+				}, 250);
 				this.trigger();
 			};
 			this._unsubscribeViaBrowser(this._links[0].href, unsubscribeHandler);
