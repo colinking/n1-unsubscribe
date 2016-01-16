@@ -92,18 +92,18 @@ class ThreadUnsubscribeStore extends NylasStore {
 
 	// Examine the email headers for the list-unsubscribe header
 	_parseHeadersForLinks(headers) {
-		// // @ColinKing - how to escape normal action and match the recovered link with a proper action?
+		// // @ColinKing - how to escape normal action? What callback should go after the function calls?
 
 		// // See if a list-unsubscribe header is accessible:
 		// if (headers && headers['list-unsubscribe']) {
 		// 	var email = headers['list-unsubscribe'].match(/<mailto:([^>]*)>/i);
 		// 	var link = headers['list-unsubscribe'].match(/<(http[^>]*)>/i);
 		// 	if (email != null) {
-		// 		// this._unsubscribeViaMail(email[1]);
-		// 		return email[1];
+		// 		this._unsubscribeViaMail(email[1]);
+		// 		return '';
 		// 	} else if (link != null) {
-		// 		// this._unsubscribeViaBrowser(link[1], function(){console.log('some callback');} );
-		// 		return link[1];
+		// 		this._unsubscribeViaBrowser(link[1], function(){console.log('some callback');} );
+		// 		return '';
 		// 	} else {
 		// 		console.warn('No recognized list-unsubscribe link');
 		// 		return '';
@@ -111,8 +111,9 @@ class ThreadUnsubscribeStore extends NylasStore {
 		// } else {
 		// 	return '';
 		// }
-		return [];
+		return '';
 	}
+
 
 	// Parse the HTML within the email body for unsubscribe links
 	_parseBodyForLinks(email_html) {
@@ -126,7 +127,8 @@ class ThreadUnsubscribeStore extends NylasStore {
 			});
 
 			var link_lists = [email_links, this._getLinkedSentences($)];
-			var regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi]; //, /click.?here/gi, /stop.?receiving/gi, /do.?not.?send/gi, /reject/gi];
+			var regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi];
+			//, /click.?here/gi, /stop.?receiving/gi, /do.?not.?send/gi, /reject/gi];
 
 			for (var j = 0, lenJ = link_lists.length; j < lenJ; j++) {
 				var links = link_lists[j];
@@ -139,81 +141,14 @@ class ThreadUnsubscribeStore extends NylasStore {
 			}
 
 			// if (unsubscribe_links.length > 0) {
-			// 	// console.log("Unsubscribe links found in the email body: ");
-			// 	// console.log(unsubscribe_links);
+				// console.log("Unsubscribe links found in the email body: ");
+				// console.log(unsubscribe_links);
 			// } else {
-			// 	// console.log("No unsubscribe links found");
+				// console.log("No unsubscribe links found");
 			// }
 		}
 
 		return unsubscribe_links;
-	}
-
-	// Takes a String URL and unsubscribes by loading a browser window
-	// Callback returns a boolean indicating if it was a success
-	_unsubscribeViaBrowser(url, callback) {
-	  // @ColinKing
-		// URL's with the '/wf/click?upn=' lick tracking feature can't be opened
-		// May be an issue with: --ignore-certificate-errors
-		// app.commandLine.appendSwitch("ignore-certificate-errors");
-		// Guide on adding flags to chrome:
-		// https://github.com/atom/electron/blob/master/docs/api/chrome-command-line-switches.md
-		// Two related issues on Electron:
-		// https://github.com/atom/electron/issues/3555
-		// https://github.com/atom/electron/issues/1956
-		// See #7 for info about the email redirect:
-		// https://support.sendgrid.com/hc/en-us/articles/200181718-Email-Deliverability-101
-		// POssible solution is to select client certificate:
-		// http://electron.atom.io/docs/v0.36.0/api/app/#event-39-select-client-certificate-39
-
-		var browserwindow = new browser({
-			'web-preferences': { 'web-security': false },
-			'width': 1000,
-			'height': 800,
-			// 'allowDisplayingInsecureContent': true,
-			// 'allowRunningInsecureContent': true,
-			'center': true
-			// 'preload': path.join(__dirname, 'inject.js')
-		});
-		browserwindow.loadUrl(url);
-		browserwindow.show();
-		// For debugging
-    browserwindow.on('page-title-updated', function(event) {
-      webContents = browserwindow.webContents;
-      if (!webContents.isDevToolsOpened()) {
-        webContents.openDevTools();
-      }
-    });
-    // // FIXME Need way for user to escape if unsuccessful
-    // // @ColinKing
-    // browserwindow.on('minimize', function(event) {
-    // 	callback(new Error("User does not want to trash this message???"));
-    // });
-		browserwindow.on('closed', () => {
-			callback(null, true);
-		});
-	}
-
-	// Takes a String email address and sends an email to it in order to unsubscribe from the list
-	// Returns a boolean indicating if the unsubscription was a success
-	_unsubscribeViaMail(email_address) {
-		console.log('_unsubscribeViaMail');
-		console.log(email_address);
-		// TODO
-		return false;
-	}
-
-	// Move the given thread to the trash
-	_trashThread() {
-		// TODO an Nylas check if developer flags is enabled?
-		// if (FocusedMailViewStore.mailView().canTrashThreads()) {
-		// 	task = TaskFactory.taskForMovingToTrash({
-		// 		threads: [this._thread],
-		// 		fromView: FocusedMailViewStore.mailView()
-		// 	});
-		// 	Actions.queueTask(task);
-		// }
-    console.log('_trashThread is disabled for testing');
 	}
 
 	// Takes a parsed DOM (through cheerio) and returns sentences that contain links
@@ -280,15 +215,87 @@ class ThreadUnsubscribeStore extends NylasStore {
 					leftover_text += " ";
 				});
 			}
-			// Case occures when an end of sentence is not found
+			// Case occurs when an end of sentence is not found
 			if(link != undefined && leftover_text.length > 0)
 				linked_sentences.push({
 					href: link,
 					innerText: leftover_text
 				});
 		});
-		// console.log(linked_sentences);
+		// console.log('linked_sentences');
 		return linked_sentences;
+	}
+
+	// Takes a String email address and sends an email to it in order to unsubscribe from the list
+	// Returns a boolean indicating if the unsubscription was a success
+	_unsubscribeViaMail(email_address) {
+		console.log('_unsubscribeViaMail');
+		console.log(email_address);
+		// TODO
+		return false;
+	}
+
+	// Takes a String URL and unsubscribes by loading a browser window
+	// Callback returns a boolean indicating if it was a success
+	_unsubscribeViaBrowser(url, callback) {
+		var re = /\/wf\/click\?upn=/gi;
+	  if (re.test(url)) {
+	  	console.warn('May not be able to open this link, but trying anyway');
+			console.warn('Loading... '+url);
+	  }
+	  // @ColinKing
+		// URL's with the '/wf/click?upn=' lick tracking feature can't be opened
+		// May be an issue with: --ignore-certificate-errors
+		// app.commandLine.appendSwitch("ignore-certificate-errors");
+		// Guide on adding flags to chrome:
+		// https://github.com/atom/electron/blob/master/docs/api/chrome-command-line-switches.md
+		// Two related issues on Electron:
+		// https://github.com/atom/electron/issues/3555
+		// https://github.com/atom/electron/issues/1956
+		// See #7 for info about the email redirect:
+		// https://support.sendgrid.com/hc/en-us/articles/200181718-Email-Deliverability-101
+		// POssible solution is to select client certificate:
+		// http://electron.atom.io/docs/v0.36.0/api/app/#event-39-select-client-certificate-39
+
+		var browserwindow = new browser({
+			'web-preferences': { 'web-security': false },
+			'width': 1000,
+			'height': 800,
+			'allowDisplayingInsecureContent': true,
+			'allowRunningInsecureContent': true,
+			'center': true
+			// 'preload': path.join(__dirname, 'inject.js')
+		});
+		browserwindow.loadUrl(url);
+		browserwindow.show();
+		// For debugging
+    browserwindow.on('page-title-updated', function(event) {
+      webContents = browserwindow.webContents;
+      if (!webContents.isDevToolsOpened()) {
+        webContents.openDevTools();
+      }
+    });
+    // // FIXME Need way for user to escape if unsuccessful
+    // // @ColinKing
+    // browserwindow.on('minimize', function(event) {
+    // 	callback(new Error("User does not want to trash this message???"));
+    // });
+		browserwindow.on('closed', () => {
+			callback(null, true);
+		});
+	}
+
+	// Move the given thread to the trash
+	_trashThread() {
+		// TODO an Nylas check if developer flags is enabled?
+   //  if (FocusedMailViewStore.mailView().canTrashThreads()) {
+			// task = TaskFactory.taskForMovingToTrash({
+			// 	threads: [this._thread],
+			// 	fromView: FocusedMailViewStore.mailView()
+			// });
+			// Actions.queueTask(task);
+   //  }
+    console.log('_trashThread is disabled for testing');
 	}
 }
 
