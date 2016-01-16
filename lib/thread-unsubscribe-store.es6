@@ -39,7 +39,13 @@ class ThreadUnsubscribeStore extends NylasStore {
 				}, 250);
 				this.trigger();
 			};
-			this._unsubscribeViaBrowser(this._links[0].href, unsubscribeHandler);
+
+			// Determine if best to unsubscribe via email or browser:
+			if (this._links[0] && this._links[0].email) {
+				this._unsubscribeViaMail(this._links[0].email, unsubscribeHandler);
+			} else {
+				this._unsubscribeViaBrowser(this._links[0].href, unsubscribeHandler);
+			}
 		}
 	}
 
@@ -51,6 +57,8 @@ class ThreadUnsubscribeStore extends NylasStore {
 				var body_links = this._parseBodyForLinks(email.html);
 				this._links = header_links.concat(body_links);
 
+				console.log('this._links');
+				console.log(this._links);
 				this.trigger();
 			} else {
 				// console.error(error);
@@ -91,26 +99,19 @@ class ThreadUnsubscribeStore extends NylasStore {
 	}
 
 	// Examine the email headers for the list-unsubscribe header
+	// and return any found to the links store for action
 	_parseHeadersForLinks(headers) {
-		// // @ColinKing - how to escape normal action and match the recovered link with a proper action?
-
-		// // See if a list-unsubscribe header is accessible:
-		// if (headers && headers['list-unsubscribe']) {
-		// 	var email = headers['list-unsubscribe'].match(/<mailto:([^>]*)>/i);
-		// 	var link = headers['list-unsubscribe'].match(/<(http[^>]*)>/i);
-		// 	if (email != null) {
-		// 		// this._unsubscribeViaMail(email[1]);
-		// 		return email[1];
-		// 	} else if (link != null) {
-		// 		// this._unsubscribeViaBrowser(link[1], function(){console.log('some callback');} );
-		// 		return link[1];
-		// 	} else {
-		// 		console.warn('No recognized list-unsubscribe link');
-		// 		return '';
-		// 	}
-		// } else {
-		// 	return '';
-		// }
+		if (headers && headers['list-unsubscribe']) {
+			var email = headers['list-unsubscribe'].match(/<mailto:([^>]*)>/i);
+			var link = headers['list-unsubscribe'].match(/<(http[^>]*)>/i);
+			if (email != null) {
+				return [ email[1] ];
+			} else if (link != null) {
+				return [{ href: link[1] }];
+			} else {
+				return [];
+			}
+		}
 		return [];
 	}
 
@@ -145,15 +146,20 @@ class ThreadUnsubscribeStore extends NylasStore {
 			// 	// console.log("No unsubscribe links found");
 			// }
 		}
-
 		return unsubscribe_links;
 	}
 
 	// Takes a String URL and unsubscribes by loading a browser window
 	// Callback returns a boolean indicating if it was a success
 	_unsubscribeViaBrowser(url, callback) {
-	  // @ColinKing
+		// @ColinKing
 		// URL's with the '/wf/click?upn=' lick tracking feature can't be opened
+		// var re = /\/wf\/click\?upn=/gi;
+	 //  if (re.test(url)) {
+	 //  	console.warn('May not be able to open this link, but trying anyway');
+	 //  	console.warn("TODO Should redirect to user's primary browser instead");
+		// 	console.warn('Loading... '+url);
+	 //  }
 		// May be an issue with: --ignore-certificate-errors
 		// app.commandLine.appendSwitch("ignore-certificate-errors");
 		// Guide on adding flags to chrome:
@@ -170,36 +176,51 @@ class ThreadUnsubscribeStore extends NylasStore {
 			'web-preferences': { 'web-security': false },
 			'width': 1000,
 			'height': 800,
-			// 'allowDisplayingInsecureContent': true,
-			// 'allowRunningInsecureContent': true,
+			'allowDisplayingInsecureContent': true,
 			'center': true
 			// 'preload': path.join(__dirname, 'inject.js')
 		});
 		browserwindow.loadUrl(url);
 		browserwindow.show();
-		// For debugging
-    browserwindow.on('page-title-updated', function(event) {
-      webContents = browserwindow.webContents;
-      if (!webContents.isDevToolsOpened()) {
-        webContents.openDevTools();
-      }
-    });
-    // // FIXME Need way for user to escape if unsuccessful
-    // // @ColinKing
-    // browserwindow.on('minimize', function(event) {
-    // 	callback(new Error("User does not want to trash this message???"));
-    // });
+		// browserwindow.on('page-title-updated', function(event) {
+		//   webContents = browserwindow.webContents;
+		//   if (!webContents.isDevToolsOpened()) {
+		//     webContents.openDevTools();
+		//   }
+		// });
+
+		// // @ColinKing - FIXME Need way for user to escape if unsuccessful
+		// browserwindow.on('minimize', function(event) {
+		// 	callback(new Error("User does not want to trash this message???"));
+		// });
 		browserwindow.on('closed', () => {
 			callback(null, true);
 		});
 	}
 
+	// // TODO find an email in email body to unsubscribe from:
+	// _parseBodyForEmails(email_html) {
+	// }
+
 	// Takes a String email address and sends an email to it in order to unsubscribe from the list
 	// Returns a boolean indicating if the unsubscription was a success
-	_unsubscribeViaMail(email_address) {
-		console.log('_unsubscribeViaMail');
-		console.log(email_address);
-		// TODO
+	_unsubscribeViaMail(email_address, callback) {
+		console.log('_unsubscribeViaMail to '+email_address);
+		// TODO - add error handling and confirm operation
+		// TODO actually send an email:
+		// NylasAPI.makeRequest({
+		//   path: '/send',
+		//   method: 'POST',
+		// 	accountId: this._thread.accountId,
+		//   body: {
+		//     body: '',
+		//     subject: 'Unsubscribe',
+		//     to: [{
+		//     	email: email_address
+		//     }]
+		//   }
+		// });
+		// callback(null, true);
 		return false;
 	}
 
@@ -213,7 +234,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 		// 	});
 		// 	Actions.queueTask(task);
 		// }
-    console.log('_trashThread is disabled for testing');
+		console.log('_trashThread is currently disabled for testing');
 	}
 
 	// Takes a parsed DOM (through cheerio) and returns sentences that contain links
