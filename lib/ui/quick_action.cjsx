@@ -13,7 +13,7 @@ class ThreadUnsubscribeQuickActions extends React.Component
       unsubscribe = <div key="unsubscribe"
                    title="Unsubscribe"
                    style={{ order: 90 }}
-                   className='btn action action-unsubscribe'
+                   className={'btn action action-unsubscribe' + (if @_tuStore.unsubscribeWasSuccess then ' unsubscribe-success' else '')}
                    onClick={@_onUnsubscribe}></div> 
     return unsubscribe
 

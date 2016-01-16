@@ -7,6 +7,8 @@ This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubs
 
 2. Download this repository by selecting `Download ZIP`
 
+3. Rename the downloaded folder to `n1-unsubscribe`. The name of this folder is used as the package name by N1, so if this is wrong, then you may have issues with missing icons.
+
 3. From the N1 menu, select `Developer > Install a Plugin Manually...`. Select this downloaded repository and it will be installed!
 
 #### Future of n1-unsubscribe 

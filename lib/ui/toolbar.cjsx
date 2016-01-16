@@ -9,15 +9,14 @@ class ThreadUnsubscribeToolbarButton extends React.Component
 
   render: =>
     unsubscribe = null
-
+    url = (if @_tuStore.unsubscribeWasSuccess then "nylas://n1-unsubscribe/assets/unsubscribe-success@2x.png" else "nylas://n1-unsubscribe/assets/unsubscribe@2x.png")
     if @_tuStore.canUnsubscribe()
       unsubscribe = <button className="btn btn-toolbar toolbar-unsubscribe"
                             onClick={@_onUnsubscribe}
                             title="Unsubscribe">
                       <RetinaImg
                         mode={RetinaImg.Mode.ContentIsMask}
-                        style={{ zoom: 0.5 }}
-                        url="nylas://n1-unsubscribe/assets/unsubscribe.png" />
+                        url=url />
                     </button>
     return unsubscribe
 

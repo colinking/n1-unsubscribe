@@ -15,6 +15,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 		this._thread = thread;
 		this._messages = this._thread.metadata;
 		this._links = [];
+		this.unsubscribeWasSuccess = false;
 		this._loadLinks();
 	}
 
@@ -26,14 +27,17 @@ class ThreadUnsubscribeStore extends NylasStore {
 
 	// Opens the unsubscribe link to unsubscribe the user
 	// The optional callback returns: (Error, Boolean indicating whether it was a success)
-	unsubscribe(callback) {
-		if (!this.canUnsubscribe()) {
-			if (callback) callback(null, false);
-		} else {
+	unsubscribe() {
+		if (this.canUnsubscribe()) {
 			var unsubscribeHandler = (error, wasSuccess) => {
-				if(!error && wasSuccess)
-					this._trashThread();
-				if (callback) callback(error, wasSuccess);
+				this.unsubscribeWasSuccess = wasSuccess;
+				setTimeout(() => {
+					if(!error && this.unsubscribeWasSuccess)
+						this._trashThread();
+					this.unsubscribeWasSuccess = false;
+					this.trigger();
+				}, 250);
+				this.trigger();
 			};
 			this._unsubscribeViaBrowser(this._links[0].href, unsubscribeHandler);
 		}
