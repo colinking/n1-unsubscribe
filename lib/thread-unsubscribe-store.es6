@@ -57,8 +57,8 @@ class ThreadUnsubscribeStore extends NylasStore {
 				var body_links = this._parseBodyForLinks(email.html);
 				this._links = header_links.concat(body_links);
 
-				console.log('this._links');
-				console.log(this._links);
+				// console.log('this._links');
+				// console.log(this._links);
 				this.trigger();
 			} else {
 				// console.error(error);
@@ -105,7 +105,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 			var email = headers['list-unsubscribe'].match(/<mailto:([^>]*)>/i);
 			var link = headers['list-unsubscribe'].match(/<(http[^>]*)>/i);
 			if (email != null) {
-				return [ email[1] ];
+				return [{ email: email[1] }];
 			} else if (link != null) {
 				return [{ href: link[1] }];
 			} else {
@@ -127,7 +127,8 @@ class ThreadUnsubscribeStore extends NylasStore {
 			});
 
 			var link_lists = [email_links, this._getLinkedSentences($)];
-			var regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi]; //, /click.?here/gi, /stop.?receiving/gi, /do.?not.?send/gi, /reject/gi];
+			var regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi];
+			//, /click.?here/gi, /stop.?receiving/gi, /do.?not.?send/gi, /reject/gi];
 
 			for (var j = 0, lenJ = link_lists.length; j < lenJ; j++) {
 				var links = link_lists[j];
@@ -140,10 +141,10 @@ class ThreadUnsubscribeStore extends NylasStore {
 			}
 
 			// if (unsubscribe_links.length > 0) {
-			// 	// console.log("Unsubscribe links found in the email body: ");
-			// 	// console.log(unsubscribe_links);
+			//  // console.log("Unsubscribe links found in the email body: ");
+			//  // console.log(unsubscribe_links);
 			// } else {
-			// 	// console.log("No unsubscribe links found");
+			//  // console.log("No unsubscribe links found");
 			// }
 		}
 		return unsubscribe_links;
@@ -154,12 +155,12 @@ class ThreadUnsubscribeStore extends NylasStore {
 	_unsubscribeViaBrowser(url, callback) {
 		// @ColinKing
 		// URL's with the '/wf/click?upn=' lick tracking feature can't be opened
-		// var re = /\/wf\/click\?upn=/gi;
-	 //  if (re.test(url)) {
-	 //  	console.warn('May not be able to open this link, but trying anyway');
-	 //  	console.warn("TODO Should redirect to user's primary browser instead");
-		// 	console.warn('Loading... '+url);
-	 //  }
+		var re = /\/wf\/click\?upn=/gi;
+		if (re.test(url)) {
+			console.warn('May not be able to open this link, but trying anyway');
+			console.warn("TODO Should redirect to user's primary browser instead");
+			console.warn('Loading... '+url);
+		}
 		// May be an issue with: --ignore-certificate-errors
 		// app.commandLine.appendSwitch("ignore-certificate-errors");
 		// Guide on adding flags to chrome:
@@ -182,16 +183,16 @@ class ThreadUnsubscribeStore extends NylasStore {
 		});
 		browserwindow.loadUrl(url);
 		browserwindow.show();
-		// browserwindow.on('page-title-updated', function(event) {
-		//   webContents = browserwindow.webContents;
-		//   if (!webContents.isDevToolsOpened()) {
-		//     webContents.openDevTools();
-		//   }
-		// });
+		browserwindow.on('page-title-updated', function(event) {
+			webContents = browserwindow.webContents;
+			if (!webContents.isDevToolsOpened()) {
+				webContents.openDevTools();
+			}
+		});
 
 		// // @ColinKing - FIXME Need way for user to escape if unsuccessful
 		// browserwindow.on('minimize', function(event) {
-		// 	callback(new Error("User does not want to trash this message???"));
+		//  callback(new Error("User does not want to trash this message???"));
 		// });
 		browserwindow.on('closed', () => {
 			callback(null, true);
@@ -199,6 +200,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 	}
 
 	// // TODO find an email in email body to unsubscribe from:
+	// Typically for non-automated or local email newsletters
 	// _parseBodyForEmails(email_html) {
 	// }
 
@@ -207,39 +209,36 @@ class ThreadUnsubscribeStore extends NylasStore {
 	_unsubscribeViaMail(email_address, callback) {
 		console.log('_unsubscribeViaMail to '+email_address);
 		// TODO - add error handling and confirm operation
-		// TODO actually send an email:
-		// NylasAPI.makeRequest({
-		//   path: '/send',
-		//   method: 'POST',
-		// 	accountId: this._thread.accountId,
-		//   body: {
-		//     body: '',
-		//     subject: 'Unsubscribe',
-		//     to: [{
-		//     	email: email_address
-		//     }]
-		//   }
-		// });
-		// callback(null, true);
-		return false;
+		NylasAPI.makeRequest({
+			path: '/send',
+			method: 'POST',
+			accountId: this._thread.accountId,
+			body: {
+				body: 'Please unsubscribe me',
+				subject: 'Unsubscribe',
+				to: [{
+					email: email_address
+				}]
+			}
+		});
+		callback(null, true);
 	}
 
 	// Move the given thread to the trash
 	_trashThread() {
-		// TODO an Nylas check if developer flags is enabled?
 		// if (FocusedMailViewStore.mailView().canTrashThreads()) {
-		// 	task = TaskFactory.taskForMovingToTrash({
-		// 		threads: [this._thread],
-		// 		fromView: FocusedMailViewStore.mailView()
-		// 	});
-		// 	Actions.queueTask(task);
+		//  task = TaskFactory.taskForMovingToTrash({
+		//    threads: [this._thread],
+		//    fromView: FocusedMailViewStore.mailView()
+		//  });
+		//  Actions.queueTask(task);
 		// }
 		console.log('_trashThread is currently disabled for testing');
 	}
 
 	// Takes a parsed DOM (through cheerio) and returns sentences that contain links
 	// Good at catching cases such as
-	//		"If you would like to unsubscrbe from our emails, please click here."
+	//    "If you would like to unsubscrbe from our emails, please click here."
 	// Returns a list of objects, each representing a single link
 	// Each object contains an href and innerText property
 	_getLinkedSentences($) {
