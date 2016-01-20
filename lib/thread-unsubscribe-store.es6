@@ -248,13 +248,17 @@ class ThreadUnsubscribeStore extends NylasStore {
 					}]
 				},
 				success: (body) => {
-					console.log("success in mail unsubscribe");
-					callback(null, true);
+					// callback(null, true);
 				},
 				error: (error) => {
-					callback(error, false);
+					// callback(error, false);
+					console.error(error);
 				}
 			});
+
+			// Temporary solution right now so that emails are trashed immediately
+			// instead of waiting for the email to be sent.
+			callback(null, true); 
 		} else {
 			callback(new Error("Invalid email address"), false);
 		}
