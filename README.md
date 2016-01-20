@@ -13,27 +13,23 @@ This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubs
 
 ### The Unsubscribe Button
 
-When successfully unsubscribed, the button will display a check mark:
-
-![SuccessIcon](/assets/unsubscribe-success%402x.png)
-
-Otherwise, it will be waiting for its moment to shine:
+To unsubscribe from an email, look for the button with this icon:
 
 ![NormalIcon](/assets/unsubscribe%402x.png)
 
 ### Behind the Scenes
 
-We use the list-unsubscribe header that is invisibly attached to most marketing emails. If there is no header, we scour the email body for the unsubscribe link or a phrase describing how to unsubscribe. Once a link is found, a mini browser will appear allowing you to quickly unsubscribe without leaving N1. When you close the browser window, the email will be trashed. An important note, if no unsubscribe action is available, the button will be hidden.
+We use the list-unsubscribe header that is invisibly attached to most marketing emails. If there is no header, we scour the email body for an unsubscribe link or a phrase describing how to unsubscribe. Once a link is found, either an automated email will be sent or a mini browser will appear that will allow you to quickly unsubscribe without leaving N1. The email is trashed for you once this completes. An important note, if no unsubscribe action is available, the button will be hidden.
 
 ### Current Features
 
 > Anywhere you interact with an email, we have a quick unsubscribe button for you
 
-#### Bulk Action
+<!--#### Bulk Action-->
 
-(To Be Developed)
+<!--(To Be Developed)-->
 
-![BulkAction](README/BulkAction.png)
+<!--![BulkAction](README/BulkAction.png)-->
 
 #### Quick Action
 
