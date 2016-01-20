@@ -173,7 +173,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 			}
 			return {
 				link: link,
-				type: type 
+				type: type
 			}
 		}), (link) => {
 			// Move email links to the front
@@ -235,7 +235,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 	_unsubscribeViaMail(email_address, callback) {
 		if (email_address) {
 			console.log('Sending an unsubscription email to: ' + email_address);
-			
+
 			NylasAPI.makeRequest({
 				path: '/send',
 				method: 'POST',
@@ -268,6 +268,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 				fromView: FocusedMailViewStore.mailView()
 			});
 			Actions.queueTask(task);
+			Actions.popSheet();
 		}
 	}
 

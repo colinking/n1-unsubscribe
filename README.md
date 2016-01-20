@@ -43,17 +43,18 @@ From the comfort of your inbox view, you can easily unsubscribe from an email by
 
 #### Menu Item
 
-While reading an email you may realize that you would like to unsubscribe, so instead of scrolling to the bottom of the email and playing the *spot the unsubscribe link game*, which is [an actual game](http://spottheunsubscribe.tumblr.com/), you can press the clear button at the top.
+While reading an email you may realize that you would like to unsubscribe, so instead of scrolling to the bottom of the email and playing the *spot the unsubscribe link game*, which is [an actual game](http://spottheunsubscribe.tumblr.com/), you can press the obvious button at the top.
 
 ![MenuItem](README/MenuItem.png)
 
 ## Future Features of n1-unsubscribe 
-- auto redirect the user back to the main screen when trashing the email
 - Better notification of in-progress unsubscribe
 - Add a bulk-unsubscribe tool bar button that is enabled when selecting multiple emails
 - Add tests and Travis CI and stricter linting?
 
 ## Made by
 [Kyle King](http://kyleking.me) and [Colin King](http://colinking.co)
+
+[Also StartupHealth is a great organization, they just happened to be at the top of my inbox](https://www.startuphealth.com/)
 
 [issues]: https://github.com/colinking/n1-unsubscribe/issues
