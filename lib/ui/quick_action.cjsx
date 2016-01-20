@@ -14,7 +14,7 @@ class ThreadUnsubscribeQuickActions extends React.Component
                    title="Unsubscribe"
                    style={{ order: 90 }}
                    className={'btn action action-unsubscribe' + (if @_tuStore.unsubscribeWasSuccess then ' unsubscribe-success' else '')}
-                   onClick={@_onUnsubscribe}></div> 
+                   onClick={@_onUnsubscribe}></div>
     return unsubscribe
 
   shouldComponentUpdate: (newProps, newState) ->
@@ -39,7 +39,7 @@ class ThreadUnsubscribeQuickActions extends React.Component
 
   _onUnsubscribe: (event) =>
     @_tuStore.unsubscribe();
-    
+
     # Don't trigger the thread row click
     event.stopPropagation()
 
