@@ -3,14 +3,12 @@ This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubs
 
 ## Overview
 
+![NormalIcon](/assets/unsubscribe%402x.png)
+
 - Quick action and Toolbar unsubscribe buttons
 - Automated unsubscribe request for most email marketers
 - Otherwise, opens a Browser Window within N1 for manual unsubscribing
 - Auto-trash email after success
-
-To unsubscribe from an email, look for the button with this icon:
-
-![NormalIcon](/assets/unsubscribe%402x.png)
 
 ## Install this plugin
 
