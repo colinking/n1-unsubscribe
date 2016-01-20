@@ -1,6 +1,13 @@
 # n1-unsubscribe
 This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubscribe functionality. It is currently in a very early beta stage, and you *may* encounter issues while using it. If so, please report them [here as an issue][issues], so they can be fixed. Have a feature request or great idea? Also submit them through the issues pane and we will take a look as quickly as possible!
 
+## Overview
+
+- Quick action and Toolbar unsubscribe buttons
+- Automated unsubscribe request for most email marketers
+- Otherwise, opens a Browser Window within N1 for manual unsubscribing
+- Auto-trash email after success
+
 ## Install this plugin
 
 1. [Install N1](https://www.nylas.com/n1)
