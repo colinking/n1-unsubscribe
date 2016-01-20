@@ -15,5 +15,6 @@
     "underscore": "^1.8.3"
   },
   "description": "Unsubscribe without leaving N1.",
-  "license": "MIT"
+  "license": "MIT",
+  "icon": "assets/unsubscribe@2x.png"
 }
