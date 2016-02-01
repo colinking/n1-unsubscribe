@@ -18,6 +18,8 @@ This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubs
 
 3. From the N1 menu, select `Developer > Install a Plugin Manually...`, then select the downloaded folder and the plugin will be installed.
 
+(optional) If you want to use the latest version, clone or download this repo. Then make sure to rename the folder to ```n1-unsubscribe``` before installing the plugin normally. If the folder name is off for any reason, you may have a [missing icon as reported here](https://github.com/colinking/n1-unsubscribe/issues/2).
+
 ### Behind the Scenes
 
 We use the list-unsubscribe header that is invisibly attached to most marketing emails. If there is no header, we scour the email body for an unsubscribe link or a phrase describing how to unsubscribe. Once a link is found, either an automated email will be sent or a mini browser will appear that will allow you to quickly unsubscribe without leaving N1. The email is trashed for you once this completes. An important note, if no unsubscribe action is available, the button will be hidden.
