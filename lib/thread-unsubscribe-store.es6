@@ -1,6 +1,6 @@
 var {Actions,
  TaskFactory,
- FocusedMailViewStore,
+ FocusedPerspectiveStore,
  NylasAPI} = require('nylas-exports');
 var NylasStore = require('nylas-store');
 var _ = require('underscore');
@@ -41,7 +41,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 						this._trashThread();
 					this.unsubscribeWasSuccess = false;
 					this.trigger();
-				}, 250);
+				}, 0);
 				this.trigger();
 			};
 
@@ -56,8 +56,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 
 	// Initializes the _links array by analyzing the headers and body of the current email thread
 	_loadLinks() {
-		// console.log("Loading data: " + this._thread.subject);
-		this._loadThreadViaAPI((error, email) => {
+		this._loadMessagesViaAPI((error, email) => {
 			if (!error) {
 				var header_links = this._parseHeadersForLinks(email.headers);
 				console.log("Header links:");
@@ -66,9 +65,6 @@ class ThreadUnsubscribeStore extends NylasStore {
 				console.log("Body links:");
 				console.log(body_links);
 				this._links = header_links.concat(body_links);
-
-				// console.log('this._links');
-				// console.log(this._links);
 				this.trigger();
 			} else {
 				// console.error(error);
@@ -80,11 +76,10 @@ class ThreadUnsubscribeStore extends NylasStore {
 	// NOTE: This will only make a request for the first email message in the thread, instead of all messages
 	// based on the assumption that all of the emails in the thread will have the unsubscribe link.
 	// Callback: (Error, Parsed email)
-	_loadThreadViaAPI(callback) {
-		if (this._messages.length > 0) {
+	_loadMessagesViaAPI(callback) {
+		if (this._messages && this._messages.length > 0) {
 			var messagePath = '/messages/' + this._messages[0].id;
 			if (!this._messages[0].draft) {
-				// console.log(this._thread);
 				NylasAPI.makeRequest({
 					path: messagePath,
 					accountId: this._thread.accountId,
@@ -103,8 +98,6 @@ class ThreadUnsubscribeStore extends NylasStore {
 					}
 				});
 			}
-		} else {
-			callback(new Error("No messages to load in this thread."));
 		}
 	}
 
@@ -265,13 +258,17 @@ class ThreadUnsubscribeStore extends NylasStore {
 	}
 
 	// Move the given thread to the trash
+	// From Thread-List Package
+	// https://github.com/nylas/N1/blob/master/internal_packages/thread-list/lib/thread-list.cjsx 
 	_trashThread() {
-		if (FocusedMailViewStore.mailView().canTrashThreads()) {
-			task = TaskFactory.taskForMovingToTrash({
-				threads: [this._thread],
-				fromView: FocusedMailViewStore.mailView()
-			});
-			Actions.queueTask(task);
+		if (FocusedPerspectiveStore.current().canTrashThreads()) {
+			if (this._thread) {
+				tasks = TaskFactory.tasksForMovingToTrash({
+					threads: [this._thread],
+					fromPerspective: FocusedPerspectiveStore.current()
+				});
+				Actions.queueTasks(tasks);
+			}
 			Actions.popSheet();
 		}
 	}
