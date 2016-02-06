@@ -23,11 +23,11 @@ class ThreadUnsubscribeToolbarButton extends React.Component
   selectIcon: (wasSuccess) ->
     if wasSuccess
       return "nylas://n1-unsubscribe/assets/unsubscribe-success@2x.png"
-    else if wasSuccess is 'loading'
+    # else if wasSuccess is 'loading'
       # FIXME just a placeholder, gifs didn't seem to work and
       # the spinner in the UI kit is a 4-icon progress bar
       # return "nylas://n1-unsubscribe/assets/hex-loader2.gif"
-      return "nylas://n1-unsubscribe/assets/loading.png"
+      # return "nylas://n1-unsubscribe/assets/loading.png"
     else
       return "nylas://n1-unsubscribe/assets/unsubscribe@2x.png"
 
