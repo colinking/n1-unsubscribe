@@ -9,7 +9,7 @@ class ThreadUnsubscribeToolbarButton extends React.Component
 
   render: =>
     unsubscribe = null
-    url = (if @_tuStore.unsubscribeWasSuccess then "nylas://n1-unsubscribe/assets/unsubscribe-success@2x.png" else "nylas://n1-unsubscribe/assets/unsubscribe@2x.png")
+    url = (@selectIcon(@_tuStore.unsubscribeWasSuccess))
     if @_tuStore.canUnsubscribe()
       unsubscribe = <button className="btn btn-toolbar toolbar-unsubscribe"
                             onClick={@_onUnsubscribe}
@@ -19,6 +19,17 @@ class ThreadUnsubscribeToolbarButton extends React.Component
                         url=url />
                     </button>
     return unsubscribe
+
+  selectIcon: (wasSuccess) ->
+    if wasSuccess
+      return "nylas://n1-unsubscribe/assets/unsubscribe-success@2x.png"
+    else if wasSuccess is 'loading'
+      # FIXME just a placeholder, gifs didn't seem to work and
+      # the spinner in the UI kit is a 4-icon progress bar
+      # return "nylas://n1-unsubscribe/assets/hex-loader2.gif"
+      return "nylas://n1-unsubscribe/assets/loading.png"
+    else
+      return "nylas://n1-unsubscribe/assets/unsubscribe@2x.png"
 
   shouldComponentUpdate: (newProps, newState) ->
     shouldUpdate = newProps.thread.id isnt @props?.thread.id
@@ -45,7 +56,7 @@ class ThreadUnsubscribeToolbarButton extends React.Component
 
   _onUnsubscribe: (event) =>
     @_tuStore.unsubscribe();
-    
+
     # Don't trigger the thread row click
     event.stopPropagation()
 

@@ -7,11 +7,12 @@ module.exports =
   # saved state using `serialize` it is provided.
   #
   activate: (@state) ->
+    # ComponentRegistry.register ThreadUnsubscribeBulkAction,
+    #   role: 'thread:BulkAction'
     ComponentRegistry.register ThreadUnsubscribeQuickAction,
       role: 'ThreadListQuickAction'
     ComponentRegistry.register ThreadUnsubscribeToolbarButton,
       role: 'message:Toolbar'
-      # role: 'thread:BulkAction'
 
   # Serialize is called when your package is about to be unmounted.
   # You can return a state object that will be passed back to your package

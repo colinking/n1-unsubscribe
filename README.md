@@ -1,29 +1,28 @@
 # n1-unsubscribe
 This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubscribe functionality. It is currently in a very early beta stage, and you *may* encounter issues while using it. If so, please report them [here as an issue][issues], so they can be fixed. Have a feature request or great idea? Also submit them through the issues pane and we will take a look as quickly as possible!
 
+## Overview
+
+![NormalIcon](/assets/unsubscribe%402x.png)
+
+- Quick action and Toolbar unsubscribe buttons
+- Automated unsubscribe request for most email marketers
+- Otherwise, opens a Browser Window within N1 for manual unsubscribing
+- Auto-trash email after success
+
 ## Install this plugin
 
 1. [Install N1](https://www.nylas.com/n1)
 
-2. Download this repository by selecting [`Download ZIP`](https://github.com/colinking/n1-unsubscribe/archive/master.zip)
+2. Download the most recent release from the [Releases page](https://github.com/colinking/n1-unsubscribe/releases).
 
-3. Unzip and rename the downloaded folder to `n1-unsubscribe` (If you forget to change the name, you may have a missing icon)
+3. From the N1 menu, select `Developer > Install a Plugin Manually...`, then select the downloaded folder and the plugin will be installed.
 
-3. From the N1 menu, select `Developer > Install a Plugin Manually...`, then select the folder created in step 3 and the plugin will be installed!
-
-### The Unsubscribe Button
-
-To unsubscribe from an email, look for the button with this icon:
-
-![NormalIcon](/assets/unsubscribe%402x.png)
+(optional) If you want to use the latest version, clone or download this repo. Then make sure to rename the folder to ```n1-unsubscribe``` before installing the plugin normally. If the folder name is off for any reason, you may have a [missing icon as reported here](https://github.com/colinking/n1-unsubscribe/issues/2).
 
 ### Behind the Scenes
 
 We use the list-unsubscribe header that is invisibly attached to most marketing emails. If there is no header, we scour the email body for an unsubscribe link or a phrase describing how to unsubscribe. Once a link is found, either an automated email will be sent or a mini browser will appear that will allow you to quickly unsubscribe without leaving N1. The email is trashed for you once this completes. An important note, if no unsubscribe action is available, the button will be hidden.
-
-### Current Features
-
-> Anywhere you interact with an email, we have a quick unsubscribe button for you
 
 <!--#### Bulk Action-->
 
