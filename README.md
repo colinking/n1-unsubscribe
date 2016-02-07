@@ -26,7 +26,7 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 ![PluginsPage](README/PluginsPage.jpg)
 
-### Behind the Scenes
+## Behind the Scenes
 
 We use the list-unsubscribe header that is invisibly attached to most marketing emails. If there is no header, we scour the email body for an unsubscribe link or a phrase describing how to unsubscribe. Once a link is found, either an automated email will be sent or a mini browser will appear that will allow you to quickly unsubscribe without leaving N1. The email is trashed for you once this completes. An important note, if no unsubscribe action is available, the button will be hidden.
 
