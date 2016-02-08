@@ -5,8 +5,6 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 ## Overview
 
-![NormalIcon](/assets/unsubscribe%402x.png)
-
 - Quick action and Toolbar unsubscribe buttons
 - Automated unsubscribe request for most email marketers
 - Otherwise, opens a Browser Window within N1 for manual unsubscribing
