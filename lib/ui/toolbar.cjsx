@@ -16,7 +16,8 @@ class ThreadUnsubscribeToolbarButton extends React.Component
                             title="Unsubscribe">
                       <RetinaImg
                         mode={RetinaImg.Mode.ContentIsMask}
-                        url=url />
+                        url=url
+                        style={zoom: 0.45} />
                     </button>
     return unsubscribe
 
