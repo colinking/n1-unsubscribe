@@ -36,7 +36,7 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 4. Restart Nylas and you should see the plugin in the plugins pane in N1 (Preferences > Plugins) [as shown above]
 
-5. *To update, periodically run:* `git fetch; git pull;`
+5. *To update to the newest version, periodically run:* `git pull`
 
 
 ## Behind the Scenes
