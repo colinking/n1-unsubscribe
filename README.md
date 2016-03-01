@@ -12,7 +12,7 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 ## Install this plugin
 
-###### NOTE: Make sure that the downloaded folder is named `n1-unsubscribe` or you may encounter missing icons as mentioned in [#2](https://github.com/colinking/n1-unsubscribe/issues/12).
+###### NOTE: Make sure that the downloaded folder is named `n1-unsubscribe` or you may encounter missing icons as mentioned in [#12](https://github.com/colinking/n1-unsubscribe/issues/12).
 
 1. [Install N1](https://www.nylas.com/n1)
 
@@ -23,6 +23,17 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 4. You should see the plugin in the plugins pane in N1 (Preferences > Plugins).
 
 ![PluginsPage](README/PluginsPage.jpg)
+
+## Familiar with git?
+
+1. Navigate to the Nylas package directory (usualy): ```cd ~/.nylas/packages/```
+
+2. Clone this repository: ```git clone https://github.com/colinking/n1-unsubscribe.git```
+
+3. And keep the folder updated: ```cd n1-unsubscribe; git fetch; git pull;```
+
+4. Restart Nylas and you should see the plugin in the plugins pane in N1 (Preferences > Plugins) [as shown above].
+
 
 ## Behind the Scenes
 
@@ -47,9 +58,15 @@ While reading an email you may realize that you would like to unsubscribe, so in
 ![MenuItem](README/MenuItem.png)
 
 ## Future Features of n1-unsubscribe 
+- [ ] Undo unsubscribe action
+- [ ] Edge case support
+- [ ] Method to report a failed unsubscribe request
+
+## Other possible features
 - Better notification of in-progress unsubscribe
-- Add a bulk-unsubscribe tool bar button that is enabled when selecting multiple emails
-- Add tests and Travis CI and stricter linting?
+- Add a bulk-unsubscribe toolbar button that is enabled when selecting multiple emails
+- Tests
+- Travis CI and stricter linting?
 
 ## Made by
 [Kyle King](http://kyleking.me) and [Colin King](http://colinking.co)
