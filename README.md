@@ -14,7 +14,7 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 ###### NOTE: Make sure that the downloaded folder is named `n1-unsubscribe` or you may encounter missing icons as mentioned in [#12](https://github.com/colinking/n1-unsubscribe/issues/12).
 
-[![Download n1-unsubscribe](./README/download.svg)](https://github.com/colinking/n1-unsubscribe/raw/master/dist/n1-unsubscribe.zip)
+[![Download n1-unsubscribe](https://cdn.rawgit.com/colinking/n1-unsubscribe/master/README/download.svg)](https://github.com/colinking/n1-unsubscribe/raw/master/dist/n1-unsubscribe.zip)
 
 #### Via Releases
 
