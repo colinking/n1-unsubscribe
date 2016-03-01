@@ -12,7 +12,7 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 ## Install this plugin
 
-*NOTE: Make sure that the downloaded folder is named `n1-unsubscribe`, or else you may encounter missing icons as mentioned in [#2](https://github.com/colinking/n1-unsubscribe/issues/2)*.
+###### NOTE: Make sure that the downloaded folder is named `n1-unsubscribe` or you may encounter missing icons as mentioned in [#2](https://github.com/colinking/n1-unsubscribe/issues/12).
 
 1. [Install N1](https://www.nylas.com/n1)
 
