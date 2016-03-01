@@ -28,13 +28,15 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 #### Via Git
 
-1. Navigate to the Nylas package directory (usually): ```cd ~/.nylas/packages/```
+1. Navigate to the Nylas package directory (usually): `cd ~/.nylas/packages/`
 
-2. Clone this repository: ```git clone https://github.com/colinking/n1-unsubscribe.git```
+2. Clone this repository: `git clone https://github.com/colinking/n1-unsubscribe.git`
 
-3. Install the npm dependencies: `npm install`
+3. Install the npm dependencies: `cd n1-unsubscribe; npm install`
 
-4. Restart Nylas and you should see the plugin in the plugins pane in N1 (Preferences > Plugins) [as shown above].
+4. Restart Nylas and you should see the plugin in the plugins pane in N1 (Preferences > Plugins) [as shown above]
+
+5. *To update, periodically run:* `git fetch; git pull;`
 
 
 ## Behind the Scenes
