@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="252px" height="45px" viewBox="0 0 252 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.6 (26304) - http://www.bohemiancoding.com/sketch -->
+    <title>download</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="74.3846902%" y1="142.410869%" x2="51.9838051%" y2="-45.9227794%" id="linearGradient-1">
+            <stop stop-color="#239696" offset="0%"></stop>
+            <stop stop-color="#69D6AD" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="download" transform="translate(1.000000, 1.000000)">
+            <rect id="Rectangle-28" stroke="#000000" stroke-width="0.5" fill="url(#linearGradient-1)" x="0" y="0" width="250" height="43" rx="1"></rect>
+            <text id="Download-n1-unsubscr" fill="#FFFFFF" font-family="Roboto-Regular, Roboto" font-size="18" font-weight="normal">
+                <tspan x="21" y="26">Download n1-unsubscribe</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
