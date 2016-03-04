@@ -80,3 +80,9 @@ While reading an email you may realize that you would like to unsubscribe, so in
 [Also StartupHealth is a great organization, they just happened to be at the top of my inbox](https://www.startuphealth.com/)
 
 [issues]: https://github.com/colinking/n1-unsubscribe/issues
+
+## Example
+
+<!--http://giphy.com/gifs/627jdmLLrBHAQ-->
+
+![UnsubscribePromoVideo](README/UnsubscribePromoVideo.gif)
