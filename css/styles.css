@@ -10,7 +10,7 @@ body {
   clear: both;
   width: 80%;
   height: auto;
-  margin: 58px 0 0 10%;
+  margin: 45px 0 0 10%;
   overflow: hidden;
 }
 
@@ -18,8 +18,8 @@ body {
   position: relative;
   float: left;
   width: 39.1666666666%;
-  margin-top: 40px;
-  padding: 10px;
+  margin-top: 65px;
+  padding: 15px;
   font-size: 1em;
   color: rgb(201, 203, 206);
 }
@@ -31,7 +31,7 @@ body {
 .title {
   float: left;
   width: 39.1666666666%;
-  margin: 29px 0 0 30.4166666666%;
+  margin: 90px 0 0 30.4166666666%;
   border-bottom: 3px solid rgb(131, 228, 166);
   font-size: 2.75em;
   font-weight: 700;
@@ -48,7 +48,7 @@ body {
 
 .text-2 {
   z-index: 3;
-  margin-left: 1.6666666666%;
+  margin-left: 1.6333333333%;
 }
 
 .text a {
@@ -76,4 +76,9 @@ body {
   word-break: normal;
   word-wrap: normal;
   white-space: normal;
+}
+
+
+a {
+  text-style: underline;
 }
