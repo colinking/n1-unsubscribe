@@ -1,6 +1,6 @@
 # n1-unsubscribe
 <a href="https://github.com/nylas/N1">
-    <img src="https://img.shields.io/badge/nylas-0.4.10-brightgreen.svg"
+    <img src="https://img.shields.io/badge/nylas-0.4.14-brightgreen.svg"
          alt="nylas version">
 </a>
 

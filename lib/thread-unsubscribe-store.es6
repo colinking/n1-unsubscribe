@@ -251,7 +251,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 
 			// Temporary solution right now so that emails are trashed immediately
 			// instead of waiting for the email to be sent.
-			callback(null, true); 
+			callback(null, true);
 		} else {
 			callback(new Error("Invalid email address"), false);
 		}
@@ -259,10 +259,10 @@ class ThreadUnsubscribeStore extends NylasStore {
 
 	// Move the given thread to the trash
 	// From Thread-List Package
-	// https://github.com/nylas/N1/blob/master/internal_packages/thread-list/lib/thread-list.cjsx 
+	// https://github.com/nylas/N1/blob/master/internal_packages/thread-list/lib/thread-list.cjsx
 	_trashThread() {
-		if (FocusedPerspectiveStore.current().canTrashThreads()) {
-			if (this._thread) {
+		if (this._thread) {
+			if (FocusedPerspectiveStore.current().canTrashThreads([this._thread])) {
 				tasks = TaskFactory.tasksForMovingToTrash({
 					threads: [this._thread],
 					fromPerspective: FocusedPerspectiveStore.current()
@@ -350,4 +350,3 @@ class ThreadUnsubscribeStore extends NylasStore {
 }
 
 module.exports = ThreadUnsubscribeStore;
-
