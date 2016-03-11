@@ -29,7 +29,9 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 2. Download and un-zip `n1-unsubscribe.zip` from the [Releases page](https://github.com/colinking/n1-unsubscribe/releases/latest).
 
-3. From the N1 menu, select `Developer > Install a Plugin Manually...`, then select the downloaded folder and the plugin will be installed.
+3. Install the plugin by either:
+    - Selecting `Developer > Install a Plugin Manually...` from the N1 menubar, and then selecting the downloaded folder, `n1-unsubscribe`
+    - Or by running the install script from the command line with `./install.sc`
 
 4. You should see the plugin in the plugins pane in N1 (Preferences > Plugins).
 
