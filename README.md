@@ -1,4 +1,9 @@
 # n1-unsubscribe
+<a href="https://github.com/nylas/N1">
+    <img src="https://img.shields.io/badge/nylas-0.4.10-brightgreen.svg"
+         alt="nylas version">
+</a>
+
 This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubscribe functionality.
 
 If you encounter any issues, please report them [here as an issue][issues], so they can be fixed. Have a feature request or great idea? Also submit them through the issues pane and we will take a look as quickly as possible!
