@@ -8,6 +8,8 @@ This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubs
 
 If you encounter any issues, please report them [here as an issue][issues], so they can be fixed. Have a feature request or great idea? Also submit them through the issues pane and we will take a look as quickly as possible!
 
+![UnsubscribePromoVideo](README/UnsubscribePromoVideo.gif)
+
 ## Overview
 
 - Quick action and Toolbar unsubscribe buttons
@@ -83,9 +85,3 @@ While reading an email you may realize that you would like to unsubscribe, so in
 [Also StartupHealth is a great organization, they just happened to be at the top of my inbox](https://www.startuphealth.com/)
 
 [issues]: https://github.com/colinking/n1-unsubscribe/issues
-
-## Example
-
-<!--http://giphy.com/gifs/627jdmLLrBHAQ-->
-
-![UnsubscribePromoVideo](README/UnsubscribePromoVideo.gif)
