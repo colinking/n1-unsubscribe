@@ -40,6 +40,18 @@ class ThreadUnsubscribeButton extends React.Component {
     event.stopPropagation()
   }
 
+  getTitleText() {
+    let titleText;
+    if (this.state.hasLinks === false) {
+      titleText = 'Unsubscribe (Disabled)';
+    } else if (this.state.isEmail === true) {
+      titleText = 'Unsubscribe (Email)';
+    } else {
+      titleText = 'Unsubscribe (Browser)';
+    }
+    return titleText;
+  }
+
   load(props) {
     this.unload();
     this.tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(props.thread);

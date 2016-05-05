@@ -8,6 +8,7 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
 
   render() {
     const disabledClass = (this.state.hasLinks === false ? 'unsubscribe-disabled' : '');
+    const titleText = this.getTitleText();
 
       // TODO: Add success and error images
       // const extraClasses = (this.state.condition === ThreadConditionType.UNSUBSCRIBED ?
@@ -15,7 +16,7 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
     return (
       <div
         key="unsubscribe"
-        title="Unsubscribe"
+        title={titleText}
         style={{ order: 80 }}
         className={
           `btn action action-unsubscribe ${disabledClass}`

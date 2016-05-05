@@ -64,6 +64,9 @@
           "allowBind": true
         }
       ],
+      "no-alert": [
+        0
+      ],
       "eqeqeq": [
         2,
         "smart"

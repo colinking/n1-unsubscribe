@@ -9,5 +9,15 @@
 	//   - Emails are automatically moved to the archive ("archive")
 	//   - Emails are automatically moved to the trash ("trash")
 	//   - Emails are not moved ("none")
-	"handle_threads": "archive"
+	"handle_threads": "archive",
+	// Ask for confirmation from the user before sending an automatic email
+	// on the user's behalf in order to unsubscribe.
+	//   - Ask for confirmation (true)
+	//   - Do not ask for confirmation (false)
+	"confirm_for_email": false,
+	// Ask for confirmation from the user before opening a browser window
+	// in order to unsubscribe.
+	//   - Ask for confirmation (true)
+	//   - Do not ask for confirmation (false)
+	"confirm_for_browser": false
 }

@@ -77,7 +77,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         const bodyLinks = this.parseBodyForLinks(email.html);
         // console.log("Body links:");
         // console.log(bodyLinks);
-        this.links = bodyLinks.concat(headerLinks);
+        this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
         this.threadState.hasLinks = this.links.length > 0;
         this.threadState.condition = ThreadConditionType.DONE;
       } else {
@@ -125,7 +125,6 @@ class ThreadUnsubscribeStore extends NylasStore {
   }
 
   // Examine the email headers for the list-unsubscribe header
-  // Returns an array of links as Objects, via the _parseLinksForTypes method
   parseHeadersForLinks(headers) {
     let unsubscribeLinks = [];
     if (headers && headers['list-unsubscribe']) {
@@ -135,11 +134,10 @@ class ThreadUnsubscribeStore extends NylasStore {
         return trimmedLinks.substring(1, trimmedLinks.length - 1);
       });
     }
-    return this.parseLinksForTypes(unsubscribeLinks);
+    return unsubscribeLinks;
   }
 
   // Parse the HTML within the email body for unsubscribe links
-  // Returns an array of links as Objects, via the _parseLinksForTypes method
   parseBodyForLinks(emailHTML) {
     const unsubscribeLinks = [];
     if (emailHTML) {
@@ -159,7 +157,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         }
       }
     }
-    return this.parseLinksForTypes(unsubscribeLinks);
+    return unsubscribeLinks;
   }
 
   // Given a list of unsubscribe links (Strings)
@@ -167,7 +165,7 @@ class ThreadUnsubscribeStore extends NylasStore {
   // The returned list is in the same order as links,
   // except that EMAIL links are pushed to the front.
   parseLinksForTypes(links) {
-    return _.sortBy(_.map(links, (link) => {
+    const newLinks = _.sortBy(_.map(links, (link) => {
       const type = (/mailto.*/g.test(link) ? this.LinkType.EMAIL : this.LinkType.BROWSER);
       const data = {link, type};
       if (type === this.LinkType.EMAIL) {
@@ -180,89 +178,101 @@ class ThreadUnsubscribeStore extends NylasStore {
     }), (link) => {
       // Move email links to the front
       if (link.type === this.LinkType.EMAIL) {
+        this.threadState.isEmail = true;
         return 0;
       }
       return 1;
     });
+    return newLinks;
   }
 
   // Takes a String URL and unsubscribes by loading a browser window
   unsubscribeViaBrowser(url, callback) {
-    console.log(`Opening a browser window to: ${url}`);
-    // @ColinKing
-    // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
-    // const re = /\/wf\/click\?upn=/gi;
-    // if (re.test(url)) {
-    // }
-    if (process.env.n1UnsubscribeUseBrowser === 'true') {
-      // Open the user's browser to the specific URL
-      open(url);
-      callback(null);
-    } else {
-      // May be an issue with: --ignore-certificate-errors
-      // app.commandLine.appendSwitch("ignore-certificate-errors");
-      // Guide on adding flags to chrome:
-      // https://github.com/atom/electron/blob/master/docs/api/chrome-command-line-switches.md
-      // Two related issues on Electron:
-      // https://github.com/atom/electron/issues/3555
-      // https://github.com/atom/electron/issues/1956
-      // See #7 for info about the email redirect:
-      // https://support.sendgrid.com/hc/en-us/articles/200181718-Email-Deliverability-101
-      // POssible solution is to select client certificate:
-      // http://electron.atom.io/docs/v0.36.0/api/app/#event-39-select-client-certificate-39
+    if (process.env.n1UnsubscribeConfirmBrowser === 'false' ||
+    confirm(`Are you sure that you want to unsubscribe?
+A browser will be opened at: ${url}`)) {
+      console.log(`Opening a browser window to: ${url}`);
+      // @ColinKing
+      // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
+      // const re = /\/wf\/click\?upn=/gi;
+      // if (re.test(url)) {
+      // }
+      if (process.env.n1UnsubscribeUseBrowser === 'true') {
+        // Open the user's browser to the specific URL
+        open(url);
+        callback(null);
+      } else {
+        // May be an issue with: --ignore-certificate-errors
+        // app.commandLine.appendSwitch("ignore-certificate-errors");
+        // Guide on adding flags to chrome:
+        // https://github.com/atom/electron/blob/master/docs/api/chrome-command-line-switches.md
+        // Two related issues on Electron:
+        // https://github.com/atom/electron/issues/3555
+        // https://github.com/atom/electron/issues/1956
+        // See #7 for info about the email redirect:
+        // https://support.sendgrid.com/hc/en-us/articles/200181718-Email-Deliverability-101
+        // POssible solution is to select client certificate:
+        // http://electron.atom.io/docs/v0.36.0/api/app/#event-39-select-client-certificate-39
 
-      const browserWindow = new BrowserWindow({
-        'web-preferences': { 'web-security': false },
-        width: 1000,
-        height: 800,
-        center: true,
-        // 'preload': path.join(__dirname, 'inject.js'),
-      });
-      browserWindow.loadUrl(url);
-      browserWindow.show();
+        const browserWindow = new BrowserWindow({
+          'web-preferences': { 'web-security': false },
+          width: 1000,
+          height: 800,
+          center: true,
+          // 'preload': path.join(__dirname, 'inject.js'),
+        });
+        browserWindow.loadUrl(url);
+        browserWindow.show();
 
-      // browserWindow.on('page-title-updated', function(event) {
-      // 	webContents = browserWindow.webContents;
-      // 	if (!webContents.isDevToolsOpened()) {
-      // 		webContents.openDevTools();
-      // 	}
-      // });
+        // browserWindow.on('page-title-updated', function(event) {
+        // 	webContents = browserWindow.webContents;
+        // 	if (!webContents.isDevToolsOpened()) {
+        // 		webContents.openDevTools();
+        // 	}
+        // });
 
-      browserWindow.on('closed', () => {
-        callback(null, true);
-      });
+        browserWindow.on('closed', () => {
+          callback(null, true);
+        });
+      }
     }
   }
 
   // Takes a String email address and sends an email to it in order to unsubscribe from the list
   unsubscribeViaMail(emailAddress, callback) {
     if (emailAddress) {
-      console.log(`Sending an unsubscription email to: ${emailAddress}`);
+      if (process.env.n1UnsubscribeConfirmEmail === 'false' ||
+      confirm(`Are you sure that you want to unsubscribe?
+An email will be sent to: ${emailAddress}`)) {
+        console.log(`Sending an unsubscription email to: ${emailAddress}`);
 
-      NylasAPI.makeRequest({
-        path: '/send',
-        method: 'POST',
-        accountId: this.thread.accountId,
-        body: {
-          body: `This is an automated unsubscription request.
-            Please remove the sender of this email from all email lists.`,
-          subject: 'Unsubscribe',
-          to: [{
-            email: emailAddress,
-          }],
-        },
-        success: () => {
-          // callback(null);
-        },
-        error: (error) => {
-          // callback(error);
-          console.error(error);
-        },
-      });
+        NylasAPI.makeRequest({
+          path: '/send',
+          method: 'POST',
+          accountId: this.thread.accountId,
+          body: {
+            body: `This is an automated unsubscription request.
+              Please remove the sender of this email from all email lists.`,
+            subject: 'Unsubscribe',
+            to: [{
+              email: emailAddress,
+            }],
+          },
+          success: () => {
+            // callback(null);
+          },
+          error: (error) => {
+            // callback(error);
+            console.error(error);
+          },
+        });
 
-      // Temporary solution right now so that emails are trashed immediately
-      // instead of waiting for the email to be sent.
-      callback(null);
+        // Temporary solution right now so that emails are trashed immediately
+        // instead of waiting for the email to be sent.
+        callback(null);
+      } else {
+        callback(new Error('Did not confirm -- do not unsubscribe.'));
+      }
     } else {
       callback(new Error(`Invalid email address (${emailAddress})`));
     }

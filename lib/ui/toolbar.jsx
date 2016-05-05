@@ -22,11 +22,13 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   render() {
     const url = this.getIconURL();
     const disabledClass = (this.state.hasLinks === false ? 'unsubscribe-disabled' : '');
+    const titleText = this.getTitleText();
+
     return (
       <button
         className={`btn btn-toolbar toolbar-unsubscribe ${disabledClass}`}
         onClick={this.onClick.bind(this)}
-        title="Unsubscribe"
+        title={titleText}
       >
         <RetinaImg
           mode={RetinaImg.Mode.ContentIsMask}

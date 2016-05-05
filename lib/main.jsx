@@ -10,6 +10,10 @@ const settings = JSON.parse(settingsJSON);
 process.env.n1UnsubscribeUseBrowser = settings.use_browser === true ||
   settings.use_browser === 'true';
 process.env.n1UnsubscribeHandleThreads = settings.handle_threads;
+process.env.n1UnsubscribeConfirmEmail = settings.confirm_for_email === true ||
+  settings.confirm_for_email === 'true';
+process.env.n1UnsubscribeConfirmBrowser = settings.confirm_for_browser === true ||
+  settings.confirm_for_browser === 'true';
 
 // Print settings file
 const browserText = (process.env.n1UnsubscribeUseBrowser === 'true' ? 'Native Browser' : 'Popup');
