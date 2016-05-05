@@ -48,6 +48,17 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 4. To update to the newest version, pull the newest commit and re-run the install script: `git pull && make install`
 
+## Settings
+Certain features for this package can be toggled by changing the appropriate settings from within [`unsubscribe-settings.json`](https://github.com/colinking/n1-unsubscribe/blob/master/unsubscribe-settings.json).
+
+To change any of these settings, first install the package, then modify `~/.nylas/packages/unsubscribe-settings.json`. To update your settings in the app, just reload N1 (<kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>L</kbd> or Developer > Reload).
+
+- **use_browser**: Toggle between opening web-based unsubscribe links in your native browser or an in-app pop-up window (default: pop-up).
+- **handle_threads**: Toggle between automatically archiving, trashing or not moving your email anywhere after unsubscibing (default: archive).
+- **confirm_for_email**: Toggle a confirmation box on or off before sending an automatic unsubscribe email (default: off).
+- **confirm_for_browser**: Toggle a confirmation box on or off before opening a browser window to unsubscribe from an email (default: off).
+
+More documentation of these toggles is available in the settings file.
 
 ## Behind the Scenes
 
