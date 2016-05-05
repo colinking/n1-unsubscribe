@@ -6,7 +6,7 @@ var NylasStore = require('nylas-store');
 var _ = require('underscore');
 var cheerio = require('cheerio');
 var path = require('path');
-var browser = require('remote').require('browser-window');
+var browser = require('electron').remote.browserWindow;
 var MailParser = require('mailparser').MailParser;
 
 class ThreadUnsubscribeStore extends NylasStore {
