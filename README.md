@@ -40,7 +40,7 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 #### Via Git
 
-1. Clone this repository: `git clone https://github.com/colinking/n1-unsubscribe.git`
+1. Clone this repository into the dev/packages folder (`cd ~/.nylas/dev/packages`): `git clone https://github.com/colinking/n1-unsubscribe.git`
 
 2. Install the package by running the install script: `make install`
 
