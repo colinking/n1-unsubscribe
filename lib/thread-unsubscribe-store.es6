@@ -1,352 +1,376 @@
-var {Actions,
- TaskFactory,
- FocusedPerspectiveStore,
- NylasAPI} = require('nylas-exports');
-var NylasStore = require('nylas-store');
-var _ = require('underscore');
-var cheerio = require('cheerio');
-var path = require('path');
-var browser = require('electron').remote.browserWindow;
-var MailParser = require('mailparser').MailParser;
+const {
+  Actions,
+  TaskFactory,
+  FocusedPerspectiveStore,
+  NylasAPI,
+} = require('nylas-exports');
+const NylasStore = require('nylas-store');
+const _ = require('underscore');
+const cheerio = require('cheerio');
+const BrowserWindow = require('electron').remote.BrowserWindow;
+const MailParser = require('mailparser').MailParser;
+const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`);
+const open = require('open');
 
 class ThreadUnsubscribeStore extends NylasStore {
-	constructor(thread) {
-		super();
-		this._thread = thread;
-		this._messages = this._thread.metadata;
-		this._links = [];
-		this.unsubscribeWasSuccess = false;
-		// Link Type Enum
-		this.LinkType = {
-			EMAIL: 'EMAIL',
-			BROWSER: 'BROWSER'
-		};
-		this._loadLinks();
-	}
+  constructor(thread) {
+    super();
 
-	// Checks if an unsubscribe link can be found in the email
-	// Returns a boolean whether it is possible to unsubscribe
-	canUnsubscribe() {
-		return this._links.length > 0;
-	}
+    // Enums
+    this.LinkType = {
+      EMAIL: 'EMAIL',
+      BROWSER: 'BROWSER',
+    };
 
-	// Opens the unsubscribe link to unsubscribe the user
-	// The optional callback returns: (Error, Boolean indicating whether it was a success)
-	unsubscribe() {
-		if (this.canUnsubscribe()) {
-			var unsubscribeHandler = (error, wasSuccess) => {
-				this.unsubscribeWasSuccess = wasSuccess;
-				setTimeout(() => {
-					if(!error && this.unsubscribeWasSuccess)
-						this._trashThread();
-					this.unsubscribeWasSuccess = false;
-					this.trigger();
-				}, 0);
-				this.trigger();
-			};
+    this.thread = thread;
+    this.threadState = {
+      id: this.thread.id,
+      condition: ThreadConditionType.LOADING,
+      hasLinks: false,
+    }
+    this.messages = this.thread.metadata;
+    this.links = [];
+    this.loadLinks();
+  }
 
-			// Determine if best to unsubscribe via email or browser:
-			if (this._links[0].type == this.LinkType.EMAIL) {
-				this._unsubscribeViaMail(this._links[0].link, unsubscribeHandler);
-			} else {
-				this._unsubscribeViaBrowser(this._links[0].link, unsubscribeHandler);
-			}
-		}
-	}
+  // Checks if an unsubscribe link can be found in the email
+  // Returns a boolean whether it is possible to unsubscribe
+  canUnsubscribe() {
+    return this.links.length > 0;
+  }
 
-	// Initializes the _links array by analyzing the headers and body of the current email thread
-	_loadLinks() {
-		this._loadMessagesViaAPI((error, email) => {
-			if (!error) {
-				var header_links = this._parseHeadersForLinks(email.headers);
-				console.log("Header links:");
-				console.log(header_links);
-				var body_links = this._parseBodyForLinks(email.html);
-				console.log("Body links:");
-				console.log(body_links);
-				this._links = header_links.concat(body_links);
-				this.trigger();
-			} else {
-				// console.error(error);
-			}
-		});
-	}
+  triggerUpdate() {
+    this.trigger(this.threadState);
+  }
 
-	// Makes an API request to fetch the data on the
-	// NOTE: This will only make a request for the first email message in the thread, instead of all messages
-	// based on the assumption that all of the emails in the thread will have the unsubscribe link.
-	// Callback: (Error, Parsed email)
-	_loadMessagesViaAPI(callback) {
-		if (this._messages && this._messages.length > 0) {
-			var messagePath = '/messages/' + this._messages[0].id;
-			if (!this._messages[0].draft) {
-				NylasAPI.makeRequest({
-					path: messagePath,
-					accountId: this._thread.accountId,
-					headers: {Accept: "message/rfc822"}, // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
-					json: false,
-					success: (raw_email) => {
-						var mailparser = new MailParser();
-						mailparser.on('end', function(parsed_email) {
-							callback(null, parsed_email);
-						});
-						mailparser.write(raw_email);
-						mailparser.end();
-					},
-					error: (error) => {
-						callback(error);
-					}
-				});
-			}
-		}
-	}
+  // Opens the unsubscribe link to unsubscribe the user
+  // The optional callback returns: (Error, Boolean indicating whether it was a success)
+  unsubscribe() {
+    if (this.canUnsubscribe()) {
+      const unsubscribeHandler = (error) => {
+        if (!error) {
+          this.moveThread();
+          this.threadState.condition = ThreadConditionType.UNSUBSCRIBED;
+        } else {
+          this.threadState.condition = ThreadConditionType.ERRORED;
+        }
 
-	// Examine the email headers for the list-unsubscribe header
-	// Returns an array of links as Objects, via the _parseLinksForTypes method
-	_parseHeadersForLinks(headers) {
-		var unsubscribe_links = [];
-		if (headers && headers['list-unsubscribe']) {
-			console.log(headers['list-unsubscribe']);
-			var raw_links = headers['list-unsubscribe'].split(/,/g);
-			unsubscribe_links = _.map(raw_links, function(link) {
-				var trimmed_link = link.trim();
-				return trimmed_link.substring(1, trimmed_link.length - 1);
-			});
-		}
-		return this._parseLinksForTypes(unsubscribe_links);
-	}
+        this.triggerUpdate();
+      };
 
-	// Parse the HTML within the email body for unsubscribe links
-	// Returns an array of links as Objects, via the _parseLinksForTypes method
-	_parseBodyForLinks(email_html) {
-		var unsubscribe_links = [];
-		if (email_html) {
-			var $ = cheerio.load(email_html);
+      // Determine if best to unsubscribe via email or browser:
+      if (this.links[0].type === this.LinkType.EMAIL) {
+        this.unsubscribeViaMail(this.links[0].link, unsubscribeHandler);
+      } else {
+        this.unsubscribeViaBrowser(this.links[0].link, unsubscribeHandler);
+      }
+    }
+  }
 
-			// Get a list of all anchor tags with valid links
-			var links = _.filter($('a'), function(email_link) {
-				return email_link.href != 'blank';
-			});
+  // Initializes the _links array by analyzing the headers and body of the current email thread
+  loadLinks() {
+    this.loadMessagesViaAPI((error, email) => {
+      if (!error) {
+        const headerLinks = this.parseHeadersForLinks(email.headers);
+        // console.log("Header links:");
+        // console.log(headerLinks);
+        const bodyLinks = this.parseBodyForLinks(email.html);
+        // console.log("Body links:");
+        // console.log(bodyLinks);
+        this.links = bodyLinks.concat(headerLinks);
+        this.threadState.hasLinks = this.links.length > 0;
+        this.threadState.condition = ThreadConditionType.DONE;
+      } else {
+        // TODO: Try again with the next email in the thread
+        console.error(error);
+        this.threadState.condition = ThreadConditionType.ERRORED;
+      }
+      this.triggerUpdate();
+    });
+  }
 
-			links = links.concat(this._getLinkedSentences($));
+  // Makes an API request to fetch the data on the
+  // NOTE: This will only make a request for the first email message in the thread,
+  // instead of all messages based on the assumption that all of the emails in the
+  // thread will have the unsubscribe link.
+  // Callback: (Error, Parsed email)
+  loadMessagesViaAPI(callback) {
+    if (this.messages && this.messages.length > 0) {
+      const messagePath = `/messages/${this.messages[0].id}`;
+      if (!this.messages[0].draft) {
+        NylasAPI.makeRequest({
+          path: messagePath,
+          accountId: this.thread.accountId,
+          // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
+          headers: {Accept: "message/rfc822"},
+          json: false,
+          success: (rawEmail) => {
+            const mailparser = new MailParser();
+            mailparser.on('end', (parsedEmail) => {
+              callback(null, parsedEmail);
+            });
+            mailparser.write(rawEmail);
+            mailparser.end();
+          },
+          error: (error) => {
+            callback(error);
+          },
+        });
+      } else {
+        callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
+      }
+    } else {
+      callback(new Error('No messages found to parse for unsubscribe links.'));
+    }
+  }
 
-			var regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi];
+  // Examine the email headers for the list-unsubscribe header
+  // Returns an array of links as Objects, via the _parseLinksForTypes method
+  parseHeadersForLinks(headers) {
+    let unsubscribeLinks = [];
+    if (headers && headers['list-unsubscribe']) {
+      const rawLinks = headers['list-unsubscribe'].split(/,/g);
+      unsubscribeLinks = _.map(rawLinks, (link) => {
+        const trimmedLinks = link.trim();
+        return trimmedLinks.substring(1, trimmedLinks.length - 1);
+      });
+    }
+    return this.parseLinksForTypes(unsubscribeLinks);
+  }
 
-			for (var j = 0; j < links.length; j++) {
-				var link = links[j];
-				for (var i = 0; i < regexps.length; i++) {
-					var re = regexps[i];
-					if (re.test(link.href) || re.test(link.innerText)) {
-						unsubscribe_links.push(link.href);
-					}
-				};
-			}
+  // Parse the HTML within the email body for unsubscribe links
+  // Returns an array of links as Objects, via the _parseLinksForTypes method
+  parseBodyForLinks(emailHTML) {
+    const unsubscribeLinks = [];
+    if (emailHTML) {
+      const $ = cheerio.load(emailHTML);
+      // Get a list of all anchor tags with valid links
+      let links = _.filter($('a'), (emailLink) => emailLink.href !== 'blank');
+      links = links.concat(this.getLinkedSentences($));
+      const regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi];
 
-			// if (unsubscribe_links.length > 0) {
-			//  // console.log("Unsubscribe links found in the email body: ");
-			//  // console.log(unsubscribe_links);
-			// } else {
-			//  // console.log("No unsubscribe links found");
-			// }
-		}
-		return this._parseLinksForTypes(unsubscribe_links);
-	}
+      for (let j = 0; j < links.length; j++) {
+        const link = links[j];
+        for (let i = 0; i < regexps.length; i++) {
+          const re = regexps[i];
+          if (re.test(link.href) || re.test(link.innerText)) {
+            unsubscribeLinks.push(link.href);
+          }
+        }
+      }
+    }
+    return this.parseLinksForTypes(unsubscribeLinks);
+  }
 
-	// Given a list of unsubscribe links (Strings)
-	// Returns a list of objects with a link and a LinkType
-	// The returned list is in the same order as links, except that EMAIL links are pushed to the front.
-	_parseLinksForTypes(links) {
-		return _.sortBy(_.map(links, (link) => {
-			var type = (/mailto.*/g.test(link) ? this.LinkType.EMAIL : this.LinkType.BROWSER);
-			if (type == this.LinkType.EMAIL) {
-				matches = /mailto:([^\?]*)/g.exec(link);
-				if (matches && matches.length > 1) {
-					link = matches[1];
-				}
-			}
-			return {
-				link: link,
-				type: type
-			}
-		}), (link) => {
-			// Move email links to the front
-			if(link.type == this.LinkType.EMAIL) {
-				return 0;
-			} else {
-				return 1;
-			}
-		});
-	}
+  // Given a list of unsubscribe links (Strings)
+  // Returns a list of objects with a link and a LinkType
+  // The returned list is in the same order as links,
+  // except that EMAIL links are pushed to the front.
+  parseLinksForTypes(links) {
+    return _.sortBy(_.map(links, (link) => {
+      const type = (/mailto.*/g.test(link) ? this.LinkType.EMAIL : this.LinkType.BROWSER);
+      const data = {link, type};
+      if (type === this.LinkType.EMAIL) {
+        const matches = /mailto:([^\?]*)/g.exec(link);
+        if (matches && matches.length > 1) {
+          data.link = matches[1];
+        }
+      }
+      return data;
+    }), (link) => {
+      // Move email links to the front
+      if (link.type === this.LinkType.EMAIL) {
+        return 0;
+      }
+      return 1;
+    });
+  }
 
-	// Takes a String URL and unsubscribes by loading a browser window
-	// Callback returns a boolean indicating if it was a success
-	_unsubscribeViaBrowser(url, callback) {
-		// @ColinKing
-		// URL's with the '/wf/click?upn=' lick tracking feature can't be opened
-		var re = /\/wf\/click\?upn=/gi;
-		if (re.test(url)) {
-			console.warn('May not be able to open this link, but trying anyway');
-			console.warn("TODO Should redirect to user's primary browser instead");
-			console.warn('Loading... '+url);
-		}
-		// May be an issue with: --ignore-certificate-errors
-		// app.commandLine.appendSwitch("ignore-certificate-errors");
-		// Guide on adding flags to chrome:
-		// https://github.com/atom/electron/blob/master/docs/api/chrome-command-line-switches.md
-		// Two related issues on Electron:
-		// https://github.com/atom/electron/issues/3555
-		// https://github.com/atom/electron/issues/1956
-		// See #7 for info about the email redirect:
-		// https://support.sendgrid.com/hc/en-us/articles/200181718-Email-Deliverability-101
-		// POssible solution is to select client certificate:
-		// http://electron.atom.io/docs/v0.36.0/api/app/#event-39-select-client-certificate-39
+  // Takes a String URL and unsubscribes by loading a browser window
+  unsubscribeViaBrowser(url, callback) {
+    console.log(`Opening a browser window to: ${url}`);
+    // @ColinKing
+    // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
+    // const re = /\/wf\/click\?upn=/gi;
+    // if (re.test(url)) {
+    // }
+    if (process.env.n1UnsubscribeUseBrowser === 'true') {
+      // Open the user's browser to the specific URL
+      open(url);
+      callback(null);
+    } else {
+      // May be an issue with: --ignore-certificate-errors
+      // app.commandLine.appendSwitch("ignore-certificate-errors");
+      // Guide on adding flags to chrome:
+      // https://github.com/atom/electron/blob/master/docs/api/chrome-command-line-switches.md
+      // Two related issues on Electron:
+      // https://github.com/atom/electron/issues/3555
+      // https://github.com/atom/electron/issues/1956
+      // See #7 for info about the email redirect:
+      // https://support.sendgrid.com/hc/en-us/articles/200181718-Email-Deliverability-101
+      // POssible solution is to select client certificate:
+      // http://electron.atom.io/docs/v0.36.0/api/app/#event-39-select-client-certificate-39
 
-		var browserwindow = new browser({
-			'web-preferences': { 'web-security': false },
-			'width': 1000,
-			'height': 800,
-			'center': true
-			// 'preload': path.join(__dirname, 'inject.js')
-		});
-		browserwindow.loadUrl(url);
-		browserwindow.show();
+      const browserWindow = new BrowserWindow({
+        'web-preferences': { 'web-security': false },
+        width: 1000,
+        height: 800,
+        center: true,
+        // 'preload': path.join(__dirname, 'inject.js'),
+      });
+      browserWindow.loadUrl(url);
+      browserWindow.show();
 
-		// browserwindow.on('page-title-updated', function(event) {
-		// 	webContents = browserwindow.webContents;
-		// 	if (!webContents.isDevToolsOpened()) {
-		// 		webContents.openDevTools();
-		// 	}
-		// });
+      // browserWindow.on('page-title-updated', function(event) {
+      // 	webContents = browserWindow.webContents;
+      // 	if (!webContents.isDevToolsOpened()) {
+      // 		webContents.openDevTools();
+      // 	}
+      // });
 
-		browserwindow.on('closed', () => {
-			callback(null, true);
-		});
-	}
+      browserWindow.on('closed', () => {
+        callback(null, true);
+      });
+    }
+  }
 
-	// Takes a String email address and sends an email to it in order to unsubscribe from the list
-	// Returns a boolean indicating if the unsubscription was a success
-	_unsubscribeViaMail(email_address, callback) {
-		if (email_address) {
-			console.log('Sending an unsubscription email to: ' + email_address);
+  // Takes a String email address and sends an email to it in order to unsubscribe from the list
+  unsubscribeViaMail(emailAddress, callback) {
+    if (emailAddress) {
+      console.log(`Sending an unsubscription email to: ${emailAddress}`);
 
-			NylasAPI.makeRequest({
-				path: '/send',
-				method: 'POST',
-				accountId: this._thread.accountId,
-				body: {
-					body: 'This is an automated unsubscription request. Please remove the sender of this email from all email lists.',
-					subject: 'Unsubscribe',
-					to: [{
-						email: email_address
-					}]
-				},
-				success: (body) => {
-					// callback(null, true);
-				},
-				error: (error) => {
-					// callback(error, false);
-					console.error(error);
-				}
-			});
+      NylasAPI.makeRequest({
+        path: '/send',
+        method: 'POST',
+        accountId: this.thread.accountId,
+        body: {
+          body: `This is an automated unsubscription request.
+            Please remove the sender of this email from all email lists.`,
+          subject: 'Unsubscribe',
+          to: [{
+            email: emailAddress,
+          }],
+        },
+        success: () => {
+          // callback(null);
+        },
+        error: (error) => {
+          // callback(error);
+          console.error(error);
+        },
+      });
 
-			// Temporary solution right now so that emails are trashed immediately
-			// instead of waiting for the email to be sent.
-			callback(null, true);
-		} else {
-			callback(new Error("Invalid email address"), false);
-		}
-	}
+      // Temporary solution right now so that emails are trashed immediately
+      // instead of waiting for the email to be sent.
+      callback(null);
+    } else {
+      callback(new Error(`Invalid email address (${emailAddress})`));
+    }
+  }
 
 	// Move the given thread to the trash
 	// From Thread-List Package
 	// https://github.com/nylas/N1/blob/master/internal_packages/thread-list/lib/thread-list.cjsx
-	_trashThread() {
-		if (this._thread) {
-			if (FocusedPerspectiveStore.current().canTrashThreads([this._thread])) {
-				tasks = TaskFactory.tasksForMovingToTrash({
-					threads: [this._thread],
-					fromPerspective: FocusedPerspectiveStore.current()
-				});
-				Actions.queueTasks(tasks);
-			}
-			Actions.popSheet();
-		}
-	}
+  moveThread() {
+    if (this.thread) {
+      if (process.env.n1UnsubscribeHandleThreads === 'trash') {
+        // Trash the thread
+        if (FocusedPerspectiveStore.current().canTrashThreads([this.thread])) {
+          const tasks = TaskFactory.tasksForMovingToTrash({
+            threads: [this.thread],
+            fromPerspective: FocusedPerspectiveStore.current(),
+          });
+          Actions.queueTasks(tasks);
+        }
+      } else if (process.env.n1UnsubscribeHandleThreads === 'archive') {
+        // Archive the thread
+        if (FocusedPerspectiveStore.current().canArchiveThreads([this.thread])) {
+          const tasks = TaskFactory.tasksForArchiving({
+            threads: [this.thread],
+            fromPerspective: FocusedPerspectiveStore.current(),
+          });
+          Actions.queueTasks(tasks);
+        }
+      }
+      Actions.popSheet();
+    }
+  }
 
-	// Takes a parsed DOM (through cheerio) and returns sentences that contain links
-	// Good at catching cases such as
-	//    "If you would like to unsubscrbe from our emails, please click here."
-	// Returns a list of objects, each representing a single link
-	// Each object contains an href and innerText property
-	_getLinkedSentences($) {
-		// Get a unique list of parents to <a> tags
-		var a_parents = [];
-		$('a').each(function(_, a_tag) {
-			if (a_tag) {
-				if(!$(a_parents).is(a_tag.parent)) {
-					a_parents.unshift(a_tag.parent);
-				}
-			}
-		});
+  // Takes a parsed DOM (through cheerio) and returns sentences that contain links
+  // Good at catching cases such as
+  //    "If you would like to unsubscrbe from our emails, please click here."
+  // Returns a list of objects, each representing a single link
+  // Each object contains an href and innerText property
+  getLinkedSentences($) {
+    // Get a unique list of parents to <a> tags
+    const aParents = [];
+    $('a').each((index, aTag) => {
+      if (aTag) {
+        if (!$(aParents).is(aTag.parent)) {
+          aParents.unshift(aTag.parent);
+        }
+      }
+    });
 
-		var linked_sentences = [];
-		$(a_parents).each(function(_, parent) {
-			// console.log($(parent));
-			var link = undefined;
-			var leftover_text = "";
-			if (parent) {
-				$(parent.children).each(function(_, child) {
-					// console.log(child);
-					if($(child).is($('a'))) {
-						if (link != undefined && leftover_text.length > 0) {
-							linked_sentences.push({
-								href: link,
-								innerText: leftover_text
-							});
-							leftover_text = "";
-						}
-						link = $(child).attr('href');
-						// console.log("Found link: " + link);
-					}
-					var text = $(child).text();
-					var re = /(.*\.|!|\?\s)|(.*\.|!|\?)$/g;
-					// console.log("text: " + text);
-					if (re.test(text)) {
-						var splitup = text.split(re);
-						// console.log(splitup);
-						for(var i = 0; i < splitup.length; i++) {
-							if (splitup[i] != "" && splitup[i] != undefined) {
-								if(link != undefined) {
-									var full_line = leftover_text + splitup[i];
-									// console.log("FULL LINE: " + full_line);
-									linked_sentences.push({
-										href: link,
-										innerText: full_line
-									});
-									link = undefined;
-									leftover_text = "";
-								} else {
-									leftover_text += splitup[i];
-								}
-							}
-						}
-					} else {
-						leftover_text += text;
-						// console.log("leftover_text: " + leftover_text);
-					}
-					leftover_text += " ";
-				});
-			}
-			// Case occures when an end of sentence is not found
-			if(link != undefined && leftover_text.length > 0)
-				linked_sentences.push({
-					href: link,
-					innerText: leftover_text
-				});
-		});
-		// console.log(linked_sentences);
-		return linked_sentences;
-	}
+    const linkedSentences = [];
+    $(aParents).each((parentIndex, parent) => {
+      // console.log($(parent));
+      let link = undefined;
+      let leftoverText = "";
+      if (parent) {
+        $(parent.children).each((childIndex, child) => {
+          // console.log(child);
+          if ($(child).is($('a'))) {
+            if (link !== undefined && leftoverText.length > 0) {
+              linkedSentences.push({
+                href: link,
+                innerText: leftoverText,
+              });
+              leftoverText = "";
+            }
+            link = $(child).attr('href');
+            // console.log("Found link: " + link);
+          }
+          const text = $(child).text();
+          const re = /(.*\.|!|\?\s)|(.*\.|!|\?)$/g;
+          // console.log("text: " + text);
+          if (re.test(text)) {
+            const splitup = text.split(re);
+            // console.log(splitup);
+            for (let i = 0; i < splitup.length; i++) {
+              if (splitup[i] !== "" && splitup[i] !== undefined) {
+                if (link !== undefined) {
+                  const fullLine = leftoverText + splitup[i];
+                  // console.log("FULL LINE: " + fullLine);
+                  linkedSentences.push({
+                    href: link,
+                    innerText: fullLine,
+                  });
+                  link = undefined;
+                  leftoverText = "";
+                } else {
+                  leftoverText += splitup[i];
+                }
+              }
+            }
+          } else {
+            leftoverText += text;
+            // console.log("leftoverText: " + leftoverText);
+          }
+          leftoverText += " ";
+        });
+      }
+      // Case occures when an end of sentence is not found
+      if (link !== undefined && leftoverText.length > 0) {
+        linkedSentences.push({
+          href: link,
+          innerText: leftoverText,
+        });
+      }
+    });
+    // console.log(linkedSentences);
+    return linkedSentences;
+  }
 }
 
 module.exports = ThreadUnsubscribeStore;

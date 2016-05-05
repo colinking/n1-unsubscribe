@@ -1,18 +1,19 @@
-var ThreadUnsubscribeStore = require('./thread-unsubscribe-store');
+const ThreadUnsubscribeStore = require('./thread-unsubscribe-store');
 
 class ThreadUnsubscribeStoreManager {
-	constructor() {
-		this._threads = {};
-	}
+  constructor() {
+    this.threads = {};
+  }
 
-	getStoreForThread(thread) {
-		var id = thread.id;
-		if (this._threads[id] === undefined) {
-			this._threads[id] = new ThreadUnsubscribeStore(thread);
-		}
-		return this._threads[id];
-	}
+  getStoreForThread(thread) {
+    const id = thread.id;
+    if (this.threads[id] === undefined) {
+      this.threads[id] = new ThreadUnsubscribeStore(thread);
+    } else {
+      this.threads[id].triggerUpdate();
+    }
+    return this.threads[id];
+  }
 }
 
 module.exports = new ThreadUnsubscribeStoreManager();
-

@@ -6,15 +6,102 @@
     "type": "git",
     "url": "https://github.com/colinking/n1-unsubscribe"
   },
+  "scripts": {
+    "test": "./node_modules/eslint/bin/eslint.js . --ext .js,.jsx,.es6"
+  },
   "engines": {
     "nylas": ">=0.3.32-b11131d"
   },
   "dependencies": {
     "cheerio": "^0.19.0",
     "mailparser": "^0.5.3",
+    "open": "0.0.5",
+    "strip-json-comments": "^2.0.1",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "eslint": "^2.9.0",
+    "eslint-config-airbnb": "^8.0.0",
+    "eslint-plugin-import": "^1.6.1",
+    "eslint-plugin-jsx-a11y": "^1.0.4",
+    "eslint-plugin-react": "^5.0.1"
   },
   "description": "Unsubscribe without leaving N1.",
   "license": "MIT",
-  "icon": "assets/unsubscribe@2x.png"
+  "icon": "assets/unsubscribe@2x.png",
+  "eslintConfig": {
+    "extends": "airbnb",
+    "env": {
+      "browser": true,
+      "node": true,
+      "jasmine": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "react/prop-types": [
+        2,
+        {
+          "ignore": [
+            "children"
+          ]
+        }
+      ],
+      "react/no-multi-comp": [
+        0
+      ],
+      "react/sort-comp": [
+        2
+      ],
+      "react/jsx-no-bind": [
+        2,
+        {
+          "allowBind": true
+        }
+      ],
+      "eqeqeq": [
+        2,
+        "smart"
+      ],
+      "id-length": [
+        0
+      ],
+      "object-curly-spacing": [
+        0
+      ],
+      "no-console": [
+        0
+      ],
+      "no-loop-func": [
+        0
+      ],
+      "no-constant-condition": [
+        0
+      ],
+      "new-cap": [
+        2,
+        {
+          "capIsNew": false
+        }
+      ],
+      "no-shadow": [
+        1
+      ],
+      "quotes": [
+        0
+      ],
+      "semi": [
+        0
+      ],
+      "import/no-unresolved": [
+        0
+      ]
+    },
+    "parser": "babel-eslint"
+  }
 }

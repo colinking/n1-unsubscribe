@@ -9,8 +9,19 @@
 	.action.action-unsubscribe {
 		background: url(@unsubscribe-img) center no-repeat, @background-gradient;
 	}
+	.action.action-unsubscribe.unsubscribe-disabled {
+		// Disabled button with dark gradient
+		background: url(@unsubscribe-img) center no-repeat, linear-gradient(to top, rgba(241, 241, 241, 0.75) 100%, rgba(253, 253, 253, 0.75) 100%);;
+	}
 	.action.action-unsubscribe.unsubscribe-success {
 		background: url(@unsubscribe-success-img) center no-repeat, @background-gradient;
+	}
+}
+.thread-list .list-item.focused:hover .list-column-HoverActions {
+	.inner .action.action-unsubscribe.unsubscribe-disabled {
+		// Disabled button with darker gradient, for when a row is selected
+		// background: url(@unsubscribe-img) center no-repeat, @background-gradient;
+		background-color: rgba(238, 238, 238, .6);
 	}
 }
 body.platform-win32 {
@@ -35,4 +46,7 @@ body.platform-win32 {
 // Styles for unsubscribe toolbar button
 .sheet-toolbar .btn-toolbar.toolbar-unsubscribe {
 	margin-right: 0px;
+	&.unsubscribe-disabled {
+		background: #e7e7e7;
+	}
 }
