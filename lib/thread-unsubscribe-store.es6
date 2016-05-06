@@ -72,17 +72,20 @@ class ThreadUnsubscribeStore extends NylasStore {
     this.loadMessagesViaAPI((error, email) => {
       if (!error) {
         const headerLinks = this.parseHeadersForLinks(email.headers);
-        // console.log("Header links:");
-        // console.log(headerLinks);
+        console.log(this.thread.subject);
+        console.log(this.thread);
+        console.log("Header links:");
+        console.log(headerLinks);
         const bodyLinks = this.parseBodyForLinks(email.html);
-        // console.log("Body links:");
-        // console.log(bodyLinks);
+        console.log("Body links:");
+        console.log(bodyLinks);
         this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
-        this.threadState.hasLinks = this.links.length > 0;
+        this.threadState.hasLinks = (this.links.length > 0);
         this.threadState.condition = ThreadConditionType.DONE;
       } else {
         // TODO: Try again with the next email in the thread
-        console.error(error);
+        console.log(this.thread);
+        console.warn(error);
         this.threadState.condition = ThreadConditionType.ERRORED;
       }
       this.triggerUpdate();

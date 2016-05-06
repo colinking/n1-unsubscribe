@@ -43,7 +43,9 @@ class ThreadUnsubscribeButton extends React.Component {
 
   getTitleText() {
     let titleText;
-    if (this.state.hasLinks === false) {
+    if (this.state.condition === ThreadConditionType.ERRORED) {
+      titleText = 'Unsubscribe (Errored)';
+    } else if (this.state.hasLinks === false) {
       titleText = 'Unsubscribe (Disabled)';
     } else if (this.state.isEmail === true) {
       titleText = 'Unsubscribe (Email)';
@@ -63,6 +65,8 @@ class ThreadUnsubscribeButton extends React.Component {
     if (this.unlisten) {
       this.unlisten();
     }
+    this.unlisten = null;
+    this.tuStore = null;
   }
 
   render() {
@@ -113,6 +117,7 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   }
 
   render() {
+    console.log(this.props.thread);
     const url = this.getIconURL();
     const disabledClass = (this.state.hasLinks === false ? 'unsubscribe-disabled' : '');
     const titleText = this.getTitleText();
@@ -134,7 +139,7 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
 }
 
 module.exports = {
-  ThreadUnsubscribeButton,
+  // ThreadUnsubscribeButton,
   ThreadUnsubscribeToolbarButton,
   ThreadUnsubscribeQuickActionButton,
 };

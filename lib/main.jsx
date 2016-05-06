@@ -19,10 +19,10 @@ process.env.n1UnsubscribeConfirmBrowser = settings.confirm_for_browser === true 
   settings.confirm_for_browser === 'true';
 
 // Print settings file
-const browserText = (process.env.n1UnsubscribeUseBrowser === 'true' ? 'Native Browser' : 'Popup');
+const browserText = (process.env.n1UnsubscribeUseBrowser === 'true' ? '' : '(Popup)');
 console.log(
   `n1-unsubscribe settings:
-  - Browser for unsubscribing: ${process.env.n1UnsubscribeUseBrowser} (${browserText})
+  - Use native browser for unsubscribing: ${process.env.n1UnsubscribeUseBrowser} ${browserText}
   - Archive or trash after unsubscribing: ${process.env.n1UnsubscribeHandleThreads}
   - Confirm before email unsubscribing: ${process.env.n1UnsubscribeConfirmEmail}
   - Confirm before browser unsubscribing: ${process.env.n1UnsubscribeConfirmBrowser}`
