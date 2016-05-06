@@ -68,10 +68,10 @@ body {
   font-size: inherit;
   font-weight: inherit;
   text-transform: inherit;
-  text-decoration: inherit;
+  text-decoration: underline;
   letter-spacing: inherit;
   word-spacing: inherit;
-  color: inherit;
+  color: rgb(131, 228, 166);
   opacity: 1;
   word-break: normal;
   word-wrap: normal;
