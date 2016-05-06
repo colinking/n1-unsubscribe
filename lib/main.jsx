@@ -23,7 +23,9 @@ const browserText = (process.env.n1UnsubscribeUseBrowser === 'true' ? 'Native Br
 console.log(
   `n1-unsubscribe settings:
   - Browser for unsubscribing: ${process.env.n1UnsubscribeUseBrowser} (${browserText})
-  - Archive or trash after unsubscribing: ${process.env.n1UnsubscribeHandleThreads}`
+  - Archive or trash after unsubscribing: ${process.env.n1UnsubscribeHandleThreads}
+  - Confirm before email unsubscribing: ${process.env.n1UnsubscribeConfirmEmail}
+  - Confirm before browser unsubscribing: ${process.env.n1UnsubscribeConfirmBrowser}`
 );
 
 module.exports = {
