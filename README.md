@@ -42,11 +42,11 @@ If you encounter any issues, please report them [here as an issue][issues], so t
 
 1. Clone this repository into the dev/packages folder (`cd ~/.nylas/dev/packages`): `git clone https://github.com/colinking/n1-unsubscribe.git`
 
-2. Install the package by running the install script: `make install`
+2. Install the package by running the install script: `make install-dev`
 
 3. Reload Nylas (<kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>L</kbd>) and you should see the plugin in the plugins pane in N1 (Preferences > Plugins) [as shown above]
 
-4. To update to the newest version, pull the newest commit and re-run the install script: `git pull && make install`
+4. To update to the newest version, pull the newest commit and re-run the install script: `git pull && make install-dev`
 
 ## Settings
 Certain features for this package can be toggled by changing the appropriate settings from within [`unsubscribe-settings.json`](https://github.com/colinking/n1-unsubscribe/blob/master/unsubscribe-settings.json).

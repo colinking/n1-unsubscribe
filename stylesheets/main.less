@@ -2,8 +2,11 @@
 @import "ui-mixins";
 
 // Styles for unsubscribe quick action
-@unsubscribe-img: "nylas://n1-unsubscribe/assets/unsubscribe@2x.png";
-@unsubscribe-success-img: "nylas://n1-unsubscribe/assets/unsubscribe-success@2x.png";
+@unsubscribe-img: "nylas://n1-unsubscribe/assets/unsubscribe.png";
+@unsubscribe-img-retina: "nylas://n1-unsubscribe/assets/unsubscribe@2x.png";
+// Needs Updated icon
+@unsubscribe-success-img: "nylas://n1-unsubscribe/assets/old/unsubscribe-success@2x.png";
+@unsubscribe-success-img-retina: "nylas://n1-unsubscribe/assets/old/unsubscribe-success@2x.png";
 
 .thread-list .list-item .list-column-HoverActions {
 	.action.action-unsubscribe {
@@ -17,6 +20,21 @@
 		background: url(@unsubscribe-success-img) center no-repeat, @background-gradient;
 	}
 }
+@media (-webkit-min-device-pixel-ratio: 2) {
+	.thread-list .list-item .list-column-HoverActions {
+		.action.action-unsubscribe {
+			background: url(@unsubscribe-img-retina) center no-repeat, @background-gradient;
+		}
+		.action.action-unsubscribe.unsubscribe-disabled {
+			// Disabled button with dark gradient
+			background: url(@unsubscribe-img-retina) center no-repeat, linear-gradient(to top, rgba(241, 241, 241, 0.75) 100%, rgba(253, 253, 253, 0.75) 100%);;
+		}
+		.action.action-unsubscribe.unsubscribe-success {
+			background: url(@unsubscribe-success-img-retina) center no-repeat, @background-gradient;
+		}
+	}
+}
+
 .thread-list .list-item.focused:hover .list-column-HoverActions {
 	.inner .action.action-unsubscribe.unsubscribe-disabled {
 		// Disabled button with darker gradient, for when a row is selected
@@ -40,6 +58,26 @@ body.platform-win32 {
 	}
 	.action.action-unsubscribe.unsubscribe-success {
 		background: url(@unsubscribe-success-img) center no-repeat;
+	}
+}
+@media (-webkit-min-device-pixel-ratio: 2) {
+	body.platform-win32 {
+		.thread-list .list-item .list-column-HoverActions {
+			.action.action-unsubscribe {
+				background: url(@unsubscribe-img-retina) center no-repeat;
+			}
+			.action.action-unsubscribe.unsubscribe-success {
+				background: url(@unsubscribe-success-img-retina) center no-repeat;
+			}
+		}
+	}
+	.thread-list .list-item.focused:hover .list-column-HoverActions .inner {
+		.action.action-unsubscribe {
+			background: url(@unsubscribe-img-retina) center no-repeat;
+		}
+		.action.action-unsubscribe.unsubscribe-success {
+			background: url(@unsubscribe-success-img-retina) center no-repeat;
+		}
 	}
 }
 

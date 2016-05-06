@@ -21,6 +21,11 @@ install:
 	@rm ${PACKAGE_DIR}.zip
 	@echo "Installed successfully."
 
+install-dev:
+	@echo "Installing to ${DEV_PACKAGE_DIR}"
+	@cd ${DEV_PACKAGE_DIR} && npm install  > /dev/null && echo "NPM Packages installed."
+	@echo "Installed successfully."
+
 uninstall:
 	@echo "Uninstalling from ${PACKAGE_DIR}"
 	rm -rf ${PACKAGE_DIR}*
