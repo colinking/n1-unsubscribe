@@ -1,12 +1,15 @@
 const {ComponentRegistry} = require('nylas-exports');
-const ThreadUnsubscribeQuickActionButton = require('./ui/quick_action');
-const ThreadUnsubscribeToolbarButton = require('./ui/toolbar');
+const {
+  ThreadUnsubscribeQuickActionButton,
+  ThreadUnsubscribeToolbarButton,
+} = require('./ui/unsubscribe-buttons');
 
 const fs = require('fs');
 const stripJsonComments = require('strip-json-comments');
 const settingsFile = fs.readFileSync(`${__dirname}/../unsubscribe-settings.json`, 'utf8');
 const settingsJSON = stripJsonComments(settingsFile);
 const settings = JSON.parse(settingsJSON);
+
 process.env.n1UnsubscribeUseBrowser = settings.use_browser === true ||
   settings.use_browser === 'true';
 process.env.n1UnsubscribeHandleThreads = settings.handle_threads;

@@ -14,10 +14,10 @@
 	// on the user's behalf in order to unsubscribe.
 	//   - Ask for confirmation (true)
 	//   - Do not ask for confirmation (false)
-	"confirm_for_email": false,
+	"confirm_for_email": true,
 	// Ask for confirmation from the user before opening a browser window
 	// in order to unsubscribe.
 	//   - Ask for confirmation (true)
 	//   - Do not ask for confirmation (false)
-	"confirm_for_browser": false
+	"confirm_for_browser": true
 }
