@@ -3,6 +3,8 @@ const {RetinaImg} = require('nylas-component-kit');
 const ThreadUnsubscribeStoreManager = require('../thread-unsubscribe-store-manager');
 const ThreadConditionType = require(`${__dirname}/../enum/threadConditionType`);
 
+const UNSUBSCRIBE_ASSETS_URL = 'nylas://n1-unsubscribe/assets/';
+
 class ThreadUnsubscribeButton extends React.Component {
 
   static propTypes = {
@@ -79,19 +81,16 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
   static displayName = 'ThreadUnsubscribeQuickActionButton';
 
   render() {
-    const disabledClass = (this.state.hasLinks === false ? 'unsubscribe-disabled' : '');
-    const titleText = this.getTitleText();
+    let buttonTitle = this.getTitleText();
+    let extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
 
-    // TODO: Add success and error images
-    // const extraClasses = (this.state.condition === ThreadConditionType.UNSUBSCRIBED ?
-    //     ' unsubscribe-success' : '');
     return (
       <div
         key="unsubscribe"
-        title={titleText}
+        title={buttonTitle}
         style={{ order: 80 }}
         className={
-          `btn action action-unsubscribe ${disabledClass}`
+          `btn action action-unsubscribe ${extraClasses}`
         }
         onClick={this.onClick.bind(this)}
       ></div>
@@ -103,35 +102,41 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
 
   static displayName = 'ThreadUnsubscribeToolbarButton';
 
-  getIconURL() {
-    let url = undefined;
-    // if (this.state === ThreadConditionType.UNSUBSCRIBED) {
-    // url = "nylas://n1-unsubscribe/assets/unsubscribe-success@2x.png";
-    // } else if () {
-    //   return "nylas://n1-unsubscribe/assets/loading.png"
-    // } else {
-    url = "nylas://n1-unsubscribe/assets/unsubscribe@2x.png";
-    // }
+  getIconURL(name : string, scale : number) {
+    let url = UNSUBSCRIBE_ASSETS_URL;
+
+    if (typeof scale === 'undefined') {
+      scale = window.devicePixelRatio || 1;
+    }
+
+    url += name;
+
+    /*switch (this.state.condition) {
+      case ThreadConditionType.UNSUBSCRIBED:
+        url += '-success';
+        break;
+    }*/
+
+    url += '@' + scale + 'x.png';
 
     return url;
   }
 
   render() {
-    console.log(this.props.thread);
-    const url = this.getIconURL();
-    const disabledClass = (this.state.hasLinks === false ? 'unsubscribe-disabled' : '');
-    const titleText = this.getTitleText();
+    let buttonTitle = this.getTitleText();
+    let extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
 
     return (
       <button
-        className={`btn btn-toolbar toolbar-unsubscribe ${disabledClass}`}
+        className={
+          `btn btn-toolbar toolbar-unsubscribe ${extraClasses}`
+        }
         onClick={this.onClick.bind(this)}
-        title={titleText}
+        title={buttonTitle}
       >
         <RetinaImg
           mode={RetinaImg.Mode.ContentIsMask}
-          url={url}
-          style={{zoom: 0.5}}
+          url={this.getIconURL('toolbar-unsubscribe')}
         />
       </button>
     );
