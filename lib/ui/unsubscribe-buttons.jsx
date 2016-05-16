@@ -82,7 +82,7 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
 
   render() {
     let buttonTitle = this.getTitleText();
-    let extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
+    const extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
 
     return (
       <div
@@ -111,20 +111,20 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
 
     url += name;
 
-    /*switch (this.state.condition) {
+    /* switch (this.state.condition) {
       case ThreadConditionType.UNSUBSCRIBED:
         url += '-success';
         break;
     }*/
 
-    url += '@' + scale + 'x.png';
+    url += `@${scale}x.png`;
 
     return url;
   }
 
   render() {
     let buttonTitle = this.getTitleText();
-    let extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
+    const extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
 
     return (
       <button

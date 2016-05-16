@@ -106,6 +106,9 @@
       ],
       "import/no-unresolved": [
         0
+      ],
+      "no-param-reassign": [
+        0
       ]
     },
     "parser": "babel-eslint"
