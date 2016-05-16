@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="toolbar-unsubscribe" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1024px" height="1024px" viewBox="0 0 1024 1024">
+	<polygon fill="#737373" points="640,741.5 557.3,658.7 538.5,640 512,640 256,640 256,384 320,384 256,320 192,320 192,704 512,704 704,896 704,768 640,704 "/>
+	<path fill="#737373" d="M704,598.8V128L512,320h-84.3L237.6,128.1l-45.5,45L786.5,773l45.5-45L704,598.8z M512,384h26.5l18.7-18.7l82.7-82.5v0.2v251.2L491.1,384H512z"/>
+</svg>

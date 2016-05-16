@@ -27,9 +27,12 @@
     "eslint-plugin-jsx-a11y": "^1.0.4",
     "eslint-plugin-react": "^5.0.1"
   },
-  "description": "Unsubscribe without leaving N1.",
   "license": "MIT",
-  "icon": "assets/unsubscribe@2x.png",
+
+  "title": "Unsubscribe",
+  "icon": "icon.png",
+  "description": "Unsubscribe without leaving N1.",
+
   "eslintConfig": {
     "extends": "airbnb",
     "env": {
