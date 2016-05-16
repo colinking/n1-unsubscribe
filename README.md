@@ -1,7 +1,7 @@
 # n1-unsubscribe
 [![Build Status](https://travis-ci.org/colinking/n1-unsubscribe.svg?branch=master)](https://travis-ci.org/colinking/n1-unsubscribe)
 <a href="https://github.com/nylas/N1">
-    <img src="https://img.shields.io/badge/nylas-0.4.33-brightgreen.svg"
+    <img src="https://img.shields.io/badge/nylas-0.4.38-brightgreen.svg"
          alt="nylas version">
 </a>
 
