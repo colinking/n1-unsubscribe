@@ -148,7 +148,12 @@ class ThreadUnsubscribeStore extends NylasStore {
       // Get a list of all anchor tags with valid links
       let links = _.filter($('a'), (emailLink) => emailLink.href !== 'blank');
       links = links.concat(this.getLinkedSentences($));
-      const regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi];
+      const regexps = [
+        /unsubscribe/gi,
+        /opt[ -]out/gi,
+        /email preferences/gi,
+        /subscription/gi,
+      ];
 
       for (let j = 0; j < links.length; j++) {
         const link = links[j];
@@ -191,10 +196,17 @@ class ThreadUnsubscribeStore extends NylasStore {
 
   // Takes a String URL and unsubscribes by loading a browser window
   unsubscribeViaBrowser(url, callback) {
+<<<<<<< HEAD
     if (process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false' ||
     confirm(`Are you sure that you want to unsubscribe?
 A browser will be opened at: ${url}`)) {
       console.log(`Opening a browser window to: ${url}`);
+=======
+    if (process.env.n1UnsubscribeConfirmBrowser === 'false' ||
+    confirm('Are you sure that you want to unsubscribe?' +
+      `\nA browser will be opened at:\n${url}`)) {
+      console.log(`Opening a browser window to:\n${url}`);
+>>>>>>> f6a5a9c471256b7dd82e42e76cf26fdc6917befa
       // @ColinKing
       // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
       // const re = /\/wf\/click\?upn=/gi;
@@ -246,17 +258,17 @@ A browser will be opened at: ${url}`)) {
   unsubscribeViaMail(emailAddress, callback) {
     if (emailAddress) {
       if (process.env.N1_UNSUBSCRIBE_CONFIRM_EMAIL === 'false' ||
-      confirm(`Are you sure that you want to unsubscribe?
-An email will be sent to: ${emailAddress}`)) {
-        console.log(`Sending an unsubscription email to: ${emailAddress}`);
+        confirm('Are you sure that you want to unsubscribe?' +
+        `\nAn email will be sent to:\n${emailAddress}`)) {
+        console.log(`Sending an unsubscription email to:\n${emailAddress}`);
 
         NylasAPI.makeRequest({
           path: '/send',
           method: 'POST',
           accountId: this.thread.accountId,
           body: {
-            body: `This is an automated unsubscription request.
-              Please remove the sender of this email from all email lists.`,
+            body: 'This is an automated unsubscription request. ' +
+              'Please remove the sender of this email from all email lists.',
             subject: 'Unsubscribe',
             to: [{
               email: emailAddress,
