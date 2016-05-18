@@ -61,6 +61,7 @@ class ThreadUnsubscribeButton extends React.Component {
     this.unload();
     this.tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(props.thread);
     this.unlisten = this.tuStore.listen(this.onMessageLoad.bind(this));
+    this.tuStore.triggerUpdate();
   }
 
   unload() {

@@ -10,22 +10,22 @@ const settingsFile = fs.readFileSync(`${__dirname}/../unsubscribe-settings.json`
 const settingsJSON = stripJsonComments(settingsFile);
 const settings = JSON.parse(settingsJSON);
 
-process.env.n1UnsubscribeUseBrowser = settings.use_browser === true ||
+process.env.N1_UNSUBSCRIBE_USE_BROWSER = settings.use_browser === true ||
   settings.use_browser === 'true';
-process.env.n1UnsubscribeHandleThreads = settings.handle_threads;
-process.env.n1UnsubscribeConfirmEmail = settings.confirm_for_email === true ||
+process.env.N1_UNSUBSCRIBE_THREAD_HANDLING = settings.handle_threads;
+process.env.N1_UNSUBSCRIBE_CONFIRM_EMAIL = settings.confirm_for_email === true ||
   settings.confirm_for_email === 'true';
-process.env.n1UnsubscribeConfirmBrowser = settings.confirm_for_browser === true ||
+process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER = settings.confirm_for_browser === true ||
   settings.confirm_for_browser === 'true';
 
 // Print settings file
 const browserText = (process.env.n1UnsubscribeUseBrowser === 'true' ? '' : '(Popup)');
 console.log(
   `n1-unsubscribe settings:
-  - Use native browser for unsubscribing: ${process.env.n1UnsubscribeUseBrowser} ${browserText}
-  - Archive or trash after unsubscribing: ${process.env.n1UnsubscribeHandleThreads}
-  - Confirm before email unsubscribing: ${process.env.n1UnsubscribeConfirmEmail}
-  - Confirm before browser unsubscribing: ${process.env.n1UnsubscribeConfirmBrowser}`
+  - Use native browser for unsubscribing: ${process.env.N1_UNSUBSCRIBE_USE_BROWSER} ${browserText}
+  - Archive or trash after unsubscribing: ${process.env.N1_UNSUBSCRIBE_THREAD_HANDLING}
+  - Confirm before email unsubscribing: ${process.env.N1_UNSUBSCRIBE_CONFIRM_EMAIL}
+  - Confirm before browser unsubscribing: ${process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER}`
 );
 
 module.exports = {

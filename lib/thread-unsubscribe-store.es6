@@ -191,7 +191,7 @@ class ThreadUnsubscribeStore extends NylasStore {
 
   // Takes a String URL and unsubscribes by loading a browser window
   unsubscribeViaBrowser(url, callback) {
-    if (process.env.n1UnsubscribeConfirmBrowser === 'false' ||
+    if (process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false' ||
     confirm(`Are you sure that you want to unsubscribe?
 A browser will be opened at: ${url}`)) {
       console.log(`Opening a browser window to: ${url}`);
@@ -200,7 +200,7 @@ A browser will be opened at: ${url}`)) {
       // const re = /\/wf\/click\?upn=/gi;
       // if (re.test(url)) {
       // }
-      if (process.env.n1UnsubscribeUseBrowser === 'true') {
+      if (process.env.N1_UNSUBSCRIBE_USE_BROWSER === 'true') {
         // Open the user's browser to the specific URL
         open(url);
         callback(null);
@@ -245,7 +245,7 @@ A browser will be opened at: ${url}`)) {
   // Takes a String email address and sends an email to it in order to unsubscribe from the list
   unsubscribeViaMail(emailAddress, callback) {
     if (emailAddress) {
-      if (process.env.n1UnsubscribeConfirmEmail === 'false' ||
+      if (process.env.N1_UNSUBSCRIBE_CONFIRM_EMAIL === 'false' ||
       confirm(`Are you sure that you want to unsubscribe?
 An email will be sent to: ${emailAddress}`)) {
         console.log(`Sending an unsubscription email to: ${emailAddress}`);
@@ -287,7 +287,7 @@ An email will be sent to: ${emailAddress}`)) {
 	// https://github.com/nylas/N1/blob/master/internal_packages/thread-list/lib/thread-list.cjsx
   moveThread() {
     if (this.thread) {
-      if (process.env.n1UnsubscribeHandleThreads === 'trash') {
+      if (process.env.N1_UNSUBSCRIBE_THREAD_HANDLING === 'trash') {
         // Trash the thread
         if (FocusedPerspectiveStore.current().canTrashThreads([this.thread])) {
           const tasks = TaskFactory.tasksForMovingToTrash({
@@ -296,7 +296,7 @@ An email will be sent to: ${emailAddress}`)) {
           });
           Actions.queueTasks(tasks);
         }
-      } else if (process.env.n1UnsubscribeHandleThreads === 'archive') {
+      } else if (process.env.N1_UNSUBSCRIBE_THREAD_HANDLING === 'archive') {
         // Archive the thread
         if (FocusedPerspectiveStore.current().canArchiveThreads([this.thread])) {
           const tasks = TaskFactory.tasksForArchiving({
