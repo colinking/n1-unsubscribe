@@ -196,17 +196,10 @@ class ThreadUnsubscribeStore extends NylasStore {
 
   // Takes a String URL and unsubscribes by loading a browser window
   unsubscribeViaBrowser(url, callback) {
-<<<<<<< HEAD
     if (process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false' ||
-    confirm(`Are you sure that you want to unsubscribe?
-A browser will be opened at: ${url}`)) {
-      console.log(`Opening a browser window to: ${url}`);
-=======
-    if (process.env.n1UnsubscribeConfirmBrowser === 'false' ||
     confirm('Are you sure that you want to unsubscribe?' +
       `\nA browser will be opened at:\n${url}`)) {
       console.log(`Opening a browser window to:\n${url}`);
->>>>>>> f6a5a9c471256b7dd82e42e76cf26fdc6917befa
       // @ColinKing
       // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
       // const re = /\/wf\/click\?upn=/gi;
