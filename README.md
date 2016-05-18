@@ -7,16 +7,19 @@
 
 This is a plugin for [Nylas N1](https://www.nylas.com/n1) that adds quick unsubscribe functionality.
 
-If you encounter any issues, please report them [here as an issue][issues], so they can be fixed. Have a feature request or great idea? Also submit them through the issues pane and we will take a look as quickly as possible!
+## Overview
 
 ![UnsubscribePromoVideo](.github/UnsubscribePromoVideo.gif)
-
-## Overview
 
 - Quick action and Toolbar unsubscribe buttons
 - Automated unsubscribe request for most email marketers
 - Otherwise, opens a Browser Window within N1 for manual unsubscribing
-- Auto-trash email after success
+- Automatically archives email on success
+
+## Reporting Bugs
+
+- **Feature Requests / Bug Reports**: Submit them through the [issues pane][issues].
+- **Mishandled Emails**: If this plugin is not acting as expected for a specific email (not finding an unsubscribe link, etc.), forward it to <a href="mailto:n1.unsubscribe@gmail.com">n1.unsubscribe@gmail.com</a> and we will look into it.
 
 ## Install this plugin
 
@@ -85,13 +88,11 @@ While reading an email you may realize that you would like to unsubscribe, so in
 ## Future Features of n1-unsubscribe
 - [ ] Undo unsubscribe action
 - [ ] Edge case support
-- [ ] Method to report a failed unsubscribe request
 
 ## Other possible features
 - Better notification of in-progress unsubscribe
 - Add a bulk-unsubscribe toolbar button that is enabled when selecting multiple emails
 - Tests
-- Travis CI and stricter linting?
 
 ## Made by
 [Kyle King](http://kyleking.me) and [Colin King](http://colinking.co)
