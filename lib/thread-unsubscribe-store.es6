@@ -148,7 +148,12 @@ class ThreadUnsubscribeStore extends NylasStore {
       // Get a list of all anchor tags with valid links
       let links = _.filter($('a'), (emailLink) => emailLink.href !== 'blank');
       links = links.concat(this.getLinkedSentences($));
-      const regexps = [/unsubscribe/gi, /opt[ -]out/gi, /email preferences/gi];
+      const regexps = [
+        /unsubscribe/gi,
+        /opt[ -]out/gi,
+        /email preferences/gi,
+        /subscription/gi,
+      ];
 
       for (let j = 0; j < links.length; j++) {
         const link = links[j];
@@ -192,9 +197,9 @@ class ThreadUnsubscribeStore extends NylasStore {
   // Takes a String URL and unsubscribes by loading a browser window
   unsubscribeViaBrowser(url, callback) {
     if (process.env.n1UnsubscribeConfirmBrowser === 'false' ||
-    confirm(`Are you sure that you want to unsubscribe?
-A browser will be opened at: ${url}`)) {
-      console.log(`Opening a browser window to: ${url}`);
+    confirm('Are you sure that you want to unsubscribe?' +
+      `\nA browser will be opened at:\n${url}`)) {
+      console.log(`Opening a browser window to:\n${url}`);
       // @ColinKing
       // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
       // const re = /\/wf\/click\?upn=/gi;
@@ -246,9 +251,9 @@ A browser will be opened at: ${url}`)) {
   unsubscribeViaMail(emailAddress, callback) {
     if (emailAddress) {
       if (process.env.n1UnsubscribeConfirmEmail === 'false' ||
-      confirm(`Are you sure that you want to unsubscribe?
-An email will be sent to: ${emailAddress}`)) {
-        console.log(`Sending an unsubscription email to: ${emailAddress}`);
+      confirm('Are you sure that you want to unsubscribe?' +
+        `\nAn email will be sent to:\n${emailAddress}`)) {
+        console.log(`Sending an unsubscription email to:\n${emailAddress}`);
 
         NylasAPI.makeRequest({
           path: '/send',
