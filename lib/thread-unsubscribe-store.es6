@@ -224,8 +224,10 @@ A browser will be opened at: ${url}`)) {
           center: true,
           // 'preload': path.join(__dirname, 'inject.js'),
         });
-        browserWindow.loadUrl(url);
-        browserWindow.show();
+
+        browserWindow.on('closed', () => {
+          callback(null, true);
+        });
 
         // browserWindow.on('page-title-updated', function(event) {
         // 	webContents = browserWindow.webContents;
@@ -234,9 +236,8 @@ A browser will be opened at: ${url}`)) {
         // 	}
         // });
 
-        browserWindow.on('closed', () => {
-          callback(null, true);
-        });
+        browserWindow.loadURL(url);
+        browserWindow.show();
       }
     }
   }
