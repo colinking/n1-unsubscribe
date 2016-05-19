@@ -25,7 +25,7 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 
 3. You should now see the plugin in the plugins pane in N1 (`Preferences > Plugins`).
 
-![PluginsPage](.github/PluginsPage.jpg)
+![PluginsPage](.github/NylasPluginPane.png)
 
 ## Settings
 
@@ -47,7 +47,7 @@ More documentation of these toggles is available in the settings file.
 
 ## Want to learn more?
 
-Do you want to install via git? Want to learn more about how N1-Unsubscribe works? [Check out the extended guide](Developers.md)
+Do you want to install via git? Want to learn more about how N1-Unsubscribe works? [Check out the extended guide](Developer.md)
 
 ## Made by
 [Kyle King](http://kyleking.me) and [Colin King](http://colinking.co)
