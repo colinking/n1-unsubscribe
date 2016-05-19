@@ -13,7 +13,7 @@ try {
   // Use user defined settings file, else the defaults
   settingsFile = fs.readFileSync(userSettings, 'utf8');
 } catch (e) {
-  console.log('Using default settings.');
+  console.log(`n1-unsubscribe: Copying default settings to ${userSettings}.`);
   fs.copySync(defaultSettings, userSettings);
   settingsFile = fs.readFileSync(userSettings, 'utf8');
 }

@@ -72,20 +72,23 @@ class ThreadUnsubscribeStore extends NylasStore {
     this.loadMessagesViaAPI((error, email) => {
       if (!error) {
         const headerLinks = this.parseHeadersForLinks(email.headers);
-        console.log(this.thread.subject);
-        console.log(this.thread);
-        console.log("Header links:");
-        console.log(headerLinks);
         const bodyLinks = this.parseBodyForLinks(email.html);
-        console.log("Body links:");
-        console.log(bodyLinks);
         this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
         this.threadState.hasLinks = (this.links.length > 0);
         this.threadState.condition = ThreadConditionType.DONE;
+        if (NylasEnv.inDevMode() === true) {
+          console.log(this.thread.subject);
+          console.log("Header links:");
+          console.log(headerLinks);
+          console.log("Body links:");
+          console.log(bodyLinks);
+        }
       } else {
         // TODO: Try again with the next email in the thread
-        console.log(this.thread);
-        console.warn(error);
+        if (NylasEnv.inDevMode() === true) {
+          console.log(this.thread.subject);
+          console.warn(error);
+        }
         this.threadState.condition = ThreadConditionType.ERRORED;
       }
       this.triggerUpdate();
@@ -199,7 +202,9 @@ class ThreadUnsubscribeStore extends NylasStore {
     if (process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false' ||
     confirm('Are you sure that you want to unsubscribe?' +
       `\nA browser will be opened at:\n${url}`)) {
-      console.log(`Opening a browser window to:\n${url}`);
+      if (NylasEnv.inDevMode() === true) {
+        console.log(`Opening a browser window to:\n${url}`);
+      }
       // @ColinKing
       // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
       // const re = /\/wf\/click\?upn=/gi;
@@ -253,7 +258,9 @@ class ThreadUnsubscribeStore extends NylasStore {
       if (process.env.N1_UNSUBSCRIBE_CONFIRM_EMAIL === 'false' ||
         confirm('Are you sure that you want to unsubscribe?' +
         `\nAn email will be sent to:\n${emailAddress}`)) {
-        console.log(`Sending an unsubscription email to:\n${emailAddress}`);
+        if (NylasEnv.inDevMode() === true) {
+          console.log(`Sending an unsubscription email to:\n${emailAddress}`);
+        }
 
         NylasAPI.makeRequest({
           path: '/send',
@@ -272,7 +279,9 @@ class ThreadUnsubscribeStore extends NylasStore {
           },
           error: (error) => {
             // callback(error);
-            console.error(error);
+            if (NylasEnv.inDevMode() === true) {
+              console.warn(error);
+            }
           },
         });
 

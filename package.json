@@ -45,6 +45,9 @@
         "jsx": true
       }
     },
+    "globals": {
+      "NylasEnv": true
+    },
     "rules": {
       "react/prop-types": [
         2,
