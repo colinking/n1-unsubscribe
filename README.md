@@ -11,13 +11,15 @@ Quickly unsubscribe from emails with the N1-Unsubscribe plugin for [Nylas N1](ht
 
 ## The Plugin Magic
 
-N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe via email. If it can, the plugin will send an unsubscribe request email on your behalf. Second, if no email is available, the plugin looks for a link in the body of the email, such as "click to unsubscribe." The plugin can then open the link in a mini-browser to complete the unsubscription without leaving Nylas. When unsubscribed the email is then trashed or archived based on your opinion.
+N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe via email. If it can, the plugin will send an unsubscribe request email on your behalf. Second, if no email is available, the plugin looks for a link in the body of the email, such as "click to unsubscribe." The plugin can then open the link in a mini-browser to complete the unsubscription without leaving Nylas. When unsubscribed, the email is then trashed or archived based on your selected option ([see settings below](https://github.com/colinking/n1-unsubscribe#settings)).
 
 ## How to install
 
+<!-- [![Download n1-unsubscribe](https://cdn.rawgit.com/colinking/n1-unsubscribe/master/.github/download.svg)](https://github.com/colinking/n1-unsubscribe/raw/master/dist/n1-unsubscribe.zip) -->
+
 1. Download and un-zip `n1-unsubscribe.zip` from the [Releases page](https://github.com/colinking/n1-unsubscribe/releases/latest).
 
-    ###### NOTE: Make sure that the downloaded folder is named `n1-unsubscribe` and not `n1-unsubscribe-master` or any other variation because the icon will not appear as mentioned in [#12](https://github.com/colinking/n1-unsubscribe/issues/12)
+    ##### NOTE: Make sure that the downloaded folder is named `n1-unsubscribe` and not `n1-unsubscribe-master` or any other variation because the icon will not appear as mentioned in [#12](https://github.com/colinking/n1-unsubscribe/issues/12)
 
 2. In N1, Select the menu bar option `Developer > Install a Plugin Manually...`, then select the unzipped folder, `n1-unsubscribe`
 
@@ -43,9 +45,9 @@ More documentation of these toggles is available in the settings file.
 - **Feature Requests or Bug Reports**: Submit them through the [issues pane][issues]
 - **Mishandled Emails**: Find something that doesn't work (not finding an unsubscribe link, etc.)? Forward the email to us at <a href="mailto:n1.unsubscribe@gmail.com">n1.unsubscribe@gmail.com</a> and we will look into it
 
-## Want to learn more and/or are a developer?
+## Want to learn more?
 
-REad how to isntall via git and other information on the [Developer.md page](Developer.md)
+Do you want to install via git? Want to learn more about how N1-Unsubscribe works? [Check out the extended guide](Developers.md)
 
 ## Made by
 [Kyle King](http://kyleking.me) and [Colin King](http://colinking.co)
