@@ -1,3 +1,5 @@
+const currentVersion = "1.2.2";
+
 const {
   Actions,
   TaskFactory,
@@ -11,6 +13,33 @@ const BrowserWindow = require('electron').remote.BrowserWindow;
 const MailParser = require('mailparser').MailParser;
 const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`);
 const open = require('open');
+
+// Get the latest release to check if an update is needed
+const GitHubApi = require("github");
+const github = new GitHubApi({
+  version: "3.0.0",
+  debug: false,
+  protocol: "https",
+  host: "api.github.com",
+  timeout: 5000,
+  headers: {
+    "user-agent": "N1-Updater",
+  },
+});
+github.releases.listReleases({
+  owner: "colinking",
+  repo: "n1-unsubscribe",
+  per_page: 1,
+}, (err, res) => {
+  if (err) console.log(err);
+  // Get latest release:
+  // console.log(res[0]);
+  if (res[0].tag_name !== currentVersion &&
+    res[0].draft === false) {
+    console.log('New release!');
+    console.log(res[0].assets[0].browser_download_url);
+  }
+});
 
 class ThreadUnsubscribeStore extends NylasStore {
   constructor(thread) {
@@ -156,6 +185,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         /opt[ -]out/gi,
         /email preferences/gi,
         /subscription/gi,
+        /notification settings/gi,
       ];
 
       for (let j = 0; j < links.length; j++) {

@@ -15,6 +15,7 @@
   "dependencies": {
     "cheerio": "^0.19.0",
     "fs-extra": "^0.30.0",
+    "github": "^0.2.4",
     "mailparser": "^0.5.3",
     "open": "0.0.5",
     "strip-json-comments": "^2.0.1",
