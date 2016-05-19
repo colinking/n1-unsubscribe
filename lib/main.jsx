@@ -4,9 +4,19 @@ const {
   ThreadUnsubscribeToolbarButton,
 } = require('./ui/unsubscribe-buttons');
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const stripJsonComments = require('strip-json-comments');
-const settingsFile = fs.readFileSync(`${__dirname}/../unsubscribe-settings.json`, 'utf8');
+let settingsFile;
+const defaultSettings = `${__dirname}/../unsubscribe-settings.defaults.json`;
+const userSettings = `${__dirname}/../unsubscribe-settings.json`;
+try {
+  // Use user defined settings file, else the defaults
+  settingsFile = fs.readFileSync(userSettings, 'utf8');
+} catch (e) {
+  console.log('Using default settings.');
+  fs.copySync(defaultSettings, userSettings);
+  settingsFile = fs.readFileSync(userSettings, 'utf8');
+}
 const settingsJSON = stripJsonComments(settingsFile);
 const settings = JSON.parse(settingsJSON);
 

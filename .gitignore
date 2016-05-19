@@ -28,3 +28,5 @@ lib/backup
 .DS_Store
 
 node_modules
+
+unsubscribe-settings.json
