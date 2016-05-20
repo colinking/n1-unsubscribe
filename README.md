@@ -47,7 +47,7 @@ More documentation of these toggles is available in the settings file.
 
 ## Want to learn more?
 
-Do you want to install via git? Want to learn more about how N1-Unsubscribe works? [Check out the extended guide](Developer.md)
+Do you want to install via git? Want to learn more about how N1-Unsubscribe works? [Check out the extended guide](CONTRIBUTING.md)
 
 ## Made by
 [Kyle King](http://kyleking.me) and [Colin King](http://colinking.co)
