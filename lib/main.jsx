@@ -1,8 +1,13 @@
+const GitHubApi = require("github");
+const config = require('../package.json');
+
 const {ComponentRegistry} = require('nylas-exports');
 const {
   ThreadUnsubscribeQuickActionButton,
   ThreadUnsubscribeToolbarButton,
 } = require('./ui/unsubscribe-buttons');
+
+const pluginUpdater = require('./ui/plugin-updater');
 
 const fs = require('fs-extra');
 const stripJsonComments = require('strip-json-comments');
@@ -49,6 +54,34 @@ module.exports = {
       { role: 'ThreadListQuickAction' });
     ComponentRegistry.register(ThreadUnsubscribeToolbarButton,
       { role: 'ThreadActionsToolbarButton' });
+
+    const github = new GitHubApi({
+      version: '3.0.0',
+      debug: false,
+      protocol: 'https',
+      host: 'api.github.com',
+      timeout: 5000,
+      headers: {
+        'user-agent': 'N1-Updater',
+      },
+    });
+    github.releases.listReleases({
+      owner: 'colinking',
+      repo: 'n1-unsubscribe',
+      per_page: 1,
+    }, (err, res) => {
+      if (err) console.log(err);
+      const curVer = config.version;
+      if (res[0].tag_name !== curVer && res[0].draft === false) {
+        const relURL = res[0].html_url;
+        console.log(res[0]);
+        console.log(res[0].assets[0].download_url);
+        console.log(`New release available at ${relURL}!`);
+        console.log(this);
+        return pluginUpdater.activate('new', relURL, curVer);
+      }
+      return false;
+    });
   },
 
   // This **optional** method is called when the window is shutting down,
@@ -57,6 +90,7 @@ module.exports = {
   // subscribing to events, release them here.
   //
   deactivate: () => {
+    pluginUpdater.deactivate();
     ComponentRegistry.unregister(ThreadUnsubscribeQuickActionButton);
     ComponentRegistry.unregister(ThreadUnsubscribeToolbarButton);
   },
