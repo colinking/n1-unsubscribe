@@ -10,6 +10,7 @@ build:
 	@echo "Building for distribution to ${LOCAL_DIST}"
 	git archive -o ${LOCAL_DIST} @
 	@echo "Built successfully."
+	@echo "WARN: Make sure to incrememnt the package.json version."
 
 install:
 	@echo "Installing to ${PACKAGE_DIR}"
