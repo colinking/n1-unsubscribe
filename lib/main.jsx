@@ -4,9 +4,9 @@ const {
   ThreadUnsubscribeToolbarButton,
 } = require('./ui/unsubscribe-buttons');
 
-const pluginUpdater = require('./ui/plugin-updater');
 const settings = require('./settings');
 settings.configure();
+const pluginUpdater = require('./ui/plugin-updater');
 
 module.exports = {
   // Activate is called when the package is loaded. If your package previously
@@ -14,8 +14,9 @@ module.exports = {
   //
   activate: () => {
     settings.checkForUpdate(pluginUpdater);
-    // ComponentRegistry.register ThreadUnsubscribeBulkAction,
-    //   role: 'thread:BulkAction'
+    // ComponentRegistry.register(ThreadUnsubscribeBulkAction,
+    //   { role: 'ThreadListBulkAction' });
+    // //   role: 'thread:BulkAction'
     ComponentRegistry.register(ThreadUnsubscribeQuickActionButton,
       { role: 'ThreadListQuickAction' });
     ComponentRegistry.register(ThreadUnsubscribeToolbarButton,
@@ -29,6 +30,7 @@ module.exports = {
   //
   deactivate: () => {
     pluginUpdater.deactivate();
+    // ComponentRegistry.register(ThreadUnsubscribeBulkAction);
     ComponentRegistry.unregister(ThreadUnsubscribeQuickActionButton);
     ComponentRegistry.unregister(ThreadUnsubscribeToolbarButton);
   },

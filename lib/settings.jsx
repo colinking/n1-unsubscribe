@@ -3,7 +3,10 @@ const fs = require('fs-extra');
 const stripJsonComments = require('strip-json-comments');
 // checkForUpdate()
 const GitHubApi = require("github");
-const config = require('../package.json');
+const config = require(`${__dirname}/../package.json`);
+// Terribly ugly workaround => need persistent data store
+const thanksFile = `${__dirname}/persistent-settings/thanks`;
+const {displayThanksNotification} = require(`${thanksFile}.json`);
 
 module.exports = {
   // configure() needs to be called at the beginning of main.jsx
@@ -66,19 +69,26 @@ module.exports = {
       if (err) console.log(err);
       const curVer = config.version;
       const avaVer = res[0].name;
-      // res[0].name -> "1.2.3"
-      // res[0].tag_name -> "1.2.3"
+      const releaseURL = res[0].html_url;
+      const downloadURL = res[0].assets[0].browser_download_url;
+      console.log(`New release available at ${releaseURL}!`);
+      // Update globals:
+      process.env.N1_UNSUBSCRIBE_CURRENT_VER = curVer;
+      process.env.N1_UNSUBSCRIBE_AVAILABLE_VER = avaVer;
+      process.env.N1_UNSUBSCRIBE_AVAILABLE_URL = releaseURL;
+      process.env.N1_UNSUBSCRIBE_DOWNLOAD_URL = downloadURL;
       if (avaVer !== curVer && res[0].draft === false) {
-        // Update globals:
-        process.env.N1_UNSUBSCRIBE_CURRENT_VER = curVer;
-        process.env.N1_UNSUBSCRIBE_AVAILABLE_VER = avaVer;
-        const releaseURL = res[0].html_url;
-        process.env.N1_UNSUBSCRIBE_AVAILABLE_URL = releaseURL;
-        console.log(`New release available at ${releaseURL}!`);
-        const downloadURL = res[0].assets[0].browser_download_url;
-        process.env.N1_UNSUBSCRIBE_DOWNLOAD_URL = downloadURL;
-        // Fire notification event
+        // Make sure to display thank you message after updating:
+        // fs.writeFileSync(thanksFile, {displayThanksNotification: true}); \\ EACCESS
+        fs.copySync(`${thanksFile}-true.json`, `${thanksFile}.json`);
+        // Fire notification event:
         return pluginUpdater.activate('NEW_RELEASE');
+      } else if (avaVer === curVer && displayThanksNotification === true) {
+        // Only display the thanks notification once
+        // process.env.N1_UNSUBSCRIBE_DISPLAY_THANKS = false;
+        // fs.writeFileSync(thanksFile, {displayThanksNotification: false}); \\ EACCESS
+        fs.copySync(`${thanksFile}-false.json`, `${thanksFile}.json`);
+        return pluginUpdater.activate('THANKS');
       }
       return false;
     });

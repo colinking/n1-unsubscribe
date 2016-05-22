@@ -5,38 +5,10 @@ module.exports =
 
   activate: (@state) ->
     @_unlisten = Actions.notificationActionTaken.listen(@_onNotificationActionTaken, @)
-    return @displayNotification(process.env.N1_UNSUBSCRIBE_AVAILABLE_VER)
-
-    # configVersion = NylasEnv.config.get("lastVersion")
-    # currentVersion = NylasEnv.getVersion()
-    # if configVersion and configVersion isnt currentVersion
-    #   NylasEnv.config.set("lastVersion", currentVersion)
-    #   @displayThanksNotification()
-
-    # if updater.getState() is 'update-available'
-    #   @displayNotification(updater.releaseVersion)
-
-    # NylasEnv.onUpdateAvailable ({releaseVersion, releaseNotes} = {}) =>
-    #   @displayNotification(releaseVersion)
-
-  displayThanksNotification: ->
-    Actions.postNotification
-      type: 'info'
-      tag: 'app-update'
-      sticky: true
-      message: "You're running the latest version of N1-Unsubscribe (Plugin)" +
-        " - view the changelog to see what's new.",
-      icon: 'fa-magic'
-      actions: [{
-        dismisses: true
-        label: 'Thanks'
-        id: 'release-bar:no-op'
-      },{
-        default: true
-        dismisses: true
-        label: 'See What\'s New'
-        id: 'release-bar:view-plugin-changelog'
-      }]
+    if (@state is 'NEW_RELEASE')
+      return @displayNotification(process.env.N1_UNSUBSCRIBE_AVAILABLE_VER)
+    else if (@state is 'THANKS')
+      return @displayThanksNotification()
 
   displayNotification: (version) ->
     version = if version then "(#{version})" else ''
@@ -55,6 +27,25 @@ module.exports =
         dismisses: true
         default: true
         id: 'release-bar:install-plugin-update'
+      }]
+
+  displayThanksNotification: ->
+    Actions.postNotification
+      type: 'info'
+      tag: 'app-update'
+      sticky: true
+      message: "You're running the latest version of N1-Unsubscribe (Plugin)" +
+        " - view the changelog to see what's new.",
+      icon: 'fa-magic'
+      actions: [{
+        label: 'Thanks'
+        dismisses: true
+        id: 'release-bar:no-op'
+      },{
+        label: 'See What\'s New'
+        # dismisses: true
+        default: true
+        id: 'release-bar:view-plugin-changelog'
       }]
 
   deactivate: ->
