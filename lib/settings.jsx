@@ -68,7 +68,7 @@ module.exports = {
     }, (err, res) => {
       if (err) console.log(err);
       const curVer = config.version;
-      const avaVer = res[0].name;
+      const avaVer = res[0].tag_name;
       const releaseURL = res[0].html_url;
       const downloadURL = res[0].assets[0].browser_download_url;
       console.log(`New release available at ${releaseURL}!`);

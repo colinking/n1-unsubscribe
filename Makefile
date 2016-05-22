@@ -9,7 +9,9 @@ LOCAL_DIST=${PWD}/dist/${PACKAGE_NAME}.zip
 build:
 	@echo "Building for distribution to ${LOCAL_DIST}"
 	git archive -o ${LOCAL_DIST} @
+	cd lib/persistent-settings; cp thanks-true.json thanks.json
 	@echo "Built successfully."
+	@echo "WARN: Make sure to incrememnt the package.json version."
 
 install:
 	@echo "Installing to ${PACKAGE_DIR}"
