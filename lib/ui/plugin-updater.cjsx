@@ -11,9 +11,10 @@ module.exports =
       return @displayThanksNotification()
 
   displayNotification: (version) ->
+    # Types: `info`, `developer`, `error`, or `success`
     version = if version then "(#{version})" else ''
     Actions.postNotification
-      type: 'info'
+      type: 'developer'
       tag: 'app-update'
       sticky: true
       message: "An update to N1-Unsubscribe (Plugin) is available" +
@@ -31,7 +32,7 @@ module.exports =
 
   displayThanksNotification: ->
     Actions.postNotification
-      type: 'info'
+      type: 'developer'
       tag: 'app-update'
       sticky: true
       message: "You're running the latest version of N1-Unsubscribe (Plugin)" +
