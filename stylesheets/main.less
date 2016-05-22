@@ -43,3 +43,12 @@
 		background: url(@unsubscribe-success-img) center no-repeat;
 	}
 }
+
+
+// Color the actions.postNotification bar to differentiate between a plugin update vs. N1 update
+// Currently tweaked to minimally interfere by using one `info`, `developer`, `error`, or `success` types
+// developer seemed to be the least likely to interfere with regular users
+// But it would be great to have a new type for this use
+.notifications-sticky .notification-developer {
+	background-color: #60CBF1 !important;
+}
