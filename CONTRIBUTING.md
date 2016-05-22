@@ -4,7 +4,7 @@
 
 1. Clone this repository into the dev/packages folder (`cd ~/.nylas/dev/packages`): `git clone https://github.com/colinking/n1-unsubscribe.git`
 
-2. Install the package by running the install script: `make install-dev`
+2. Install the package by running the install script: `cd n1-unsubscribe/; make install-dev`
 
 3. Reload Nylas (<kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>L</kbd>) and you should see the plugin in the plugins pane in N1 (`Preferences > Plugins`)
 
@@ -33,11 +33,9 @@ While reading an email you may realize that you would like to unsubscribe, so in
 ![MenuItem](.github/NewMenuItem.png)
 
 ## Future Features of n1-unsubscribe
-- [ ] Alert user of new releases (in progress)
-- [ ] Automatically update plugin
 - [ ] Undo unsubscribe action -> cancel email from sending
-- [ ] Edge case support
-- [ ] Icons sit ontop of text in quick action - fix CSS
+- [ ] Edge case support (See 3 open issues)
+- [ ] Icons sits on top of text in quick action - fix CSS
 - [ ] Move toolbar button to far left
 - [ ] Loading icon
 - [ ] Functional bulk-unsubscribe button

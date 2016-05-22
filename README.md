@@ -19,9 +19,7 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 
 1. Download and un-zip `n1-unsubscribe.zip` from the [Releases page](https://github.com/colinking/n1-unsubscribe/releases/latest).
 
-    ##### NOTE: Make sure that the downloaded folder is named `n1-unsubscribe` and not `n1-unsubscribe-master` or any other variation because the icon will not appear as mentioned in [#12](https://github.com/colinking/n1-unsubscribe/issues/12)
-
-2. In N1, Select the menu bar option `Developer > Install a Plugin Manually...`, then select the unzipped folder, `n1-unsubscribe`
+2. In N1, Select the menu bar option `Developer > Install a Plugin...`, then select the unzipped folder, `n1-unsubscribe`
 
 3. You should now see the plugin in the plugins pane in N1 (`Preferences > Plugins`).
 
