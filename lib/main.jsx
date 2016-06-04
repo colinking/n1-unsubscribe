@@ -6,14 +6,20 @@ const {
 
 const settings = require('./settings');
 settings.configure();
-const pluginUpdater = require('./ui/plugin-updater');
+
+const config = require(`${__dirname}/../package.json`); // the path to your package.json
+const n1pluginupdater = require('n1pluginupdater');
 
 module.exports = {
   // Activate is called when the package is loaded. If your package previously
   // saved state using `serialize` it is provided.
   //
   activate: () => {
-    settings.checkForUpdate(pluginUpdater);
+    n1pluginupdater.checkForUpdate({
+      repositoryName: "n1-unsubscribe",
+      repositoryOwner: "colinking",
+      currentVersion: config.version,
+    });
     // ComponentRegistry.register(ThreadUnsubscribeBulkAction,
     //   { role: 'ThreadListBulkAction' });
     // //   role: 'thread:BulkAction'
@@ -29,7 +35,7 @@ module.exports = {
   // subscribing to events, release them here.
   //
   deactivate: () => {
-    pluginUpdater.deactivate();
+    n1pluginupdater.deactivate();
     // ComponentRegistry.register(ThreadUnsubscribeBulkAction);
     ComponentRegistry.unregister(ThreadUnsubscribeQuickActionButton);
     ComponentRegistry.unregister(ThreadUnsubscribeToolbarButton);
