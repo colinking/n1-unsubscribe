@@ -71,13 +71,13 @@ module.exports = {
       const avaVer = res[0].tag_name;
       const releaseURL = res[0].html_url;
       const downloadURL = res[0].assets[0].browser_download_url;
-      console.log(`New release available at ${releaseURL}!`);
       // Update globals:
       process.env.N1_UNSUBSCRIBE_CURRENT_VER = curVer;
       process.env.N1_UNSUBSCRIBE_AVAILABLE_VER = avaVer;
       process.env.N1_UNSUBSCRIBE_AVAILABLE_URL = releaseURL;
       process.env.N1_UNSUBSCRIBE_DOWNLOAD_URL = downloadURL;
       if (avaVer !== curVer && res[0].draft === false) {
+        console.log(`New release available at ${releaseURL}!`);
         // Make sure to display thank you message after updating:
         // fs.writeFileSync(thanksFile, {displayThanksNotification: true}); \\ EACCESS
         fs.copySync(`${thanksFile}-true.json`, `${thanksFile}.json`);
