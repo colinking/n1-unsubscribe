@@ -7,7 +7,8 @@ const {
 const settings = require('./settings');
 settings.configure();
 
-const config = require(`${__dirname}/../package.json`); // the path to your package.json
+// Configure plugin updater
+const config = require(`${__dirname}/../package.json`);
 const n1pluginupdater = require('n1pluginupdater');
 
 module.exports = {

@@ -11,6 +11,7 @@ const BrowserWindow = require('electron').remote.BrowserWindow;
 const MailParser = require('mailparser').MailParser;
 const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`);
 const open = require('open');
+const blacklist = require(`${__dirname}/blacklist.json`);
 
 class ThreadUnsubscribeStore extends NylasStore {
   constructor(thread) {
@@ -73,20 +74,24 @@ class ThreadUnsubscribeStore extends NylasStore {
       if (!error) {
         const headerLinks = this.parseHeadersForLinks(email.headers);
         const bodyLinks = this.parseBodyForLinks(email.html);
-        this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
+        const TEMP = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
+        this.links = this.checkLinkBlacklist(TEMP);
         this.threadState.hasLinks = (this.links.length > 0);
         this.threadState.condition = ThreadConditionType.DONE;
         if (NylasEnv.inDevMode() === true) {
-          console.log(this.thread.subject);
-          console.log("Header links:");
-          console.log(headerLinks);
-          console.log("Body links:");
-          console.log(bodyLinks);
+          if (this.threadState.hasLinks) {
+            console.info(`Found links for: "${this.thread.subject}"`);
+            console.info({headerLinks, bodyLinks});
+            // console.table([["Header links:", headerLinks[0]], ["Body links:", bodyLinks[0]]]);
+          } else {
+            console.log(`Found no links for: "${this.thread.subject}"`);
+          }
         }
       } else {
-        // TODO: Try again with the next email in the thread
+        // FIXME: "{ "message": "Couldn't find raw contents for message
+        // `3nyx735ds55uv0o7je7k9unc5`", "type": "invalid_request_error" }"
         if (NylasEnv.inDevMode() === true) {
-          console.log(this.thread.subject);
+          console.warn(`\n--Error in querying message: ${this.thread.subject}--\n`);
           console.warn(error);
         }
         this.threadState.condition = ThreadConditionType.ERRORED;
@@ -126,6 +131,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
       }
     } else {
+      console.log('No Email Found');
       callback(new Error('No messages found to parse for unsubscribe links.'));
     }
   }
@@ -195,6 +201,13 @@ class ThreadUnsubscribeStore extends NylasStore {
       }
       return 1;
     });
+    return newLinks;
+  }
+
+  // Check the custom blacklist and handle links that can issues:
+  checkLinkBlacklist(links) {
+    // console.warn(blacklist.emails[0]);
+    const newLinks = links;
     return newLinks;
   }
 

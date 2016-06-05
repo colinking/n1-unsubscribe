@@ -1,4 +1,3 @@
-// Configure()
 const fs = require('fs-extra');
 const stripJsonComments = require('strip-json-comments');
 
