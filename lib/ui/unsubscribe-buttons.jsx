@@ -1,5 +1,5 @@
 const {React} = require('nylas-exports');
-const {RetinaImg} = require('nylas-component-kit');
+const {RetinaImg, KeyCommandsRegion} = require('nylas-component-kit');
 const ThreadUnsubscribeStoreManager = require('../thread-unsubscribe-store-manager');
 const ThreadConditionType = require(`${__dirname}/../enum/threadConditionType`);
 
@@ -127,24 +127,34 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
     return url;
   }
 
+  _keymapHandlers() {
+    return {"n1-unsubscribe:unsubscribe": this._keymapDemo}
+  }
+
   render() {
     let buttonTitle = this.getTitleText();
     const extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
 
     return (
-      <button
-        className={
-          `btn btn-toolbar toolbar-unsubscribe ${extraClasses}`
-        }
-        onClick={this.onClick.bind(this)}
-        title={buttonTitle}
-      >
-        <RetinaImg
-          mode={RetinaImg.Mode.ContentIsMask}
-          url={this.getIconURL('toolbar-unsubscribe')}
-        />
-      </button>
+      <KeyCommandsRegion globalHandlers={this._keymapHandlers(this)}>
+        <button
+          className={`btn btn-toolbar toolbar-unsubscribe ${extraClasses}`}
+          onClick={this.onClick.bind(this)}
+          title={buttonTitle}
+        >
+          <RetinaImg
+            mode={RetinaImg.Mode.ContentIsMask}
+            url={this.getIconURL('toolbar-unsubscribe')}
+          />
+        </button>
+      </KeyCommandsRegion>
     );
+  }
+
+  _keymapDemo() {
+    console.error('KEYMAP for N!-Unsubscribe was PRESSED!');
+    // FIXME: `this` doesn't have class `.unsubscribe()`
+    // this.tuStore.unsubscribe();
   }
 }
 
