@@ -109,9 +109,9 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
     if (typeof scale === 'undefined') {
       // Add error checking to make sure an icon is available:
       // PREVIOUSLY: scale = window.devicePixelRatio || 1;
-      scale = Math.floor(window.devicePixelRatio);
-      if (scale !== 1 || scale !== 2) { scale = 1; }
-      // console.log(`Calculated scale: ${scale}`);
+      scale = Math.ceil(window.devicePixelRatio);
+      console.log(`Calculated scale: ${scale}`);
+      if (scale !== 1 || scale !== 2) { scale = 2; }
     }
 
     url += name;
