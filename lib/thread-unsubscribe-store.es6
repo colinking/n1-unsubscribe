@@ -11,6 +11,7 @@ const BrowserWindow = require('electron').remote.BrowserWindow;
 const MailParser = require('mailparser').MailParser;
 const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`);
 const open = require('open');
+// TODO
 const blacklist = require(`${__dirname}/blacklist.json`);
 
 class ThreadUnsubscribeStore extends NylasStore {
@@ -205,6 +206,8 @@ class ThreadUnsubscribeStore extends NylasStore {
   }
 
   // Check the custom blacklist and handle links that can issues:
+  // FIXME
+  // TODO
   checkLinkBlacklist(links) {
     // console.warn(blacklist.emails[0]);
     const newLinks = links;
