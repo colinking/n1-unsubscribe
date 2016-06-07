@@ -30,7 +30,7 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 - ![Loading](assets/unsubscribe-loading@2x.png) Loading -- wait for a moment for the icon to update
 - ![Unsubscribe](assets/unsubscribe@2x.png) Ready to unsubscribe and waiting on your click
 - ![Error](assets/unsubscribe-success@2x.png) You are now unsubscribed!
-- ![Error](assets/unsubscribe-error@2x.png) When something goes wrong, you will get this error icon. Click the icon to forward the current email to [n1.unsubscribe@gmail.com](mailto:n1.unsubscribe@gmail.com) and we will try to see what went wrong.
+- ![Error](assets/unsubscribe-error@2x.png) When something goes wrong, you will get this error icon. Click the icon to forward the current email to [n1.unsubscribe@gmail.com](mailto:n1.unsubscribe@gmail.com) and we will try to see what went wrong. [NOT YET WORKING, will be in 1.5.0 release]
 
 ## Settings
 
@@ -44,6 +44,23 @@ To change any of these settings, first install the package and modify `~/.nylas/
 - **confirm_for_browser**: Toggle a confirmation box on or off before opening a browser window to unsubscribe from an email (default: off).
 
 More documentation of these toggles is available in the settings file.
+
+## Keyboard Shortcuts
+
+N1-Unsubscribe now supports keyboard shortcuts! Press <kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>U</kbd> when viewing a single email instead of pressing the button. Unsubscribing couldn't be faster. If you want to map your own shortcut keys:
+
+1. Go to:`Nylas->Preferences`
+2. Click the `shortcuts` tab
+3. Then scroll to the bottom and click the `Edit Custom Shortcuts` button
+4. From the finder window, open keymap.json in a text editor and add this snippet (replace mod+j with whatver shortcut you want - note mod is <kbd>CMD</kbd> on a mac and <kbd>Alt</kbd> on a PC):
+
+    For keymap.json:
+    ```json
+    {
+      "n1-unsubscribe:unsubscribe": "mod+j"
+    }
+    ```
+    **Alterantively** if you use Keymap.cson, you know what to do!
 
 ## Reporting Bugs
 
