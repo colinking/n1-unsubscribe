@@ -27,10 +27,10 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 
 ## The Icons
 
-- ![Loading](assets/unsubscribe-loading.svg) Loading -- wait for a moment for the icon to update
-- ![Unsubscribe](assets/unsubscribe.svg) Ready to unsubscribe and waiting on your click
-- ![Error](assets/unsubscribe-success.svg) You are now unsubscribed!
-- ![Error](assets/unsubscribe-error.svg) When something goes wrong, you will get this error icon. Click the icon to forward the current email to [n1.unsubscribe@gmail.com](mailto:n1.unsubscribe@gmail.com) and we will try to see what went wrong.
+- ![Loading](assets/unsubscribe-loading@2x.png) Loading -- wait for a moment for the icon to update
+- ![Unsubscribe](assets/unsubscribe@2x.png) Ready to unsubscribe and waiting on your click
+- ![Error](assets/unsubscribe-success@2x.png) You are now unsubscribed!
+- ![Error](assets/unsubscribe-error@2x.png) When something goes wrong, you will get this error icon. Click the icon to forward the current email to [n1.unsubscribe@gmail.com](mailto:n1.unsubscribe@gmail.com) and we will try to see what went wrong.
 
 ## Settings
 
