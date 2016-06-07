@@ -123,7 +123,7 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
         key="unsubscribe"
         title={buttonTitle}
         style={{
-          order: 120,
+          order: 90,
           background: `url(${url}) center no-repeat`,
         }}
         className={`btn action action-unsubscribe ${extraClasses}`}
@@ -144,11 +144,11 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   render() {
     const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
     // Style-order: [<-107] Archive (-107) ...
-    //      Unread (-104) [To be on the right, be > -104]
+    //      Unread (-104), Star/Label? (-103) [To be on the right, be > -103]
     return (
       <KeyCommandsRegion
         globalHandlers={this._keymapHandlers(this)}
-        style={{order: -110}}
+        style={{order: -102}}
       >
         <button
           className={`btn btn-toolbar toolbar-unsubscribe ${extraClasses}`}
@@ -165,10 +165,13 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
     );
   }
 
-  _keymapDemo() {
-    console.error('KEYMAP for N1-Unsubscribe was PRESSED!');
-    // // FIXME: `this` doesn't have class `.unsubscribe()`
-    // this.tuStore.unsubscribe();
+  _keymapEvent() {
+    if (NylasEnv.inDevMode() === true) { console.log("Keymap event fired"); }
+    // // Scoped for the HTML markup of the Nylas Application
+    // console.warn(this);
+    // Just press the button when the Keymap event is fired:
+    const e = document.getElementById('N1-Unsubscribe');
+    e.click()
   }
 }
 
