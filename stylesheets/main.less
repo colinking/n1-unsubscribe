@@ -6,11 +6,14 @@
 @unsubscribe-assets: "nylas://n1-unsubscribe/assets";
 
 @unsubscribe-quickaction-img: "@{unsubscribe-assets}/ic-quickaction-unsubscribe@2x.png";
-@unsubscribe-success-img: "@{unsubscribe-assets}/old/unsubscribe-success@2x.png";
+@unsubscribe-loading-img: "@{unsubscribe-assets}/unsubscribe-loading@2x.png";
+@unsubscribe-success-img: "@{unsubscribe-assets}/unsubscribe-success@2x.png";
+@unsubscribe-error-img: "@{unsubscribe-assets}/unsubscribe-error@2x.png";
 
 .action-unsubscribe,
 .toolbar-unsubscribe {
-	&.unsubscribe-disabled {
+	&.unsubscribe-disabled,
+	&.unsubscribe-loading {
 		.btn-disabled;
 		background-color: rgba(241,241,241,0.75);
 		opacity: 0.5;
@@ -18,37 +21,28 @@
 }
 
 .thread-list .list-item .list-column-HoverActions {
-	.action.action-unsubscribe {
-		background: url(@unsubscribe-quickaction-img) center no-repeat, @background-gradient;
-	}
-	.action.action-unsubscribe.unsubscribe-disabled {
-		// Disabled button with dark gradient
-		background: url(@unsubscribe-quickaction-img) center no-repeat;
-	}
-	.action.action-unsubscribe.unsubscribe-success {
-		background: url(@unsubscribe-success-img) center no-repeat, @background-gradient;
-	}
-}
-
-.thread-list .list-item.focused:hover .list-column-HoverActions .inner {
-	.action.action-unsubscribe {
+	.action.action-unsubscribe.unsubscribe-ready {
 		background: url(@unsubscribe-quickaction-img) center no-repeat;
 	}
 	.action.action-unsubscribe.unsubscribe-disabled {
-		// Disabled button with darker gradient, for when a row is selected
-		// background: url(@unsubscribe-quickaction-img) center no-repeat, @background-gradient;
+		// Same icon, but faded background gradient (see above)
 		background: url(@unsubscribe-quickaction-img) center no-repeat;
+	}
+	.action.action-unsubscribe.unsubscribe-loading {
+		// Also has faded background gradient (see above)
+		background: url(@unsubscribe-loading-img) center no-repeat;
 	}
 	.action.action-unsubscribe.unsubscribe-success {
 		background: url(@unsubscribe-success-img) center no-repeat;
 	}
+	.action.action-unsubscribe.unsubscribe-error {
+		background: url(@unsubscribe-error-img) center no-repeat;
+	}
 }
 
-
-// Color the actions.postNotification bar to differentiate between a plugin update vs. N1 update
-// Currently tweaked to minimally interfere by using one `info`, `developer`, `error`, or `success` types
-// developer seemed to be the least likely to interfere with regular users
-// But it would be great to have a new type for this use
+// Style the plugin notification bar to differentiate from the regular updates
+// Can only select one of: `info`, `developer`, `error`, or `success` types
+// Selected developer because least likely to interfere with regular users
 .notifications-sticky .notification-developer {
 	background-color: #60CBF1 !important;
 }

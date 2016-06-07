@@ -43,18 +43,78 @@ class ThreadUnsubscribeButton extends React.Component {
     event.stopPropagation()
   }
 
-  getTitleText() {
-    let titleText;
-    if (this.state.condition === ThreadConditionType.ERRORED) {
-      titleText = 'Unsubscribe (Errored)';
-    } else if (this.state.hasLinks === false) {
-      titleText = 'Unsubscribe (Disabled)';
-    } else if (this.state.isEmail === true) {
-      titleText = 'Unsubscribe (Email)';
-    } else {
-      titleText = 'Unsubscribe (Browser)';
+  getIconURL(name : string, scale : number) {
+    let url = UNSUBSCRIBE_ASSETS_URL;
+
+    if (typeof scale === 'undefined') {
+      // Add error checking to make sure an icon is available:
+      // PREVIOUSLY: scale = window.devicePixelRatio || 1;
+      scale = Math.ceil(window.devicePixelRatio);
+      // console.log(`Calculated scale: ${scale}`);
+      if (scale !== 1 || scale !== 2) { scale = 2; }
     }
-    return titleText;
+
+    url += name;
+
+    switch (this.state.condition) {
+      case ThreadConditionType.UNSUBSCRIBED:
+        url += '-success';
+        break;
+      case ThreadConditionType.ERRORED:
+        url += '-error';
+        break;
+      case ThreadConditionType.DISABLED:
+        // url += '-disabled';
+        url += '';
+        break;
+      // // // Moved to default:
+      // case ThreadConditionType.LOADING:
+      //   url += '-loading';
+      //   break;
+      case ThreadConditionType.DONE:
+        url += '';
+        break;
+      default:
+        url += '-loading';
+        break;
+    }
+
+    url += `@${scale}x.png`;
+
+    return url;
+  }
+
+  getStateText() {
+    let buttonTitle;
+    let extraClasses;
+    if (this.state.condition === ThreadConditionType.ERRORED) {
+      extraClasses = 'unsubscribe-error';
+      buttonTitle = 'Unsubscribe (Error)';
+    } else if (this.state.condition === ThreadConditionType.LOADING) {
+      extraClasses = 'unsubscribe-loading';
+      buttonTitle = 'Unsubscribe (Loading)';
+    } else if (this.state.condition === ThreadConditionType.UNSUBSCRIBED) {
+      extraClasses = 'unsubscribe-success';
+      buttonTitle = 'Unsubscribe (Success!)';
+    } else if (this.state.condition === ThreadConditionType.DISABLED) {
+      extraClasses = 'unsubscribe-disabled';
+      buttonTitle = 'Unsubscribe (Disabled)';
+    } else if (this.state.condition === ThreadConditionType.DONE) {
+      extraClasses = 'unsubscribe-ready';
+      buttonTitle = 'Unsubscribe Now!';
+    } else if (this.state.isEmail === true) {
+      extraClasses = 'unsubscribe-ready';
+      buttonTitle = 'Unsubscribe (via Email)';
+    } else if (this.state.hasLinks === true) {
+      extraClasses = 'unsubscribe-ready';
+      buttonTitle = 'Unsubscribe (via Browser)';
+    } else {
+      console.warn('Unknown state for this.state.condition:');
+      console.warn(this);
+      extraClasses = 'unsubscribe-else-catch';
+      buttonTitle = 'Unsubscribe (NO-STATE-ERROR)';
+    }
+    return {buttonTitle, extraClasses};
   }
 
   load(props) {
@@ -82,9 +142,7 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
   static displayName = 'ThreadUnsubscribeQuickActionButton';
 
   render() {
-    let buttonTitle = this.getTitleText();
-    const extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
-
+    const {buttonTitle, extraClasses} = this.getStateText();
     return (
       <div
         key="unsubscribe"
@@ -103,38 +161,12 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
 
   static displayName = 'ThreadUnsubscribeToolbarButton';
 
-  getIconURL(name : string, scale : number) {
-    let url = UNSUBSCRIBE_ASSETS_URL;
-
-    if (typeof scale === 'undefined') {
-      // Add error checking to make sure an icon is available:
-      // PREVIOUSLY: scale = window.devicePixelRatio || 1;
-      scale = Math.ceil(window.devicePixelRatio);
-      // console.log(`Calculated scale: ${scale}`);
-      if (scale !== 1 || scale !== 2) { scale = 2; }
-    }
-
-    url += name;
-
-    /* switch (this.state.condition) {
-      case ThreadConditionType.UNSUBSCRIBED:
-        url += '-success';
-        break;
-    }*/
-
-    url += `@${scale}x.png`;
-
-    return url;
-  }
-
   _keymapHandlers() {
     return {"n1-unsubscribe:unsubscribe": this._keymapDemo}
   }
 
   render() {
-    let buttonTitle = this.getTitleText();
-    const extraClasses = (this.state.hasLinks === false) ? 'unsubscribe-disabled' : '';
-
+    const {buttonTitle, extraClasses} = this.getStateText();
     return (
       <KeyCommandsRegion globalHandlers={this._keymapHandlers(this)}>
         <button
@@ -152,8 +184,8 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   }
 
   _keymapDemo() {
-    console.error('KEYMAP for N!-Unsubscribe was PRESSED!');
-    // FIXME: `this` doesn't have class `.unsubscribe()`
+    console.error('KEYMAP for N1-Unsubscribe was PRESSED!');
+    // // FIXME: `this` doesn't have class `.unsubscribe()`
     // this.tuStore.unsubscribe();
   }
 }

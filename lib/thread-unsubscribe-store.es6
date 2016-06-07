@@ -77,7 +77,11 @@ class ThreadUnsubscribeStore extends NylasStore {
         const bodyLinks = this.parseBodyForLinks(email.html);
         this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
         this.threadState.hasLinks = (this.links.length > 0);
-        this.threadState.condition = ThreadConditionType.DONE;
+        if (this.threadState.hasLinks) {
+          this.threadState.condition = ThreadConditionType.DONE;
+        } else {
+          this.threadState.condition = ThreadConditionType.DISABLED;
+        }
         if (NylasEnv.inDevMode() === true) {
           if (this.threadState.hasLinks) {
             console.info(`Found links for: "${this.thread.subject}"`);
