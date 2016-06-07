@@ -27,7 +27,7 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 
 ## Settings
 
-Certain features for this package can be toggled by changing the appropriate settings from within [`unsubscribe-settings.json`](https://github.com/colinking/n1-unsubscribe/blob/master/unsubscribe-settings.json).
+Certain features for this package can be toggled by changing the appropriate settings from within `unsubscribe-settings.json`. The settings file isn't tracked, so once you edit it, your preferences will be saved even when updating. You can see the defulat file here: [`unsubscribe-settings.defaults.json`](https://github.com/colinking/n1-unsubscribe/blob/master/unsubscribe-settings.defaults.json).
 
 To change any of these settings, first install the package and modify `~/.nylas/packages/unsubscribe-settings.json`. To update your settings in the app, just reload N1 (<kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>L</kbd> or `Developer > Reload`).
 
