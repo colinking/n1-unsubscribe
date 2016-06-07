@@ -25,6 +25,13 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 
 ![PluginsPage](.github/NylasPluginPane.png)
 
+## The Icons
+
+- ![Loading](assets/unsubscribe-loading.svg) Loading -- wait for a moment for the icon to update
+- ![Unsubscribe](assets/unsubscribe.svg) Ready to unsubscribe and waiting on your click
+- ![Error](assets/unsubscribe-success.svg) You are now unsubscribed!
+- ![Error](assets/unsubscribe-error.svg) When something goes wrong, you will get this error icon. Click the icon to forward the current email to [n1.unsubscribe@gmail.com](mailto:n1.unsubscribe@gmail.com) and we will try to see what went wrong.
+
 ## Settings
 
 Certain features for this package can be toggled by changing the appropriate settings from within `unsubscribe-settings.json`. The settings file isn't tracked, so once you edit it, your preferences will be saved even when updating. You can see the default file here: [`unsubscribe-settings.defaults.json`](https://raw.githubusercontent.com/colinking/n1-unsubscribe/master/unsubscribe-settings.defaults.json).
