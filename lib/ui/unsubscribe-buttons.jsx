@@ -7,6 +7,8 @@ const UNSUBSCRIBE_ASSETS_URL = 'nylas://n1-unsubscribe/assets/';
 
 class ThreadUnsubscribeButton extends React.Component {
 
+  static containerRequired = false;
+
   static propTypes = {
     thread: React.PropTypes.object,
   }
@@ -115,17 +117,16 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
 
   render() {
     const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
+    // Style-order: [<100] Archive (100), Trash (110) [To be on the right, be > 110]
     return (
       <div
         key="unsubscribe"
         title={buttonTitle}
         style={{
-          order: 80,
+          order: 120,
           background: `url(${url}) center no-repeat`,
         }}
-        className={
-          `btn action action-unsubscribe ${extraClasses}`
-        }
+        className={`btn action action-unsubscribe ${extraClasses}`}
         onClick={this.onClick.bind(this)}
       ></div>
     );
@@ -137,15 +138,21 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   static displayName = 'ThreadUnsubscribeToolbarButton';
 
   _keymapHandlers() {
-    return {"n1-unsubscribe:unsubscribe": this._keymapDemo}
+    return {"n1-unsubscribe:unsubscribe": this._keymapEvent}
   }
 
   render() {
     const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
+    // Style-order: [<-107] Archive (-107) ...
+    //      Unread (-104) [To be on the right, be > -104]
     return (
-      <KeyCommandsRegion globalHandlers={this._keymapHandlers(this)}>
+      <KeyCommandsRegion
+        globalHandlers={this._keymapHandlers(this)}
+        style={{order: -110}}
+      >
         <button
           className={`btn btn-toolbar toolbar-unsubscribe ${extraClasses}`}
+          id={'N1-Unsubscribe'}
           onClick={this.onClick.bind(this)}
           title={buttonTitle}
         >
