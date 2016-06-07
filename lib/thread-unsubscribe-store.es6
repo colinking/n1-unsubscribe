@@ -4,6 +4,7 @@ const {
   FocusedPerspectiveStore,
   NylasAPI,
 } = require('nylas-exports');
+
 const NylasStore = require('nylas-store');
 const _ = require('underscore');
 const cheerio = require('cheerio');
@@ -11,7 +12,6 @@ const BrowserWindow = require('electron').remote.BrowserWindow;
 const MailParser = require('mailparser').MailParser;
 const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`);
 const open = require('open');
-// TODO
 const blacklist = require(`${__dirname}/blacklist.json`);
 
 class ThreadUnsubscribeStore extends NylasStore {
@@ -75,8 +75,7 @@ class ThreadUnsubscribeStore extends NylasStore {
       if (!error) {
         const headerLinks = this.parseHeadersForLinks(email.headers);
         const bodyLinks = this.parseBodyForLinks(email.html);
-        const TEMP = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
-        this.links = this.checkLinkBlacklist(TEMP);
+        this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
         this.threadState.hasLinks = (this.links.length > 0);
         this.threadState.condition = ThreadConditionType.DONE;
         if (NylasEnv.inDevMode() === true) {
@@ -204,17 +203,7 @@ class ThreadUnsubscribeStore extends NylasStore {
     });
     return newLinks;
   }
-
-  // Check the custom blacklist and handle links that can issues:
-  // FIXME
-  // TODO
-  checkLinkBlacklist(links) {
-    // console.warn(blacklist.emails[0]);
-    const newLinks = links;
-    return newLinks;
-  }
-
-  // Takes a String URL and unsubscribes by loading a browser window
+  // Takes a String URL to later open a URL
   unsubscribeViaBrowser(url, callback) {
     if (process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false' ||
     confirm('Are you sure that you want to unsubscribe?' +
@@ -222,28 +211,13 @@ class ThreadUnsubscribeStore extends NylasStore {
       if (NylasEnv.inDevMode() === true) {
         console.log(`Opening a browser window to:\n${url}`);
       }
-      // @ColinKing
-      // URL's with the '/wf/click?upn=' lick tracking feature can't be opened
-      // const re = /\/wf\/click\?upn=/gi;
-      // if (re.test(url)) {
-      // }
-      if (process.env.N1_UNSUBSCRIBE_USE_BROWSER === 'true') {
-        // Open the user's browser to the specific URL
+
+      if (this.checkLinkBlacklist(url) ||
+        process.env.N1_UNSUBSCRIBE_USE_BROWSER === 'true') {
+        // Open the user's default browser to the specific URL
         open(url);
         callback(null);
       } else {
-        // May be an issue with: --ignore-certificate-errors
-        // app.commandLine.appendSwitch("ignore-certificate-errors");
-        // Guide on adding flags to chrome:
-        // https://github.com/atom/electron/blob/master/docs/api/chrome-command-line-switches.md
-        // Two related issues on Electron:
-        // https://github.com/atom/electron/issues/3555
-        // https://github.com/atom/electron/issues/1956
-        // See #7 for info about the email redirect:
-        // https://support.sendgrid.com/hc/en-us/articles/200181718-Email-Deliverability-101
-        // POssible solution is to select client certificate:
-        // http://electron.atom.io/docs/v0.36.0/api/app/#event-39-select-client-certificate-39
-
         const browserWindow = new BrowserWindow({
           'web-preferences': { 'web-security': false },
           width: 1000,
@@ -257,16 +231,38 @@ class ThreadUnsubscribeStore extends NylasStore {
         });
 
         // browserWindow.on('page-title-updated', function(event) {
-        // 	webContents = browserWindow.webContents;
-        // 	if (!webContents.isDevToolsOpened()) {
-        // 		webContents.openDevTools();
-        // 	}
+        //  webContents = browserWindow.webContents;
+        //  if (!webContents.isDevToolsOpened()) {
+        //    webContents.openDevTools();
+        //  }
         // });
 
         browserWindow.loadURL(url);
         browserWindow.show();
       }
     }
+  }
+
+  // Determine if the link can be opened in the electron browser or if it
+  // should be directed to the default browser
+  checkLinkBlacklist(url) {
+    const regexps = blacklist.browser;
+    for (let i = 0; i < regexps.length; i++) {
+      const re = new RegExp(regexps[i]);
+      if (NylasEnv.inDevMode() === true) {
+        console.log(`Checking blacklist with: ${re}`);
+      }
+      if (re.test(url)) {
+        if (NylasEnv.inDevMode() === true) {
+          console.log(`Found ${url} on blacklist with ${re}`);
+        }
+        return true;
+      }
+    }
+    if (NylasEnv.inDevMode() === true) {
+      console.log('NOT FOUND on BLACKLIST');
+    }
+    return false;
   }
 
   // Takes a String email address and sends an email to it in order to unsubscribe from the list
@@ -292,13 +288,11 @@ class ThreadUnsubscribeStore extends NylasStore {
             }],
           },
           success: () => {
-            // callback(null);
+            // TODO
+            callback(null);
           },
           error: (error) => {
-            // callback(error);
-            if (NylasEnv.inDevMode() === true) {
-              console.warn(error);
-            }
+            console.error(error);
           },
         });
 
@@ -313,9 +307,9 @@ class ThreadUnsubscribeStore extends NylasStore {
     }
   }
 
-	// Move the given thread to the trash
-	// From Thread-List Package
-	// https://github.com/nylas/N1/blob/master/internal_packages/thread-list/lib/thread-list.cjsx
+  // Move the given thread to the trash
+  // From Thread-List Package
+  // https://github.com/nylas/N1/blob/master/internal_packages/thread-list/lib/thread-list.cjsx
   moveThread() {
     if (this.thread) {
       if (process.env.N1_UNSUBSCRIBE_THREAD_HANDLING === 'trash') {

@@ -1,13 +1,14 @@
 {
 	"browser": [
-		"www.roomster.com",
-		"www.trulia.com",
-		"hackerrank.com",
-		"www.apartmentlist.com"
+		"www\\.roomster\\.com",
+		"trulia\\.com",
+		"hackerrank\\.com",
+		"www\\.apartmentlist\\.com",
+		"/wf/click\\?upn='"
 	],
 	"emails": [
-		"sympa@lists.eng.umd.edu",
+		"sympa@lists\\.eng\\.umd\\.edu",
 		"sympa@",
-		"@blancmedia.activehosted.com"
+		"@blancmedia\\.activehosted\\.com"
 	]
 }

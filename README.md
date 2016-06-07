@@ -17,7 +17,7 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 
 <!-- [![Download n1-unsubscribe](https://cdn.rawgit.com/colinking/n1-unsubscribe/master/.github/download.svg)](https://github.com/colinking/n1-unsubscribe/raw/master/dist/n1-unsubscribe.zip) -->
 
-1. Download and un-zip `n1-unsubscribe.zip` from the [Releases page](https://github.com/colinking/n1-unsubscribe/releases/latest).
+1. Download and unzip `n1-unsubscribe.zip` from the [Releases page](https://github.com/colinking/n1-unsubscribe/releases/latest).
 
 2. In N1, Select the menu bar option `Developer > Install a Plugin...`, then select the unzipped folder, `n1-unsubscribe`
 
@@ -27,12 +27,12 @@ N1-Unsubscribe acts in one of two ways. First, it looks if it can unsubscribe vi
 
 ## Settings
 
-Certain features for this package can be toggled by changing the appropriate settings from within `unsubscribe-settings.json`. The settings file isn't tracked, so once you edit it, your preferences will be saved even when updating. You can see the defulat file here: [`unsubscribe-settings.defaults.json`](https://raw.githubusercontent.com/colinking/n1-unsubscribe/master/unsubscribe-settings.defaults.json).
+Certain features for this package can be toggled by changing the appropriate settings from within `unsubscribe-settings.json`. The settings file isn't tracked, so once you edit it, your preferences will be saved even when updating. You can see the default file here: [`unsubscribe-settings.defaults.json`](https://raw.githubusercontent.com/colinking/n1-unsubscribe/master/unsubscribe-settings.defaults.json).
 
 To change any of these settings, first install the package and modify `~/.nylas/packages/unsubscribe-settings.json`. To update your settings in the app, just reload N1 (<kbd>Alt</kbd> + <kbd>Cmd</kbd> + <kbd>L</kbd> or `Developer > Reload`).
 
 - **use_browser**: Toggle between opening web-based unsubscribe links in your native browser or an in-app pop-up window (default: pop-up).
-- **handle_threads**: Toggle between automatically archiving, trashing or not moving your email anywhere after unsubscibing (default: archive).
+- **handle_threads**: Toggle between automatically archiving, trashing or not moving your email anywhere after unsubscribing (default: archive).
 - **confirm_for_email**: Toggle a confirmation box on or off before sending an automatic unsubscribe email (default: off).
 - **confirm_for_browser**: Toggle a confirmation box on or off before opening a browser window to unsubscribe from an email (default: off).
 
