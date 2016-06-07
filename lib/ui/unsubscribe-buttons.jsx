@@ -43,78 +43,50 @@ class ThreadUnsubscribeButton extends React.Component {
     event.stopPropagation()
   }
 
-  getIconURL(name : string, scale : number) {
+  getIconInfo(name : string, scale : number) {
     let url = UNSUBSCRIBE_ASSETS_URL;
+    let buttonTitle;
+    let extraClasses;
 
     if (typeof scale === 'undefined') {
-      // Add error checking to make sure an icon is available:
-      // PREVIOUSLY: scale = window.devicePixelRatio || 1;
       scale = Math.ceil(window.devicePixelRatio);
       // console.log(`Calculated scale: ${scale}`);
       if (scale !== 1 || scale !== 2) { scale = 2; }
     }
 
     url += name;
-
     switch (this.state.condition) {
       case ThreadConditionType.UNSUBSCRIBED:
+        extraClasses = 'unsubscribe-success';
+        buttonTitle = 'Unsubscribe (Success!)';
         url += '-success';
         break;
       case ThreadConditionType.ERRORED:
+        extraClasses = 'unsubscribe-error';
+        buttonTitle = 'Unsubscribe (Error)';
         url += '-error';
         break;
       case ThreadConditionType.DISABLED:
+        extraClasses = 'unsubscribe-disabled';
+        buttonTitle = 'Unsubscribe (Disabled)';
         // url += '-disabled';
         url += '';
         break;
-      // // // Moved to default:
-      // case ThreadConditionType.LOADING:
-      //   url += '-loading';
-      //   break;
       case ThreadConditionType.DONE:
+        extraClasses = 'unsubscribe-ready';
+        buttonTitle = 'Unsubscribe Now!';
         url += '';
         break;
       default:
+        extraClasses = 'unsubscribe-loading';
+        buttonTitle = 'Unsubscribe (Loading)';
         url += '-loading';
         break;
     }
 
     url += `@${scale}x.png`;
 
-    return url;
-  }
-
-  getStateText() {
-    let buttonTitle;
-    let extraClasses;
-    if (this.state.condition === ThreadConditionType.ERRORED) {
-      extraClasses = 'unsubscribe-error';
-      buttonTitle = 'Unsubscribe (Error)';
-    } else if (this.state.condition === ThreadConditionType.LOADING) {
-      extraClasses = 'unsubscribe-loading';
-      buttonTitle = 'Unsubscribe (Loading)';
-    } else if (this.state.condition === ThreadConditionType.UNSUBSCRIBED) {
-      extraClasses = 'unsubscribe-success';
-      buttonTitle = 'Unsubscribe (Success!)';
-    } else if (this.state.condition === ThreadConditionType.DISABLED) {
-      extraClasses = 'unsubscribe-disabled';
-      buttonTitle = 'Unsubscribe (Disabled)';
-    } else if (this.state.condition === ThreadConditionType.DONE) {
-      extraClasses = 'unsubscribe-ready';
-      buttonTitle = 'Unsubscribe Now!';
-    } else if (this.state.isEmail === true) {
-      extraClasses = 'unsubscribe-ready';
-      buttonTitle = 'Unsubscribe (via Email)';
-    } else if (this.state.hasLinks === true) {
-      extraClasses = 'unsubscribe-ready';
-      buttonTitle = 'Unsubscribe (via Browser)';
-    } else {
-      console.warn('Unknown state for this.state.condition:');
-      console.warn(this);
-      extraClasses = 'unsubscribe-else-catch';
-      buttonTitle = 'Unsubscribe (NO-STATE-ERROR)';
-    }
-    return {buttonTitle, extraClasses};
+    return {buttonTitle, extraClasses, url};
   }
 
   load(props) {
@@ -142,12 +114,15 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
   static displayName = 'ThreadUnsubscribeQuickActionButton';
 
   render() {
-    const {buttonTitle, extraClasses} = this.getStateText();
+    const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
     return (
       <div
         key="unsubscribe"
         title={buttonTitle}
-        style={{ order: 80 }}
+        style={{
+          order: 80,
+          background: `url(${url}) center no-repeat`,
+        }}
         className={
           `btn action action-unsubscribe ${extraClasses}`
         }
@@ -166,7 +141,7 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   }
 
   render() {
-    const {buttonTitle, extraClasses} = this.getStateText();
+    const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
     return (
       <KeyCommandsRegion globalHandlers={this._keymapHandlers(this)}>
         <button
@@ -176,7 +151,7 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
         >
           <RetinaImg
             mode={RetinaImg.Mode.ContentIsMask}
-            url={this.getIconURL('toolbar-unsubscribe')}
+            url={url}
           />
         </button>
       </KeyCommandsRegion>
