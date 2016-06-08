@@ -73,6 +73,16 @@ class ThreadUnsubscribeStore extends NylasStore {
   loadLinks() {
     this.loadMessagesViaAPI((error, email) => {
       if (!error) {
+        // Take note when asking to unsubscribe later:
+        this.isForwarded = this.thread.subject.match(/^Fwd: /i);
+        if (this.isForwarded) {
+          this.confirmText = `The email was forwarded, are you sure that you` +
+            ` want to unsubscribe?`;
+        } else {
+          this.confirmText = `Are you sure that you want to unsubscribe?`;
+        }
+
+        // Find and concatenate links:
         const headerLinks = this.parseHeadersForLinks(email.headers);
         const bodyLinks = this.parseBodyForLinks(email.html);
         this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
@@ -82,6 +92,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         } else {
           this.threadState.condition = ThreadConditionType.DISABLED;
         }
+        // This quickly adds up, so only log this info when debugging:
         if (NylasEnv.inDevMode() === true) {
           if (this.threadState.hasLinks) {
             console.info(`Found links for: "${this.thread.subject}"`);
@@ -117,7 +128,6 @@ class ThreadUnsubscribeStore extends NylasStore {
     _.each(this.messages[0].categories, (category) => {
       type = category.displayName;
       if (type === "Sent Mail") {
-        console.log(type);
         sentMail = true;
       }
     });
@@ -229,9 +239,22 @@ class ThreadUnsubscribeStore extends NylasStore {
   }
   // Takes a String URL to later open a URL
   unsubscribeViaBrowser(url, callback) {
-    if (process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false' ||
-    confirm('Are you sure that you want to unsubscribe?' +
-      `\nA browser will be opened at:\n${url}`)) {
+    // NylasEnv.confirm({
+    //   message: 'How you feeling?',
+    //   detailedMessage: 'Be honest.',
+    //   buttons: {
+    //     Good: () => {
+    //       console.log('good')
+    //       return window.alert('good to hear');
+    //     },
+    //     Bad: () => {
+    //       console.log('bad')
+    //       return window.alert('bummer');
+    //     },
+    //   },
+    // });
+    if ((!this.isForwarded && process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false') ||
+      confirm(`${this.confirmText}\nA browser will be opened at:\n\n${url}`)) {
       if (NylasEnv.inDevMode() === true) {
         console.log(`Opening a browser window to:\n${url}`);
       }
@@ -292,9 +315,8 @@ class ThreadUnsubscribeStore extends NylasStore {
   // Takes a String email address and sends an email to it in order to unsubscribe from the list
   unsubscribeViaMail(emailAddress, callback) {
     if (emailAddress) {
-      if (process.env.N1_UNSUBSCRIBE_CONFIRM_EMAIL === 'false' ||
-        confirm('Are you sure that you want to unsubscribe?' +
-        `\nAn email will be sent to:\n${emailAddress}`)) {
+      if ((!this.isForwarded && process.env.N1_UNSUBSCRIBE_CONFIRM_EMAIL === 'false') ||
+        confirm(`${this.confirmText}\nAn email will be sent to:\n${emailAddress}`)) {
         if (NylasEnv.inDevMode() === true) {
           console.log(`Sending an unsubscription email to:\n${emailAddress}`);
         }
