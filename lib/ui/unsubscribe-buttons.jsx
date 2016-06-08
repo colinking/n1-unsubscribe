@@ -142,7 +142,7 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   }
 
   render() {
-    const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
+    const {buttonTitle, extraClasses, url} = this.getIconInfo('toolbar-unsubscribe');
     // Style-order: [<-107] Archive (-107) ...
     //      Unread (-104), Star/Label? (-103) [To be on the right, be > -103]
     return (
