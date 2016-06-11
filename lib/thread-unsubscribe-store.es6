@@ -104,6 +104,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         }
       } else if (error === 'sentMail') {
         console.log(`Can\'t parse "${this.thread.subject}"" because it was sent from this account`);
+        this.threadState.condition = ThreadConditionType.DISABLED;
       } else {
         if (NylasEnv.inDevMode() === true) {
           console.warn(`\n--Error in querying message: ${this.thread.subject}--\n`);
@@ -132,6 +133,8 @@ class ThreadUnsubscribeStore extends NylasStore {
       }
     });
     if (sentMail) {
+      // callback(new Error('Sent email.'));
+      // No error, sort of...
       callback('sentMail', null);
     } else {
       if (this.messages && this.messages.length > 0) {
