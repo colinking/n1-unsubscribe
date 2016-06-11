@@ -1,3 +1,100 @@
-a {
-	text-style: underline;
+/*
+Universal Styles and Bootstrap Overwrites
+ */
+
+body {
+	font-family: 'Lato', sans-serif;
+  color: rgb(38, 50, 56);
 }
+
+.small-N1-image {
+	max-width: 90%;
+}
+.mini-N1-image {
+	max-height: 100px;
+}
+
+/*
+Working with text elements
+ */
+
+a {
+	text-style: underline !important;
+	color: rgb(255, 255, 255);
+}
+a:hover {
+	text-style: underline;
+	color: rgb(255, 255, 255);
+}
+
+h1 {
+	font-size: 50px;
+}
+h2 {
+	font-size: 25px;
+}
+h3 {
+	font-size: 25px;
+	padding: 20px;
+}
+h4.break-text {
+	font-size: 40px;
+	font-style: oblique;
+}
+
+/*
+The Hero Element
+ */
+
+.hero-background {
+	padding-top: 20vh;
+  background-color: rgb(128, 203, 194);
+  height: 60vh;
+}
+.hero-text {
+	color: RGB(249, 249, 249);
+}
+
+/*
+Content containers
+ */
+.buttons-container {
+	padding-top: 10vh;
+	padding-bottom: 20vh;
+}
+.actions-container {
+	padding-bottom: 10vh;
+}
+
+.getstarted-container {
+	padding-top: 10vh;
+	padding-bottom: 10vh;
+	// height: 100vh;
+	background-color: rgb(38, 50, 56);
+	color: rgb(255, 255, 255);
+}
+.force-white {
+	color: rgb(255, 255, 255);
+}
+
+.features-container {
+	padding-top: 10vh;
+	padding-bottom: 20vh;
+	/* height: 100vh; */
+}
+
+/*
+Footer links and hints
+ */
+
+footer {
+  background-color: rgb(128, 203, 194);
+	padding-top: 10vh;
+	padding-bottom: 10vh;
+}
+footer h2 {
+	line-height: 1.5 !important;
+}
+
+
+/* @media (min-width: 1000px) { */
