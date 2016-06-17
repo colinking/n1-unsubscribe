@@ -181,8 +181,15 @@ class ThreadUnsubscribeStore extends NylasStore {
     if (headers && headers['list-unsubscribe']) {
       const rawLinks = headers['list-unsubscribe'].split(/,/g);
       unsubscribeLinks = _.map(rawLinks, (link) => {
-        const trimmedLinks = link.trim();
-        return trimmedLinks.substring(1, trimmedLinks.length - 1);
+        const trimmedLink = link.trim();
+        let approvedLink = '';
+        if (this.checkEmailBlacklist(trimmedLink) === false) {
+          approvedLink = trimmedLink.substring(1, trimmedLink.length - 1);
+        } else {
+          console.log(`${trimmedLink} was found on blacklist and will` +
+            ` not be used to unsubscribe`);
+        }
+        return approvedLink;
       });
     }
     return unsubscribeLinks;
@@ -308,20 +315,29 @@ class ThreadUnsubscribeStore extends NylasStore {
   // should be directed to the default browser
   checkLinkBlacklist(url) {
     const regexps = blacklist.browser;
+    return this.regexpcompare(regexps, url);
+  }
+
+  // Determine if the unsubscribe email is valid
+  checkEmailBlacklist(email) {
+    const regexps = blacklist.emails;
+    return this.regexpcompare(regexps, email);
+  }
+
+  // Takes an array of regular expressions and compares against a target string
+  // Returns true if a match is found
+  regexpcompare(regexps, target) {
     for (let i = 0; i < regexps.length; i++) {
       const re = new RegExp(regexps[i]);
-      if (NylasEnv.inDevMode() === true) {
-        console.log(`Checking blacklist with: ${re}`);
-      }
-      if (re.test(url)) {
+      // if (NylasEnv.inDevMode() === true) {
+      //   console.log(`Checking blacklist with: ${re}`);
+      // }
+      if (re.test(target)) {
         if (NylasEnv.inDevMode() === true) {
-          console.log(`Found ${url} on blacklist with ${re}`);
+          console.log(`Found ${target} on blacklist with ${re}`);
         }
         return true;
       }
-    }
-    if (NylasEnv.inDevMode() === true) {
-      console.log('NOT FOUND on BLACKLIST');
     }
     return false;
   }
