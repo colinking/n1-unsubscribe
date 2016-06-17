@@ -364,8 +364,7 @@ class ThreadUnsubscribeStore extends NylasStore {
             }],
           },
           success: () => {
-            // TODO
-            callback(null);
+            // Do nothing - for now
           },
           error: (error) => {
             console.error(error);
