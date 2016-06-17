@@ -126,12 +126,14 @@ class ThreadUnsubscribeStore extends NylasStore {
     // Ignore any sent messages because they return a 404 error:
     let type = '';
     let sentMail = false;
-    _.each(this.messages[0].categories, (category) => {
-      type = category.displayName;
-      if (type === "Sent Mail") {
-        sentMail = true;
-      }
-    });
+    if (this.messages[0] && this.messages[0].categories) {
+      _.each(this.messages[0].categories, (category) => {
+        type = category.displayName;
+        if (type === "Sent Mail") {
+          sentMail = true;
+        }
+      });
+    }
     if (sentMail) {
       // callback(new Error('Sent email.'));
       // No error, sort of...
