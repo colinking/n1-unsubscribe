@@ -258,8 +258,9 @@ class ThreadUnsubscribeStore extends NylasStore {
     //     },
     //   },
     // });
+    const disURL = this.shortenURL(url);
     if ((!this.isForwarded && process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false') ||
-      confirm(`${this.confirmText}\nA browser will be opened at:\n\n${url}`)) {
+      confirm(`${this.confirmText}\nA browser will be opened at:\n\n${disURL}`)) {
       if (NylasEnv.inDevMode() === true) {
         console.log(`Opening a browser window to:\n${url}`);
       }
@@ -293,6 +294,14 @@ class ThreadUnsubscribeStore extends NylasStore {
         browserWindow.show();
       }
     }
+  }
+
+  // Quick solution to
+  shortenURL(url) {
+    // modified from: http://stackoverflow.com/a/26766402/3219667
+    const regex = /^([^:\/?#]+:?\/\/([^\/?#]*))/i;
+    const disURL = regex.exec(url)[0];
+    return `${disURL}/...`;
   }
 
   // Determine if the link can be opened in the electron browser or if it
