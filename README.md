@@ -52,7 +52,7 @@ N1-Unsubscribe now supports keyboard shortcuts! Press <kbd>CMD</kbd> + <kbd>ALT<
 1. Go to:`Nylas->Preferences`
 2. Click the `shortcuts` tab
 3. Then scroll to the bottom and click the `Edit Custom Shortcuts` button
-4. From the finder window, open keymap.json in a text editor and add this snippet (replace mod+j with whatver shortcut you want - note mod is <kbd>CMD</kbd> on a mac and <kbd>Alt</kbd> on a PC):
+4. From the finder window, open keymap.json in a text editor and add this snippet (replace `mod+j` with whatever shortcut you want - note mod is the super key on a Mac/PC):
 
     For keymap.json:
     ```json
@@ -61,6 +61,12 @@ N1-Unsubscribe now supports keyboard shortcuts! Press <kbd>CMD</kbd> + <kbd>ALT<
     }
     ```
     **Alterantively** if you use Keymap.cson, you know what to do!
+
+## Always Stay Up To Date
+
+Whenever an update is released, you will get a native notification. If you would like to add the same banner to your application, see our related NPM package - [n1pluginupdater](https://github.com/KyleKing/n1pluginupdater)
+
+![Nylas Alert](.github/alertbanner.png)
 
 ## Reporting Bugs
 
