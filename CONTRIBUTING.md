@@ -33,11 +33,5 @@ While reading an email you may realize that you would like to unsubscribe, so in
 ![MenuItem](.github/NewMenuItem.png)
 
 ## Future Features of n1-unsubscribe
-- [ ] Undo unsubscribe action -> cancel email from sending
-- [ ] Edge case support (See 3 open issues)
-- [ ] Icons sits on top of text in quick action - fix CSS
-- [ ] Move toolbar button to far left
-- [ ] Loading icon
-- [ ] Functional bulk-unsubscribe button
+- [ ] Bulk-unsubscribe button (can't sequentially unsubscribe)
 - [ ] Add Jasmine tests
-- [ ] Many more!
