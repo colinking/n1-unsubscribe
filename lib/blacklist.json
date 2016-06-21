@@ -4,12 +4,14 @@
 		"trulia\\.com",
 		"hackerrank\\.com",
 		"www\\.apartmentlist\\.com",
-		"/wf/click\\?upn='"
+		"/wf/click\\?upn='",
+		"timbuk2\\.com",
+		"perch-email\\.closely\\.com"
 	],
 	"emails": [
 		"sympa@lists\\.eng\\.umd\\.edu",
 		"sympa@",
 		"@blancmedia\\.activehosted\\.com",
-		"@bounces\\.elasticemail\\.net"
+		"@bounce"
 	]
 }
