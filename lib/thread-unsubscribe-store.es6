@@ -205,7 +205,7 @@ class ThreadUnsubscribeStore extends NylasStore {
       links = links.concat(this.getLinkedSentences($));
       const regexps = [
         /unsubscribe/gi,
-        /opt[ -]out/gi,
+        /opt[ -]{0,2}out/gi,
         /email preferences/gi,
         /subscription/gi,
         /notification settings/gi,
