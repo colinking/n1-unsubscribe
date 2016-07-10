@@ -85,7 +85,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         // Find and concatenate links:
         const headerLinks = this.parseHeadersForLinks(email.headers);
         const bodyLinks = this.parseBodyForLinks(email.html);
-        this.links = this.parseLinksForTypes(bodyLinks.concat(headerLinks));
+        this.links = this.parseLinksForTypes(headerLinks.concat(bodyLinks));
         this.threadState.hasLinks = (this.links.length > 0);
         if (this.threadState.hasLinks) {
           this.threadState.condition = ThreadConditionType.DONE;
@@ -177,19 +177,19 @@ class ThreadUnsubscribeStore extends NylasStore {
 
   // Examine the email headers for the list-unsubscribe header
   parseHeadersForLinks(headers) {
-    let unsubscribeLinks = [];
+    const unsubscribeLinks = [];
     if (headers && headers['list-unsubscribe']) {
       const rawLinks = headers['list-unsubscribe'].split(/,/g);
-      unsubscribeLinks = _.map(rawLinks, (link) => {
+      rawLinks.forEach((link) => {
         const trimmedLink = link.trim();
-        let approvedLink = '';
-        if (this.checkEmailBlacklist(trimmedLink) === false) {
-          approvedLink = trimmedLink.substring(1, trimmedLink.length - 1);
+        if (/mailto.*/g.test(link)) {
+          if (this.checkEmailBlacklist(trimmedLink) === false) {
+            unsubscribeLinks.push(trimmedLink.substring(1, trimmedLink.length - 1));
+          }
         } else {
-          console.log(`${trimmedLink} was found on blacklist and will` +
-            ` not be used to unsubscribe`);
+          // if (this.checkLinkBlacklist(trimmedLink) === false) {
+          unsubscribeLinks.push(trimmedLink.substring(1, trimmedLink.length - 1));
         }
-        return approvedLink;
       });
     }
     return unsubscribeLinks;
