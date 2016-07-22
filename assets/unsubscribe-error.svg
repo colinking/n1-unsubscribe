@@ -4,11 +4,11 @@
     <title>unsubscribe-error</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="unsubscribe-error">
-            <polygon id="Bottom" fill="#2F3337" points="7.11043783 14.0908733 13.4463772 14.0908733 15.5229992 15.9416589 8.92989393 15.9416589 8.92989393 28.0297571 19.5376658 28.0297571 29.0706277 37.7539516 29.1059225 28.3346219 30.9184079 29.9335113 30.9184079 40.4979282 29.1059231 40.4979282 18.6392731 29.9335113 7.11043783 29.9335113"></polygon>
-            <path d="M22,21.1421356 L36.1421356,7" id="Line" stroke="#2F3337" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M22,21.1421356 L36.1421356,7" id="Line" stroke="#2F3337" stroke-width="2" stroke-linecap="square" transform="translate(29.071068, 14.071068) scale(-1, 1) translate(-29.071068, -14.071068) "></path>
+            <polygon id="Bottom" fill="#2F3337" points="6.38547379 12.46454 12.7678738 12.46454 15.5229992 14.9416589 8.92989393 14.9416589 8.92989393 27.0297571 19.5376658 27.0297571 29.0706277 36.7539516 29.1059225 27.3346219 31.1736627 29.1644988 31.1736627 40.1289286 29.1059232 40.1289286 18.2479063 29.5385374 6.38547379 29.5385374"></polygon>
+            <path d="M22.5302294,19.6119062 L35.6119062,6.53022944" id="Line" stroke="#2F3337" stroke-width="2.5" stroke-linecap="square"></path>
+            <path d="M35.6119062,19.6119062 L22.5302294,6.53022944" id="Line" stroke="#2F3337" stroke-width="2.5" stroke-linecap="square"></path>
         </g>
     </g>
 </svg>

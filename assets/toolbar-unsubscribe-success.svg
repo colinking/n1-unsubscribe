@@ -4,10 +4,10 @@
     <title>toolbar-unsubscribe-success</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="toolbar-unsubscribe-success" fill="#16A085">
-            <polygon id="Bottom" points="5 10 9.52415597 10 22 21.3123818 22 28.8558677 20.7058014 28.8558677 13.2321256 21.3123818 5 21.3123818"></polygon>
-            <polygon id="Top" points="8.0097332 4.54007097 13.8934318 9.98303666 20.8797298 3 22.3719289 3 22.3719295 17.8155918 29 23.9544824 27.9903622 25.0794357 7 5.62118099"></polygon>
+            <polygon id="Bottom" points="4.10966158 8.51757096 8.93426049 8.51757096 11.0169214 10.3900806 21.2845568 19.7581984 22.8476079 21.1414433 22.8476079 29.429701 21.2845574 29.429701 13.0483453 21.4241875 4.10966158 21.4241875"></polygon>
+            <polygon id="Top" points="8.69683146 3.04890434 14.6951297 8.40042072 21.2261168 1.50781024 22.9370665 1.50781024 22.9370665 16.5281137 29.5653741 22.4573509 28.4226883 23.9893954 7.29868614 4.40725523"></polygon>
         </g>
     </g>
 </svg>

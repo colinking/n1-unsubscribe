@@ -4,11 +4,11 @@
     <title>toolbar-unsubscribe-error</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="toolbar-unsubscribe-error">
-            <path d="M16,14.6066017 L26.6066017,4" id="Line" stroke="#2F3337" stroke-width="1.5" stroke-linecap="square" transform="translate(21.303301, 9.303301) scale(-1, 1) translate(-21.303301, -9.303301) "></path>
-            <path d="M16,14.6066017 L26.6066017,4" id="Line" stroke="#2F3337" stroke-width="1.5" stroke-linecap="square"></path>
-            <polygon id="Bottom" fill="#2F3337" points="5 10 9.52415597 10 11.0069609 11.3215472 6.29917644 11.3215472 6.29917644 19.9530125 13.8736198 19.9530125 20.6805988 26.8965405 20.705801 20.1707002 22 21.3123818 22 28.8558677 20.7058014 28.8558677 13.2321256 21.3123818 5 21.3123818"></polygon>
+            <polygon id="Bottom" fill="#2F3337" points="3.79392545 9.15280598 8.84871645 9.15280598 11.0307456 11.0433947 5.80907837 11.0433947 5.80907837 20.2692827 14.2103176 20.2692827 21.7603191 27.6909902 21.7882722 20.5019618 23.4258999 21.8985619 23.4258999 30.2668428 21.7882728 30.2668428 13.1888422 22.184036 3.79392545 22.184036"></polygon>
+            <path d="M17.1524418,14.684175 L27.5129867,4.69996718" id="Line" stroke="#2F3337" stroke-width="2" stroke-linecap="square"></path>
+            <path d="M27.5129867,14.684175 L17.1524418,4.69996718" id="Line" stroke="#2F3337" stroke-width="2" stroke-linecap="square"></path>
         </g>
     </g>
 </svg>
