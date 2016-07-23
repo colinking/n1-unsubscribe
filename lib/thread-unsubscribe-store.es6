@@ -209,6 +209,32 @@ class ThreadUnsubscribeStore extends NylasStore {
         /email preferences/gi,
         /subscription/gi,
         /notification settings/gi,
+        // Danish
+        /afmeld/gi,
+        /Aamelden/gi,
+        /af te melden voor/gi,
+        // Spanish
+        /darse de baja/gi,
+        // French
+        /désabonnement/gi,
+        // Russian - this is probably wrong:
+        /отказаться от подписки/gi,
+        // Serbian
+        /одјавити/gi,
+        // Icelandic
+        /afskrá/gi,
+        // Hebrew
+        /לבטל את המנוי/gi,
+        // Creole (Haitian)
+        /koupe abònman/gi,
+        // Chinese (Simplified)
+        /退订/gi,
+        // Chinese (Traditional)
+        /退訂/gi,
+        // Arabic
+        /إلغاء الاشتراك/gi,
+        // Armenian
+        /պետք է նախ միանալ/gi,
       ];
 
       for (let j = 0; j < links.length; j++) {
