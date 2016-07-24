@@ -235,6 +235,10 @@ class ThreadUnsubscribeStore extends NylasStore {
         /إلغاء الاشتراك/gi,
         // Armenian
         /պետք է նախ միանալ/gi,
+        // German
+        /abmelden/gi,
+        /ausschreiben/gi,
+        /austragen/gi,
       ];
 
       for (let j = 0; j < links.length; j++) {
