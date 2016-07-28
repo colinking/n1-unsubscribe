@@ -211,12 +211,17 @@ class ThreadUnsubscribeStore extends NylasStore {
         /notification settings/gi,
         // Danish
         /afmeld/gi,
-        /Aamelden/gi,
+        /afmelden/gi,
         /af te melden voor/gi,
         // Spanish
         /darse de baja/gi,
         // French
         /désabonnement/gi,
+        /désinscrire/gi,
+        /désinscription/gi,
+        /désabonner/gi,
+        /préférences d'email/gi,
+        /préférences d'abonnement/gi,
         // Russian - this is probably wrong:
         /отказаться от подписки/gi,
         // Serbian
