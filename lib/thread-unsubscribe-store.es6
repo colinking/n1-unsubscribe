@@ -244,6 +244,11 @@ class ThreadUnsubscribeStore extends NylasStore {
         /abmelden/gi,
         /ausschreiben/gi,
         /austragen/gi,
+        // Swedish
+        /avprenumerera/gi,
+        /avregistrera/gi,
+        /prenumeration/gi,
+        /notisinställningar/gi,
       ];
 
       for (let j = 0; j < links.length; j++) {
