@@ -1,5 +1,5 @@
-const {React} = require('nylas-exports');
-const {RetinaImg, KeyCommandsRegion} = require('nylas-component-kit');
+const {React} = require('nylas-exports'); // eslint-disable-line
+const {RetinaImg, KeyCommandsRegion} = require('nylas-component-kit'); // eslint-disable-line
 const ThreadUnsubscribeStoreManager = require('../thread-unsubscribe-store-manager');
 const ThreadConditionType = require(`${__dirname}/../enum/threadConditionType`);
 
@@ -128,7 +128,7 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
         }}
         className={`btn action action-unsubscribe ${extraClasses}`}
         onClick={this.onClick.bind(this)}
-      ></div>
+      />
     );
   }
 }

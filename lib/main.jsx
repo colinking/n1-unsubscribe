@@ -1,10 +1,10 @@
-const {ComponentRegistry} = require('nylas-exports');
+const {ComponentRegistry} = require('nylas-exports'); // eslint-disable-line
 const {
   ThreadUnsubscribeQuickActionButton,
   ThreadUnsubscribeToolbarButton,
 } = require('./ui/unsubscribe-buttons');
-
 const settings = require('./settings');
+
 settings.configure();
 
 // Configure plugin updater

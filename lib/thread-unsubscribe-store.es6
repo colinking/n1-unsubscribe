@@ -3,12 +3,12 @@ const {
   TaskFactory,
   FocusedPerspectiveStore,
   NylasAPI,
-} = require('nylas-exports');
+} = require('nylas-exports'); // eslint-disable-line
 
-const NylasStore = require('nylas-store');
+const NylasStore = require('nylas-store'); // eslint-disable-line
 const _ = require('underscore');
 const cheerio = require('cheerio');
-const BrowserWindow = require('electron').remote.BrowserWindow;
+const BrowserWindow = require('electron').remote.BrowserWindow; // eslint-disable-line
 const MailParser = require('mailparser').MailParser;
 const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`);
 const open = require('open');
@@ -138,40 +138,38 @@ class ThreadUnsubscribeStore extends NylasStore {
       // callback(new Error('Sent email.'));
       // No error, sort of...
       callback('sentMail', null);
-    } else {
-      if (this.messages && this.messages.length > 0) {
-        // if (NylasEnv.inDevMode() === true) {
-        //   console.log('-----break------')
-        //   console.log(`Checking "${this.thread.subject}" with length ` +
-        //     ` of: ${this.messages.length}`);
-        //   console.log(this.messages[0]);
-        // }
-        const messagePath = `/messages/${this.messages[0].id}`;
-        if (!this.messages[0].draft) {
-          NylasAPI.makeRequest({
-            path: messagePath,
-            accountId: this.thread.accountId,
-            // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
-            headers: {Accept: "message/rfc822"},
-            json: false,
-            success: (rawEmail) => {
-              const mailparser = new MailParser();
-              mailparser.on('end', (parsedEmail) => {
-                callback(null, parsedEmail);
-              });
-              mailparser.write(rawEmail);
-              mailparser.end();
-            },
-            error: (error) => {
-              callback(error);
-            },
-          });
-        } else {
-          callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
-        }
+    } else if (this.messages && this.messages.length > 0) {
+      // if (NylasEnv.inDevMode() === true) {
+      //   console.log('-----break------')
+      //   console.log(`Checking "${this.thread.subject}" with length ` +
+      //     ` of: ${this.messages.length}`);
+      //   console.log(this.messages[0]);
+      // }
+      const messagePath = `/messages/${this.messages[0].id}`;
+      if (!this.messages[0].draft) {
+        NylasAPI.makeRequest({
+          path: messagePath,
+          accountId: this.thread.accountId,
+          // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
+          headers: {Accept: "message/rfc822"},
+          json: false,
+          success: (rawEmail) => {
+            const mailparser = new MailParser();
+            mailparser.on('end', (parsedEmail) => {
+              callback(null, parsedEmail);
+            });
+            mailparser.write(rawEmail);
+            mailparser.end();
+          },
+          error: (error) => {
+            callback(error);
+          },
+        });
       } else {
-        callback(new Error('No messages found to parse for unsubscribe links.'));
+        callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
       }
+    } else {
+      callback(new Error('No messages found to parse for unsubscribe links.'));
     }
   }
 
@@ -469,13 +467,13 @@ class ThreadUnsubscribeStore extends NylasStore {
     const linkedSentences = [];
     $(aParents).each((parentIndex, parent) => {
       // console.log($(parent));
-      let link = undefined;
+      let link = false;
       let leftoverText = "";
       if (parent) {
         $(parent.children).each((childIndex, child) => {
           // console.log(child);
           if ($(child).is($('a'))) {
-            if (link !== undefined && leftoverText.length > 0) {
+            if (link !== false && leftoverText.length > 0) {
               linkedSentences.push({
                 href: link,
                 innerText: leftoverText,
@@ -493,7 +491,7 @@ class ThreadUnsubscribeStore extends NylasStore {
             // console.log(splitup);
             for (let i = 0; i < splitup.length; i++) {
               if (splitup[i] !== "" && splitup[i] !== undefined) {
-                if (link !== undefined) {
+                if (link !== false) {
                   const fullLine = leftoverText + splitup[i];
                   // console.log("FULL LINE: " + fullLine);
                   linkedSentences.push({
@@ -515,7 +513,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         });
       }
       // Case occures when an end of sentence is not found
-      if (link !== undefined && leftoverText.length > 0) {
+      if (link !== false && leftoverText.length > 0) {
         linkedSentences.push({
           href: link,
           innerText: leftoverText,
