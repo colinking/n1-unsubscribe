@@ -185,7 +185,6 @@ class ThreadUnsubscribeStore extends NylasStore {
             unsubscribeLinks.push(trimmedLink.substring(1, trimmedLink.length - 1));
           }
         } else {
-          // if (this.checkLinkBlacklist(trimmedLink) === false) {
           unsubscribeLinks.push(trimmedLink.substring(1, trimmedLink.length - 1));
         }
       });
@@ -356,10 +355,15 @@ class ThreadUnsubscribeStore extends NylasStore {
     return this.regexpcompare(regexps, url);
   }
 
-  // Determine if the unsubscribe email is valid
+  // Check if the unsubscribe email is known to fail
   checkEmailBlacklist(email) {
     const regexps = blacklist.emails;
-    return this.regexpcompare(regexps, email);
+    if (/\?/.test(email)) {
+      console.warn('Parsing complicated mailto: URL\'s is not yet' +
+        ' supported by N1-Unsibscribe:' +
+        `\n${email}`);
+    }
+    return this.regexpcompare(regexps, email) || /\?/.test(email);
   }
 
   // Takes an array of regular expressions and compares against a target string
