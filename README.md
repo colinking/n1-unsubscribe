@@ -4,6 +4,8 @@
     <img src="https://img.shields.io/badge/nylas-0.4.38-brightgreen.svg"
          alt="nylas version">
 </a>
+![All Downloads](https://img.shields.io/github/downloads/colinking/n1-unsubscribe/total.svg)
+<!--  [Last Release Downloads](https://img.shields.io/github/downloads/colinking/n1-unsubscribe/latest/total.svg) -->
 
 Quickly unsubscribe from emails with the N1-Unsubscribe plugin for [Nylas N1](https://www.nylas.com/n1).
 
