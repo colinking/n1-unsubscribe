@@ -9,9 +9,9 @@ class ThreadUnsubscribeButton extends React.Component {
 
   static containerRequired = false;
 
-  static propTypes = {
-    thread: React.PropTypes.object,
-  }
+  // static propTypes = {
+  //   thread: React.PropTypes.object,
+  // }
 
   constructor(props) {
     super(props);
@@ -119,7 +119,7 @@ class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
     const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
     // Style-order: [<100] Archive (100), Trash (110) [To be on the right, be > 110]
     return (
-      <div
+      <button
         key="unsubscribe"
         title={buttonTitle}
         style={{
