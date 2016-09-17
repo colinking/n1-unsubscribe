@@ -198,7 +198,7 @@ class ThreadUnsubscribeStore extends NylasStore {
     if (emailHTML) {
       const $ = cheerio.load(emailHTML);
       // Get a list of all anchor tags with valid links
-      let links = _.filter($('a'), (emailLink) => emailLink.href !== 'blank');
+      let links = _.filter($('a'), emailLink => emailLink.href !== 'blank');
       links = links.concat(this.getLinkedSentences($));
       const regexps = [
         /unsubscribe/gi,
@@ -248,9 +248,9 @@ class ThreadUnsubscribeStore extends NylasStore {
         /notisinställningar/gi,
       ];
 
-      for (let j = 0; j < links.length; j++) {
+      for (let j = 0; j < links.length; j += 1) {
         const link = links[j];
-        for (let i = 0; i < regexps.length; i++) {
+        for (let i = 0; i < regexps.length; i += 1) {
           const re = regexps[i];
           if (re.test(link.href) || re.test(link.innerText)) {
             unsubscribeLinks.push(link.href);
@@ -302,6 +302,8 @@ class ThreadUnsubscribeStore extends NylasStore {
     //     },
     //   },
     // });
+    // Accounts for an issue when the h in http is cutoff
+    url = url.replace(/^ttp:/, 'http:');
     const disURL = this.shortenURL(url);
     if ((!this.isForwarded && process.env.N1_UNSUBSCRIBE_CONFIRM_BROWSER === 'false') ||
       confirm(`${this.confirmText}\nA browser will be opened at:\n\n${disURL}`)) {
@@ -369,7 +371,7 @@ class ThreadUnsubscribeStore extends NylasStore {
   // Takes an array of regular expressions and compares against a target string
   // Returns true if a match is found
   regexpcompare(regexps, target) {
-    for (let i = 0; i < regexps.length; i++) {
+    for (let i = 0; i < regexps.length; i += 1) {
       const re = new RegExp(regexps[i]);
       // if (NylasEnv.inDevMode() === true) {
       //   console.log(`Checking blacklist with: ${re}`);
@@ -493,7 +495,7 @@ class ThreadUnsubscribeStore extends NylasStore {
           if (re.test(text)) {
             const splitup = text.split(re);
             // console.log(splitup);
-            for (let i = 0; i < splitup.length; i++) {
+            for (let i = 0; i < splitup.length; i += 1) {
               if (splitup[i] !== "" && splitup[i] !== undefined) {
                 if (link !== false) {
                   const fullLine = leftoverText + splitup[i];

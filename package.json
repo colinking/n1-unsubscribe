@@ -13,7 +13,7 @@
     "nylas": ">=0.3.32-b11131d"
   },
   "dependencies": {
-    "cheerio": "^0.20.0",
+    "cheerio": "^0.22.0",
     "fs-extra": "^0.30.0",
     "mailparser": "^0.6.1",
     "n1pluginupdater": "^1.0.0",
@@ -21,8 +21,112 @@
     "strip-json-comments": "^2.0.1",
     "underscore": "^1.8.3"
   },
+  "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb": "^11.1.0",
+    "eslint-plugin-import": "^1.6.1",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-react": "^6.0.0",
+    "pre-commit": "^1.1.3"
+  },
   "license": "MIT",
   "title": "Unsubscribe",
   "icon": "icon.png",
-  "description": "Unsubscribe without leaving N1."
+  "description": "Unsubscribe without leaving N1.",
+  "eslintConfig": {
+    "extends": "airbnb",
+    "env": {
+      "browser": true,
+      "node": true,
+      "jasmine": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "globals": {
+      "NylasEnv": true
+    },
+    "rules": {
+      "react/prop-types": [
+        2,
+        {
+          "ignore": [
+            "children"
+          ]
+        }
+      ],
+      "react/no-multi-comp": [
+        0
+      ],
+      "react/sort-comp": [
+        2
+      ],
+      "react/jsx-no-bind": [
+        2,
+        {
+          "allowBind": true
+        }
+      ],
+      "no-alert": [
+        0
+      ],
+      "eqeqeq": [
+        2,
+        "smart"
+      ],
+      "id-length": [
+        0
+      ],
+      "object-curly-spacing": [
+        0
+      ],
+      "no-console": [
+        0
+      ],
+      "no-loop-func": [
+        0
+      ],
+      "no-constant-condition": [
+        0
+      ],
+      "new-cap": [
+        2,
+        {
+          "capIsNew": false
+        }
+      ],
+      "no-shadow": [
+        1
+      ],
+      "quotes": [
+        0
+      ],
+      "semi": [
+        0
+      ],
+      "import/no-unresolved": [
+        0
+      ],
+      "no-param-reassign": [
+        0
+      ],
+      "no-underscore-dangle": [
+        "error",
+        {
+          "allowAfterThis": true
+        }
+      ],
+      "import/newline-after-import": [
+        0
+      ],
+      "react/require-extension": [
+        0
+      ]
+    },
+    "parser": "babel-eslint"
+  }
 }

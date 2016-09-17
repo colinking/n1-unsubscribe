@@ -9,9 +9,11 @@
 		"perch-email\\.closely\\.com",
 		"aore\\.memberclicks\\.net",
 		"www\\.cybercoders\\.com",
-		"links\\.notifications\\.soundcloud\\.com\\/asm\\/unsubscribe"
+		"links\\.notifications\\.soundcloud\\.com\\/asm\\/unsubscribe",
+		"fullcontact.com/"
 	],
 	"emails": [
+		"@idearium.activehosted.com",
 		"sympa@lists\\.eng\\.umd\\.edu",
 		"sympa@",
 		"@blancmedia\\.activehosted\\.com",
