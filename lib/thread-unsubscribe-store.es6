@@ -103,8 +103,12 @@ class ThreadUnsubscribeStore extends NylasStore {
           }
         }
       } else if (error === 'sentMail') {
-        console.log(`Can\'t parse "${this.thread.subject}"" because it was sent from this account`);
+        console.log(`Can\'t parse "${this.thread.subject}" because it was sent from this account`);
         this.threadState.condition = ThreadConditionType.DISABLED;
+      } else if (error === 'noEmail') {
+        console.warn(`Can\'t parse "${this.thread.subject}" for an unknown reason. See below error message:`);
+        console.warn(email);
+        this.threadState.condition = ThreadConditionType.ERRORED;
       } else {
         if (NylasEnv.inDevMode() === true) {
           console.warn(`\n--Error in querying message: ${this.thread.subject}--\n`);
@@ -126,68 +130,74 @@ class ThreadUnsubscribeStore extends NylasStore {
     // Ignore any sent messages because they return a 404 error:
     let type = '';
     let sentMail = false;
-    if (this.messages[0] && this.messages[0].categories) {
-      _.each(this.messages[0].categories, (category) => {
-        type = category.displayName;
-        if (type === "Sent Mail") {
-          sentMail = true;
-        }
-      });
-    }
-    if (sentMail) {
-      // callback(new Error('Sent email.'));
-      // No error, sort of...
-      callback('sentMail', null);
-    } else if (this.messages && this.messages.length > 0) {
-      // if (NylasEnv.inDevMode() === true) {
-      //   console.log('-----break------')
-      //   console.log(`Checking "${this.thread.subject}" with length ` +
-      //     ` of: ${this.messages.length}`);
-      //   console.log(this.messages[0]);
-      // }
-      const messagePath = `/messages/${this.messages[0].id}`;
-      if (!this.messages[0].draft) {
-        NylasAPI.makeRequest({
-          path: messagePath,
-          accountId: this.thread.accountId,
-          // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
-          headers: {Accept: "message/rfc822"},
-          json: false,
-          success: (rawEmail) => {
-            const mailparser = new MailParser();
-            mailparser.on('end', (parsedEmail) => {
-              callback(null, parsedEmail);
-            });
-            mailparser.write(rawEmail);
-            mailparser.end();
-          },
-          error: (error) => {
-            callback(error);
-          },
+    // Added extra check to see if email was loaded
+    if (this.messages) {
+      if (this.messages[0] && this.messages[0].categories) {
+        _.each(this.messages[0].categories, (category) => {
+          type = category.displayName;
+          if (type === "Sent Mail") {
+            sentMail = true;
+          }
         });
-      } else {
-        callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
+      }
+      if (sentMail) {
+        // callback(new Error('Sent email.'));
+        // No error, sort of...
+        callback('sentMail', null);
+      } else if (this.messages && this.messages.length > 0) {
+        // if (NylasEnv.inDevMode() === true) {
+        //   console.log('-----break------')
+        //   console.log(`Checking "${this.thread.subject}" with length ` +
+        //     ` of: ${this.messages.length}`);
+        //   console.log(this.messages[0]);
+        // }
+        const messagePath = `/messages/${this.messages[0].id}`;
+        if (!this.messages[0].draft) {
+          NylasAPI.makeRequest({
+            path: messagePath,
+            accountId: this.thread.accountId,
+            // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
+            headers: {Accept: "message/rfc822"},
+            json: false,
+            success: (rawEmail) => {
+              const mailparser = new MailParser();
+              mailparser.on('end', (parsedEmail) => {
+                callback(null, parsedEmail);
+              });
+              mailparser.write(rawEmail);
+              mailparser.end();
+            },
+            error: (error) => {
+              callback(error);
+            },
+          });
+        } else {
+          callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
+        }
       }
     } else {
-      callback(new Error('No messages found to parse for unsubscribe links.'));
+      callback('noEmail', new Error('No messages found to parse for unsubscribe links.'));
     }
   }
 
   // Examine the email headers for the list-unsubscribe header
   parseHeadersForLinks(headers) {
     const unsubscribeLinks = [];
-    if (headers && headers['list-unsubscribe']) {
-      const rawLinks = headers['list-unsubscribe'].split(/,/g);
-      rawLinks.forEach((link) => {
-        const trimmedLink = link.trim();
-        if (/mailto.*/g.test(link)) {
-          if (this.checkEmailBlacklist(trimmedLink) === false) {
+    if (headers) {
+      const headersLU = headers['list-unsubscribe'];
+      if (headersLU && typeof headersLU === 'string') {
+        const rawLinks = headersLU.split(/,/g);
+        rawLinks.forEach((link) => {
+          const trimmedLink = link.trim();
+          if (/mailto.*/g.test(link)) {
+            if (this.checkEmailBlacklist(trimmedLink) === false) {
+              unsubscribeLinks.push(trimmedLink.substring(1, trimmedLink.length - 1));
+            }
+          } else {
             unsubscribeLinks.push(trimmedLink.substring(1, trimmedLink.length - 1));
           }
-        } else {
-          unsubscribeLinks.push(trimmedLink.substring(1, trimmedLink.length - 1));
-        }
-      });
+        });
+      }
     }
     return unsubscribeLinks;
   }

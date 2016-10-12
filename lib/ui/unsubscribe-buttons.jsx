@@ -31,6 +31,7 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   componentWillUnmount() {
+    // console.log('Component dismounting and no longer listening');
     return this.unload();
   }
 
@@ -39,7 +40,11 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   onClick(event) {
-    this.tuStore.unsubscribe();
+    if (this.tuStore) {
+      this.tuStore.unsubscribe();
+    } else {
+      console.log('ERROR: No tuStore object....??');
+    }
 
     // Don't trigger the thread row click
     event.stopPropagation()
@@ -92,7 +97,6 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   load(props) {
-    this.unload();
     this.tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(props.thread);
     this.unlisten = this.tuStore.listen(this.onMessageLoad.bind(this));
     this.tuStore.triggerUpdate();
