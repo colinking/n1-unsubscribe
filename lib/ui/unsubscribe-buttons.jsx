@@ -26,8 +26,9 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    console.warn(newProps);
     this.load(newProps);
-    this.setState(this.tuStore.threadState);
+    // this.setState(this.tuStore.threadState);
   }
 
   componentWillUnmount() {
@@ -40,10 +41,10 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   onClick(event) {
-    if (this.tuStore) {
+    if (this && this.tuStore) {
       this.tuStore.unsubscribe();
     } else {
-      console.log('ERROR: No tuStore object....??');
+      console.error('ERROR: No tuStore object from within onClick event...??');
     }
 
     // Don't trigger the thread row click
@@ -97,6 +98,7 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   load(props) {
+    this.unload();
     this.tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(props.thread);
     this.unlisten = this.tuStore.listen(this.onMessageLoad.bind(this));
     this.tuStore.triggerUpdate();

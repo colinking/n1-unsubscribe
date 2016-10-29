@@ -63,8 +63,12 @@ class ThreadUnsubscribeStore extends NylasStore {
       // Determine if best to unsubscribe via email or browser:
       if (this.links[0].type === this.LinkType.EMAIL) {
         this.unsubscribeViaMail(this.links[0].link, unsubscribeHandler);
-      } else {
+      } else if (this.links.length > 0) {
         this.unsubscribeViaBrowser(this.links[0].link, unsubscribeHandler);
+      } else {
+        this.threadState.condition = ThreadConditionType.ERRORED;
+        console.error('Can not unsubscribe for some reason. See this.links below:');
+        console.log(this.links);
       }
     }
   }
@@ -116,6 +120,7 @@ class ThreadUnsubscribeStore extends NylasStore {
           console.warn(email);
         }
         this.threadState.condition = ThreadConditionType.ERRORED;
+        this.triggerUpdate();
       }
       this.triggerUpdate();
     });
@@ -131,7 +136,7 @@ class ThreadUnsubscribeStore extends NylasStore {
     let type = '';
     let sentMail = false;
     // Added extra check to see if email was loaded
-    if (this.messages) {
+    if (this.messages !== undefined && this.messages.length > 0) {
       if (this.messages[0] && this.messages[0].categories) {
         _.each(this.messages[0].categories, (category) => {
           type = category.displayName;
@@ -144,7 +149,9 @@ class ThreadUnsubscribeStore extends NylasStore {
         // callback(new Error('Sent email.'));
         // No error, sort of...
         callback('sentMail', null);
-      } else if (this.messages && this.messages.length > 0) {
+      } else if (this.messages[0].draft) {
+        callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
+      } else if (this.messages.length > 0) {
         // if (NylasEnv.inDevMode() === true) {
         //   console.log('-----break------')
         //   console.log(`Checking "${this.thread.subject}" with length ` +
@@ -152,28 +159,24 @@ class ThreadUnsubscribeStore extends NylasStore {
         //   console.log(this.messages[0]);
         // }
         const messagePath = `/messages/${this.messages[0].id}`;
-        if (!this.messages[0].draft) {
-          NylasAPI.makeRequest({
-            path: messagePath,
-            accountId: this.thread.accountId,
-            // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
-            headers: {Accept: "message/rfc822"},
-            json: false,
-            success: (rawEmail) => {
-              const mailparser = new MailParser();
-              mailparser.on('end', (parsedEmail) => {
-                callback(null, parsedEmail);
-              });
-              mailparser.write(rawEmail);
-              mailparser.end();
-            },
-            error: (error) => {
-              callback(error);
-            },
-          });
-        } else {
-          callback(new Error('Draft emails aren\'t parsed for unsubscribe links.'));
-        }
+        NylasAPI.makeRequest({
+          path: messagePath,
+          accountId: this.thread.accountId,
+          // Need raw email to get email headers (see: https://nylas.com/docs/#raw_message_contents)
+          headers: {Accept: "message/rfc822"},
+          json: false,
+          success: (rawEmail) => {
+            const mailparser = new MailParser();
+            mailparser.on('end', (parsedEmail) => {
+              callback(null, parsedEmail);
+            });
+            mailparser.write(rawEmail);
+            mailparser.end();
+          },
+          error: (error) => {
+            callback(error);
+          },
+        });
       }
     } else {
       callback('noEmail', new Error('No messages found to parse for unsubscribe links.'));
@@ -212,6 +215,7 @@ class ThreadUnsubscribeStore extends NylasStore {
       links = links.concat(this.getLinkedSentences($));
       const regexps = [
         /unsubscribe/gi,
+        /Unfollow/gi,
         /opt[ -]{0,2}out/gi,
         /email preferences/gi,
         /subscription/gi,

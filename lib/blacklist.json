@@ -4,13 +4,14 @@
 		"trulia\\.com",
 		"hackerrank\\.com",
 		"www\\.apartmentlist\\.com",
-		"/wf/click\\?upn='",
+		"\\/wf\\/click\\?upn='",
 		"timbuk2\\.com",
 		"perch-email\\.closely\\.com",
 		"aore\\.memberclicks\\.net",
 		"www\\.cybercoders\\.com",
 		"links\\.notifications\\.soundcloud\\.com\\/asm\\/unsubscribe",
-		"fullcontact.com/"
+		"fullcontact\\.com",
+		"www\\.facebook\\.com"
 	],
 	"emails": [
 		"@idearium.activehosted.com",
