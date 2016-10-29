@@ -107,10 +107,10 @@ class ThreadUnsubscribeStore extends NylasStore {
           }
         }
       } else if (error === 'sentMail') {
-        console.log(`Can\'t parse "${this.thread.subject}" because it was sent from this account`);
+        console.log(`Can not parse "${this.thread.subject}" because it was sent from this account`);
         this.threadState.condition = ThreadConditionType.DISABLED;
       } else if (error === 'noEmail') {
-        console.warn(`Can\'t parse "${this.thread.subject}" for an unknown reason. See below error message:`);
+        console.warn(`Can not parse "${this.thread.subject}" for an unknown reason. See below error message:`);
         console.warn(email);
         this.threadState.condition = ThreadConditionType.ERRORED;
       } else {
@@ -284,7 +284,7 @@ class ThreadUnsubscribeStore extends NylasStore {
       const type = (/mailto.*/g.test(link) ? this.LinkType.EMAIL : this.LinkType.BROWSER);
       const data = {link, type};
       if (type === this.LinkType.EMAIL) {
-        const matches = /mailto:([^\?]*)/g.exec(link);
+        const matches = /mailto:([^?]*)/g.exec(link);
         if (matches && matches.length > 1) {
           data.link = matches[1];
         }
@@ -359,7 +359,7 @@ class ThreadUnsubscribeStore extends NylasStore {
   // Quick solution to
   shortenURL(url) {
     // modified from: http://stackoverflow.com/a/26766402/3219667
-    const regex = /^([^:\/?#]+:?\/\/([^\/?#]*))/i;
+    const regex = /^([^:/?#]+:?\/\/([^/?#]*))/i;
     const disURL = regex.exec(url)[0];
     return `${disURL}/...`;
   }

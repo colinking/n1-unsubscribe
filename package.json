@@ -1,7 +1,7 @@
 {
   "name": "n1-unsubscribe",
   "main": "./lib/main",
-  "version": "1.5.5",
+  "version": "1.6.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/colinking/n1-unsubscribe"
