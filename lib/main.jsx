@@ -8,19 +8,19 @@ const settings = require('./settings');
 settings.configure();
 
 // Configure plugin updater
-const config = require(`${__dirname}/../package.json`);
-const n1pluginupdater = require('n1pluginupdater');
+const config = require(`${__dirname}/../package.json`); // eslint-disable-line
+// const n1pluginupdater = require('n1pluginupdater');
 
 module.exports = {
   // Activate is called when the package is loaded. If your package previously
   // saved state using `serialize` it is provided.
   //
   activate: () => {
-    n1pluginupdater.checkForUpdate({
-      repositoryName: "n1-unsubscribe",
-      repositoryOwner: "colinking",
-      currentVersion: config.version,
-    });
+    // n1pluginupdater.checkForUpdate({
+    //   repositoryName: "n1-unsubscribe",
+    //   repositoryOwner: "colinking",
+    //   currentVersion: config.version,
+    // });
     // ComponentRegistry.register(ThreadUnsubscribeBulkAction,
     //   { role: 'ThreadListBulkAction' });
     // //   role: 'thread:BulkAction'
@@ -36,7 +36,7 @@ module.exports = {
   // subscribing to events, release them here.
   //
   deactivate: () => {
-    n1pluginupdater.deactivate();
+    // n1pluginupdater.deactivate();
     // ComponentRegistry.register(ThreadUnsubscribeBulkAction);
     ComponentRegistry.unregister(ThreadUnsubscribeQuickActionButton);
     ComponentRegistry.unregister(ThreadUnsubscribeToolbarButton);

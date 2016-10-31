@@ -1,7 +1,7 @@
 const {React} = require('nylas-exports'); // eslint-disable-line
 const {RetinaImg, KeyCommandsRegion} = require('nylas-component-kit'); // eslint-disable-line
 const ThreadUnsubscribeStoreManager = require('../thread-unsubscribe-store-manager');
-const ThreadConditionType = require(`${__dirname}/../enum/threadConditionType`);
+const ThreadConditionType = require(`${__dirname}/../enum/threadConditionType`); // eslint-disable-line
 
 const UNSUBSCRIBE_ASSETS_URL = 'nylas://n1-unsubscribe/assets/';
 

@@ -10,9 +10,9 @@ const _ = require('underscore');
 const cheerio = require('cheerio');
 const BrowserWindow = require('electron').remote.BrowserWindow; // eslint-disable-line
 const MailParser = require('mailparser').MailParser;
-const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`);
+const ThreadConditionType = require(`${__dirname}/enum/threadConditionType`); // eslint-disable-line
 const open = require('open');
-const blacklist = require(`${__dirname}/blacklist.json`);
+const blacklist = require(`${__dirname}/blacklist.json`); // eslint-disable-line
 
 class ThreadUnsubscribeStore extends NylasStore {
   constructor(thread) {
