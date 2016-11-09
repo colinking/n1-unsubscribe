@@ -30,7 +30,7 @@ class ThreadUnsubscribeStore extends NylasStore {
       condition: ThreadConditionType.LOADING,
       hasLinks: false,
     }
-    this.messages = this.thread.metadata;
+    this.messages = this.thread.__messages; // eslint-disable-line
     this.links = [];
     this.loadLinks();
   }
@@ -110,7 +110,7 @@ class ThreadUnsubscribeStore extends NylasStore {
         console.log(`Can not parse "${this.thread.subject}" because it was sent from this account`);
         this.threadState.condition = ThreadConditionType.DISABLED;
       } else if (error === 'noEmail') {
-        console.warn(`Can not parse "${this.thread.subject}" for an unknown reason. See below error message:`);
+        console.warn(`Can not parse an email for an unknown reason. See error message below:`);
         console.warn(email);
         this.threadState.condition = ThreadConditionType.ERRORED;
       } else {
