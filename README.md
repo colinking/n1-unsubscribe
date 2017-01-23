@@ -1,16 +1,16 @@
 ## N1-Unsubscribe (Nylas Mail Plugin)
 
-![Unsubscribe: unsubscribe without leaving N1](plugin.png)
+![Unsubscribe: unsubscribe without leaving Nylas Mail](plugin.png)
 
-Quickly unsubscribe from emails without leaving N1. The unsubscribe plugin parses the `list-unsubscribe` header and the email body to look for the best way to unsubscribe. If an unsubscribe email address can be found, the plugin will send one in the background on your behalf. If only a browser link is found, either a mini N1 browser window will open or for certain cases, you will be redirected to your default browser.
+Quickly unsubscribe from emails without leaving Nylas Mail. The unsubscribe plugin parses the `list-unsubscribe` header and the email body to look for the best way to unsubscribe. If an unsubscribe email address can be found, the plugin will send one in the background on your behalf. If only a browser link is found, either a mini Nylas Mail browser window will open or for certain cases, you will be redirected to your default browser.
 
 ## How to install
 
 1. Download and unzip `n1-unsubscribe.zip` from the [Releases page](https://github.com/colinking/n1-unsubscribe/releases/latest).
 
-2. In N1, Select the menu bar option `Developer > Install a Plugin...`, then select the unzipped folder, `n1-unsubscribe`
+2. In Nylas Mail, Select the menu bar option `Developer > Install a Plugin...`, then select the unzipped folder, `n1-unsubscribe`
 
-3. You should now see the plugin in the plugins pane in N1 (`Preferences > Plugins`).
+3. You should now see the plugin in the plugins pane in Nylas Mail (`Preferences > Plugins`).
 
 ## Keyboard Shortcuts
 
