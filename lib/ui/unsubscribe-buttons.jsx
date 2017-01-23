@@ -1,17 +1,13 @@
-const {React} = require('nylas-exports'); // eslint-disable-line
-const {RetinaImg, KeyCommandsRegion} = require('nylas-component-kit'); // eslint-disable-line
-const ThreadUnsubscribeStoreManager = require('../thread-unsubscribe-store-manager');
-const ThreadConditionType = require(`${__dirname}/../enum/threadConditionType`); // eslint-disable-line
+import {React} from 'nylas-exports';
+import {RetinaImg, KeyCommandsRegion} from 'nylas-component-kit';
+import ThreadUnsubscribeStoreManager from '../thread-unsubscribe-store-manager';
+import ThreadConditionType from '../enum/threadConditionType';
 
-const UNSUBSCRIBE_ASSETS_URL = 'nylas://n1-unsubscribe/assets/';
+const UNSUBSCRIBE_ASSETS_BASE_URL = 'nylas://n1-unsubscribe/assets/';
 
 class ThreadUnsubscribeButton extends React.Component {
 
   static containerRequired = false;
-
-  // static propTypes = {
-  //   thread: React.PropTypes.object,
-  // }
 
   constructor(props) {
     super(props);
@@ -19,6 +15,7 @@ class ThreadUnsubscribeButton extends React.Component {
       condition: ThreadConditionType.LOADING,
       hasLinks: false,
     };
+    this.onClick = this.onClick.bind(this);
   }
 
   componentWillMount() {
@@ -26,13 +23,10 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.warn(newProps);
     this.load(newProps);
-    // this.setState(this.tuStore.threadState);
   }
 
   componentWillUnmount() {
-    // console.log('Component dismounting and no longer listening');
     return this.unload();
   }
 
@@ -41,24 +35,18 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 
   onClick(event) {
-    if (this && this.tuStore) {
-      this.tuStore.unsubscribe();
-    } else {
-      console.error('ERROR: No tuStore object from within onClick event...??');
-    }
-
-    // Don't trigger the thread row click
+    this.tuStore.unsubscribe();
     event.stopPropagation()
   }
 
-  getIconInfo(name : string, scale : number) {
-    let url = UNSUBSCRIBE_ASSETS_URL;
+  getIconInfo(name : string, ratio : number) {
+    let url = UNSUBSCRIBE_ASSETS_BASE_URL;
     let buttonTitle;
     let extraClasses;
+    let scale = ratio;
 
     if (typeof scale === 'undefined') {
       scale = Math.ceil(window.devicePixelRatio);
-      // console.log(`Calculated scale: ${scale}`);
       if (scale !== 1 || scale !== 2) { scale = 2; }
     }
 
@@ -66,7 +54,7 @@ class ThreadUnsubscribeButton extends React.Component {
     switch (this.state.condition) {
       case ThreadConditionType.UNSUBSCRIBED:
         extraClasses = 'unsubscribe-success';
-        buttonTitle = 'Unsubscribe (Success!)';
+        buttonTitle = 'Unsubscribe (Success)';
         url += '-success';
         break;
       case ThreadConditionType.ERRORED:
@@ -77,12 +65,11 @@ class ThreadUnsubscribeButton extends React.Component {
       case ThreadConditionType.DISABLED:
         extraClasses = 'unsubscribe-disabled';
         buttonTitle = 'Unsubscribe (Disabled)';
-        // url += '-disabled';
         url += '';
         break;
-      case ThreadConditionType.DONE:
+      case ThreadConditionType.READY:
         extraClasses = 'unsubscribe-ready';
-        buttonTitle = 'Unsubscribe Now!';
+        buttonTitle = 'Unsubscribe';
         url += '';
         break;
       default:
@@ -101,7 +88,7 @@ class ThreadUnsubscribeButton extends React.Component {
     this.unload();
     this.tuStore = ThreadUnsubscribeStoreManager.getStoreForThread(props.thread);
     this.unlisten = this.tuStore.listen(this.onMessageLoad.bind(this));
-    this.tuStore.triggerUpdate();
+    this.tuStore._triggerUpdate();
   }
 
   unload() {
@@ -117,50 +104,47 @@ class ThreadUnsubscribeButton extends React.Component {
   }
 }
 
-class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
+export class ThreadUnsubscribeQuickActionButton extends ThreadUnsubscribeButton {
 
   static displayName = 'ThreadUnsubscribeQuickActionButton';
 
   render() {
     const {buttonTitle, extraClasses, url} = this.getIconInfo('unsubscribe');
-    // Style-order: [<100] Archive (100), Trash (110) [To be on the right, be > 110]
     return (
       <button
         key="unsubscribe"
         title={buttonTitle}
+        className={`btn action action-unsubscribe ${extraClasses}`}
         style={{
           order: 90,
           background: `url(${url}) center no-repeat`,
         }}
-        className={`btn action action-unsubscribe ${extraClasses}`}
-        onClick={this.onClick.bind(this)}
+        onClick={this.onClick}
       />
     );
   }
 }
 
-class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
+export class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
 
   static displayName = 'ThreadUnsubscribeToolbarButton';
 
   _keymapHandlers() {
-    return {"n1-unsubscribe:unsubscribe": this._keymapEvent}
+    return {"unsubscribe:unsubscribe": this._keymapEvent}
   }
 
   render() {
     const {buttonTitle, extraClasses, url} = this.getIconInfo('toolbar-unsubscribe');
-    // Style-order: [<-107] Archive (-107) ...
-    //      Unread (-104), Star/Label? (-103) [To be on the right, be > -103]
     return (
       <KeyCommandsRegion
         globalHandlers={this._keymapHandlers(this)}
         style={{order: -102}}
       >
         <button
-          className={`btn btn-toolbar toolbar-unsubscribe ${extraClasses}`}
-          id={'N1-Unsubscribe'}
-          onClick={this.onClick.bind(this)}
           title={buttonTitle}
+          id={'unsubscribe'}
+          className={`btn btn-toolbar toolbar-unsubscribe ${extraClasses}`}
+          onClick={this.onClick}
         >
           <RetinaImg
             mode={RetinaImg.Mode.ContentIsMask}
@@ -172,17 +156,7 @@ class ThreadUnsubscribeToolbarButton extends ThreadUnsubscribeButton {
   }
 
   _keymapEvent() {
-    if (NylasEnv.inDevMode() === true) { console.log("Keymap event fired"); }
-    // // Scoped for the HTML markup of the Nylas Application
-    // console.warn(this);
-    // Just press the button when the Keymap event is fired:
-    const e = document.getElementById('N1-Unsubscribe');
+    const e = document.getElementById('unsubscribe');
     e.click()
   }
 }
-
-module.exports = {
-  // ThreadUnsubscribeButton,
-  ThreadUnsubscribeToolbarButton,
-  ThreadUnsubscribeQuickActionButton,
-};

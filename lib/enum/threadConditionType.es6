@@ -1,6 +1,6 @@
-module.exports = {
+export default {
   LOADING: 'LOADING',
   ERRORED: 'ERRORED',
-  DONE: 'DONE',
+  READY: 'READY',
   UNSUBSCRIBED: 'UNSUBSCRIBED',
 };
