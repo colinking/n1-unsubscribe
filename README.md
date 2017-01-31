@@ -1,4 +1,4 @@
-## N1-Unsubscribe (Nylas N1 Plugin)
+## N1-Unsubscribe (Nylas Mail Plugin - *Beta* version)
 
 ![Unsubscribe: unsubscribe without leaving Nylas Mail](plugin.png)
 
@@ -20,6 +20,10 @@ Press <kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>U</kbd> when viewing an email. This
 
 - **Feature Requests or Bug Reports**: Submit them through the [issues](issues) pane.
 - **Mishandled Emails**: Find an email which this plugin doesn't handle correctly? Not finding an unsubscribe link when there should be one? Forward the email to us at <a href="mailto:n1.unsubscribe@gmail.com">n1.unsubscribe@gmail.com</a> and we'll look into it.
+
+## Nylas N1
+
+Nylas Mail is the awaited update to Nylas N1, which included several critical breaking changes. To access the older version, see the legacy branch: [legacy-N1-support](https://github.com/colinking/n1-unsubscribe/tree/legacy-N1-support).
 
 ## Made by
 
