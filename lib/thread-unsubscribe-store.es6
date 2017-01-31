@@ -177,7 +177,6 @@ export default class ThreadUnsubscribeStore extends NylasStore {
   }
 
   _moveThread() {
-    console.log(this.settings);
     switch (this.settings.handleThreads) {
       case "trash":
         if (FocusedPerspectiveStore.current().canTrashThreads([this.thread])) {
