@@ -103,20 +103,20 @@ export default class ThreadUnsubscribeStore extends NylasStore {
             path: messagePath,
             headers: {Accept: "message/rfc822"},
             json: false,
-            success: (rawEmail) => {
-              const mailparser = new MailParser();
-              mailparser.on('end', (parsedEmail) => {
-                callback(null, parsedEmail);
-              });
-              mailparser.write(rawEmail);
-              mailparser.end();
-            },
-            error: (error) => {
-              callback(error);
-            },
-          }
+          },
+        });
+        loadEmail.run()
+        .then((rawEmail) => {
+          const mailparser = new MailParser();
+          mailparser.on('end', (parsedEmail) => {
+            callback(null, parsedEmail);
+          });
+          mailparser.write(rawEmail);
+          mailparser.end();
         })
-        loadEmail.run();
+        .catch((err) => {
+          callback(err);
+        });
       }
     } else {
       callback(new Error('No messages found to parse for unsubscribe links.'));

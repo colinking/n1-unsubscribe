@@ -1,6 +1,8 @@
-## N1-Unsubscribe (Nylas Mail Plugin - *Beta* version)
+## N1-Unsubscribe
 
 ![Unsubscribe: unsubscribe without leaving Nylas Mail](plugin.png)
+
+### A Nylas Mail Plugin *(To run on Nylas N1/Pro - [see this branch](https://github.com/colinking/n1-unsubscribe/tree/legacy-N1-support))*
 
 Quickly unsubscribe from emails without leaving N1. The unsubscribe plugin parses the `list-unsubscribe` header and the email body to look for the best way to unsubscribe. If an unsubscribe email address can be found, the plugin will send one in the background on your behalf. If only a browser link is found, either a mini N1 browser window will open or for certain cases, you will be redirected to your default browser.
 
