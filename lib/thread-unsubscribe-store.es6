@@ -14,6 +14,7 @@ import {logIfDebug, shortenURL, shortenEmail, interpretEmail, userConfirm} from 
 import {electronCantOpen} from './util/blacklist';
 import EmailParser from './util/email-parser';
 import ThreadConditionType from './enum/threadConditionType';
+import path from 'path';
 
 export default class ThreadUnsubscribeStore extends NylasStore {
   constructor(thread) {
@@ -84,6 +85,21 @@ export default class ThreadUnsubscribeStore extends NylasStore {
     });
   }
 
+  _runNylasQuery(options) {
+    const IS_NYLAS_MAIL = path.parse(NylasEnv.getConfigDirPath()).base == ".nylas-mail"
+    if (IS_NYLAS_MAIL) {
+      // Nylas Mail
+      const loadEmail = new NylasAPIRequest({
+        api: NylasAPI,
+        options
+      });
+      loadEmail.run();
+    } else {
+      // Nylas N1
+      NylasAPI.makeRequest(options);
+    }
+  }
+
   _loadMessagesViaAPI(callback) {
     if (this.messages && this.messages.length > 0) {
       if (this.messages[0].draft || (this.messages[0].categories &&
@@ -96,27 +112,24 @@ export default class ThreadUnsubscribeStore extends NylasStore {
         // instead of all messages based on the assumption that the first email will have
         // an unsubscribe link iff you can unsubscribe from that thread.
         const messagePath = `/messages/${this.messages[0].id}`;
-        const loadEmail = new NylasAPIRequest({
-          api: NylasAPI,
-          options: {
-            accountId: this.thread.accountId,
-            path: messagePath,
-            headers: {Accept: "message/rfc822"},
-            json: false,
+        const options = {
+          accountId: this.thread.accountId,
+          path: messagePath,
+          headers: {Accept: "message/rfc822"},
+          json: false,
+          success: (rawEmail) => {
+            const mailparser = new MailParser();
+            mailparser.on('end', (parsedEmail) => {
+              callback(null, parsedEmail);
+            });
+            mailparser.write(rawEmail);
+            mailparser.end();
           },
-        });
-        loadEmail.run()
-        .then((rawEmail) => {
-          const mailparser = new MailParser();
-          mailparser.on('end', (parsedEmail) => {
-            callback(null, parsedEmail);
-          });
-          mailparser.write(rawEmail);
-          mailparser.end();
-        })
-        .catch((err) => {
-          callback(err);
-        });
+          error: (error) => {
+            callback(error);
+          },
+        };
+        this._runNylasQuery(options);
       }
     } else {
       callback(new Error('No messages found to parse for unsubscribe links.'));
@@ -160,20 +173,16 @@ export default class ThreadUnsubscribeStore extends NylasStore {
       if ((!this.isForwarded && !this.settings.confirmForEmail) ||
         userConfirm(this.confirmText, `An email will be sent to:\n${shortenEmail(emailAddress)}`)) {
         logIfDebug(`Sending an email to: ${emailAddress}`);
-        const sendEmail = new NylasAPIRequest({
-          api: NylasAPI,
-          options: {
-            accountId: this.thread.accountId,
-            path: '/send',
-            method: 'POST',
-            body: interpretEmail(emailAddress),
-            success: () => {},
-            error: (error) => {
-              NylasEnv.reportError(error, this);
-            },
+        this._runNylasQuery({
+          accountId: this.thread.accountId,
+          path: '/send',
+          method: 'POST',
+          body: interpretEmail(emailAddress),
+          success: () => {},
+          error: (error) => {
+            NylasEnv.reportError(error, this);
           },
-        })
-        sendEmail.run();
+        });
         // Send the callback now so that emails are moved immediately
         // instead of waiting for the email to be sent.
         callback(null, /* unsubscribed= */true);
