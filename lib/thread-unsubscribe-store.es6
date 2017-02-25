@@ -177,16 +177,19 @@ export default class ThreadUnsubscribeStore extends NylasStore {
       if ((!this.isForwarded && !this.settings.confirmForEmail) ||
         userConfirm(this.confirmText, `An email will be sent to:\n${shortenEmail(emailAddress)}`)) {
         logIfDebug(`Sending an email to: ${emailAddress}`);
+        const success = () => {};
+        const error = (error) => {
+          NylasEnv.reportError(error, this);
+        };
         this._runNylasQuery({
           accountId: this.thread.accountId,
           path: '/send',
           method: 'POST',
           body: interpretEmail(emailAddress),
-          success: () => {},
-          error: (error) => {
-            NylasEnv.reportError(error, this);
-          },
-        });
+        },
+        success,
+        error
+      );
         // Send the callback now so that emails are moved immediately
         // instead of waiting for the email to be sent.
         callback(null, /* unsubscribed= */true);
