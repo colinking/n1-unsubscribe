@@ -85,7 +85,7 @@ export default class ThreadUnsubscribeStore extends NylasStore {
     });
   }
 
-  _runNylasQuery(options) {
+  _runNylasQuery(options, success, error) {
     const IS_NYLAS_MAIL = path.parse(NylasEnv.getConfigDirPath()).base == ".nylas-mail"
     if (IS_NYLAS_MAIL) {
       // Nylas Mail
@@ -93,9 +93,13 @@ export default class ThreadUnsubscribeStore extends NylasStore {
         api: NylasAPI,
         options
       });
-      loadEmail.run();
+      loadEmail.run()
+               .then(success)
+               .catch(error);
     } else {
       // Nylas N1
+      options.success = success;
+      options.error = error;
       NylasAPI.makeRequest(options);
     }
   }
@@ -117,19 +121,19 @@ export default class ThreadUnsubscribeStore extends NylasStore {
           path: messagePath,
           headers: {Accept: "message/rfc822"},
           json: false,
-          success: (rawEmail) => {
-            const mailparser = new MailParser();
-            mailparser.on('end', (parsedEmail) => {
-              callback(null, parsedEmail);
-            });
-            mailparser.write(rawEmail);
-            mailparser.end();
-          },
-          error: (error) => {
-            callback(error);
-          },
         };
-        this._runNylasQuery(options);
+        const success = (rawEmail) => {
+          const mailparser = new MailParser();
+          mailparser.on('end', (parsedEmail) => {
+            callback(null, parsedEmail);
+          });
+          mailparser.write(rawEmail);
+          mailparser.end();
+        };
+        const error = (error) => {
+          callback(error);
+        };
+        this._runNylasQuery(options, success, error);
       }
     } else {
       callback(new Error('No messages found to parse for unsubscribe links.'));
