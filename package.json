@@ -1,6 +1,6 @@
 {
   "name": "n1-unsubscribe",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "main": "./lib/main",
   "description": "Unsubscribe without leaving Nylas Mail.",
   "license": "GPL-3.0",
