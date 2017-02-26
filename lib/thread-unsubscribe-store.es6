@@ -91,7 +91,7 @@ export default class ThreadUnsubscribeStore extends NylasStore {
       // Nylas Mail
       const loadEmail = new NylasAPIRequest({
         api: NylasAPI,
-        options
+        options: options,
       });
       loadEmail.run()
                .then(success)
@@ -181,15 +181,13 @@ export default class ThreadUnsubscribeStore extends NylasStore {
         const error = (error) => {
           NylasEnv.reportError(error, this);
         };
-        this._runNylasQuery({
+        const options = {
           accountId: this.thread.accountId,
           path: '/send',
           method: 'POST',
           body: interpretEmail(emailAddress),
-        },
-        success,
-        error
-      );
+        };
+        this._runNylasQuery(options, success, error);
         // Send the callback now so that emails are moved immediately
         // instead of waiting for the email to be sent.
         callback(null, /* unsubscribed= */true);
