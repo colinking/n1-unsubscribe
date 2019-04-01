@@ -18,7 +18,7 @@
     "cheerio": "^0.22.0",
     "mailparser": "^0.6.1",
     "mailto-parser": "^1.0.0",
-    "open": "0.0.5",
+    "open": "6.0.0",
     "underscore": "^1.8.3"
   }
 }
