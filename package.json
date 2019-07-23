@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "cheerio": "^0.22.0",
-    "mailparser": "^0.6.1",
+    "mailparser": "^2.3.0",
     "mailto-parser": "^1.0.0",
     "open": "0.0.5",
     "underscore": "^1.8.3"
